@@ -126,6 +126,8 @@ a { color: inherit; }
 .scene--rwvideo .rwv-video, .scene--rwvideo .rwv-input { position: absolute; display: block; pointer-events: none; object-fit: fill;
   border-radius: 6px; background: var(--card); }
 .scene--rwvideo .rwv-input { opacity: 0; background: none; }
+.scene--rwvideo .rwv-title { position: absolute; pointer-events: none; font-family: var(--mono); font-size: var(--fs-xs); line-height: 16px;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--sub); }             /* a group's small title (data-title) */
 .scene--rwvideo .rwv-lab { position: absolute; pointer-events: none; font-family: var(--mono); font-size: var(--fs-xs); line-height: 14px; color: var(--sub); }
 .scene--rwvideo .rwv-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
   color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
@@ -436,7 +438,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="planning" role="img" aria-label="A robot arm in simulation executes three plans for the same milk carton: an unguided sample, a plan guided to a target, and a plan guided to the target over a wall."></div>
-    <div class="pd-stage" data-scene="rwvideo" data-group="planning_more" role="img" aria-label="Six more guided plans executed by the robot arm, each carrying an object to its own target: an oil bottle, a peanut butter jar, two wine glasses, a ketchup bottle and a water bottle."></div>
+    <div class="pd-stage" data-scene="rwvideo" data-group="planning_more" data-title="More examples" role="img" aria-label="Six more guided plans executed by the robot arm, each carrying an object to its own target: an oil bottle, a peanut butter jar, two wine glasses, a ketchup bottle and a water bottle."></div>
   </section>
 
   <section class="sec" id="real-world">
@@ -3478,6 +3480,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
       const box = el('div', 'rwv-box', host); host.insertBefore(box, api.stage.art);
       const msg = el('div', 'rwv-msg', ui, 'Loading…');
+      const title = host.dataset.title ? el('div', 'rwv-title', ui, host.dataset.title) : null;   // a small title over the first tile
       let tiles = [], lay = null, total = 0, t = 0, ready = false, onScreen = true;
 
       new IntersectionObserver(es => {                  // off screen: stop decoding; the clock resumes where it was
@@ -3510,7 +3513,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const per = (ROWS[group] || [3, 2])[mob ? 1 : 0], maxH = group === 'photo' ? (mob ? 300 : Math.min(560, innerHeight * 0.62)) : mob ? 200 : 300;
         const rows = [], vp = [];
         for (let i = 0; i < tiles.length; i += per) rows.push(tiles.slice(i, i + per));
-        let y = 0;
+        let y = title ? 30 : 0;
         rows.forEach(row => {
           const asp = row.map(x => x.d.w / x.d.h), sum = asp.reduce((a, b) => a + b, 0);
           const h = Math.floor(Math.min(maxH, (aw - (row.length - 1) * gap) / sum));
@@ -3529,6 +3532,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           tile.lab.textContent = tile.failed ? `${tile.d.label || 'clip'} · could not load` : tile.d.label;
           tile.lab.hidden = !tile.lab.textContent;
         });
+        if (title && vp.length) Object.assign(title.style, { left: vp[0][0] + 'px', top: '0px' });
         lay = { vp };
       }
 
