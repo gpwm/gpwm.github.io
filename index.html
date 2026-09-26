@@ -116,6 +116,8 @@ a { color: inherit; }
 .scene--realworld .rw-player { position: static; }
 .scene--realworld .rw-cap { font-family: var(--mono); font-size: var(--fs-xs); line-height: 17px; color: var(--sub); }
 .scene--realworld .rw-ctl.rw-rows { display: grid; gap: 8px; }
+.scene--realworld .rw-input { position: absolute; pointer-events: none; border-radius: 10px; object-fit: fill; }
+.scene--realworld .rw-input[hidden] { display: none; }
 .view-switch { margin: 22px 0 0; }
 .sec [data-view][hidden] { display: none !important; }
 .method-block { margin-top: 44px; }
@@ -2490,6 +2492,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       { label: 'Mars habitat', data: ['rw_mars'] }, { label: 'Let go', data: ['rw_letgo'] }, { label: '1970s photo', data: ['rw_1970s'] }] },
   ];
   const HOLD = 1.1, SWING = 3.4, AZ = 0.87, PO = [-0.5, 0.3], D2R = Math.PI / 180;
+  const INTRO = 1.4, FADE = 0.6;                  // the input image first, then a crossfade to the reconstruction
   const MAT = { elastic: 'elastic', elastoplastic: 'plasticine', plasticine: 'plasticine', sand: 'sand' };
   const list = a => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
 
@@ -2576,6 +2579,8 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const btns = OPTS.map((o, i) => { const b = el('button', 'bars-sw', bar, o.label); b.type = 'button'; b.onclick = () => choose(i); return b; });
       const canvas = el('canvas', 'rw-gl', host); host.insertBefore(canvas, api.stage.art);
       const msg = el('div', 'rw-msg', ui, 'Loading the 3D viewer…');
+      const inputs = [el('img', 'rw-input', ui), el('img', 'rw-input', ui)];       // under the labels
+      inputs.forEach(im => { im.alt = ''; im.hidden = true; });
       const tags = [el('div', 'rw-tag', ui), el('div', 'rw-tag', ui)];
       const clock = el('div', 'rw-clock', ui), hint = el('div', 'rw-hint', ui);
       const panel = el('div', 'rw-panel', ui);
@@ -2737,6 +2742,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           for (const S of orec.setups) views.push(await buildView(srec, dd, S, orec.plate));
           if (my !== token) return;
           st.recs = { srec, orec, dd }; st.views = views;
+          inputs.forEach(im => { if (srec.input) im.src = srec.input; im.hidden = !srec.input; im.style.opacity = 0; });
           if (o.id === 'drop') addDropMarks(views[0]);
           if (o.id === 'nudge') { views[0].arrow = arrowMesh(0xf28e2b); views[0].s3.add(views[0].arrow); }
           cam.az = 0; cam.po = 0; cam.user = false;
@@ -2830,12 +2836,15 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const spd = (st.recs && st.recs.orec.speed) || o.speed;
         const fps = 24 / S.clock * spd, T = S.frames, bt = st.bullet && S.bullet && o.id !== 'drop';
         const F = bt ? S.bullet.freeze : 0, d1 = F / fps, sw = bt ? SWING : 0, d2 = (T - 1 - F) / fps;
-        st.tl = { fps, T, F, d1, sw, d2, total: d1 + sw + d2 + HOLD, bt, spd };
+        const i0 = st.recs.srec.input ? INTRO + FADE : 0;
+        st.tl = { fps, T, F, d1, sw, d2, total: i0 + d1 + sw + d2 + HOLD, bt, spd, i0 };
         const frac = keep ? player.t / player.total : 0;
         player.total = st.tl.total; player.seek(frac * st.tl.total);
       }
       function at(t) {                                // timeline seconds -> model frame, swing phase
         const L = st.tl;
+        if (t < L.i0) return { f: 0, u: -1, intro: t };
+        t -= L.i0;
         if (t < L.d1) return { f: t * L.fps, u: -1 };
         if (t < L.d1 + L.sw) return { f: L.F, u: (t - L.d1) / L.sw };
         return { f: Math.min(L.T - 1, L.F + (t - L.d1 - L.sw) * L.fps), u: -1 };
@@ -2888,7 +2897,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         if (!ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), -st.recs.srec.table_z), hit)) return;
         const S = st.views[0].S; let best = 0, bd = Infinity;
         S.points.forEach((p, i) => { const d = (p.table[0] - hit.x) ** 2 + (p.table[1] - hit.y) ** 2; if (d < bd) { bd = d; best = i; } });
-        dropPick(best); player.seek(0); if (player.paused) player.box.querySelector('.pd-play').click();
+        dropPick(best); player.seek(st.tl.i0); if (player.paused) player.box.querySelector('.pd-play').click();
         prepare();
       }
 
@@ -2941,6 +2950,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         Object.assign(clock.style, { left: (x0 + v0[0] + 10) + 'px', top: (top + v0[1] + v0[3] - 30) + 'px' });
         Object.assign(hint.style, { left: (x0 + vp[0][0] + 10) + 'px', top: (top + vp[0][1] + 10) + 'px' });
         vp.forEach((v, k) => Object.assign(tags[k].style, { left: (x0 + v[0] + 10) + 'px', top: (top + v[1] + 10) + 'px' }));
+        inputs.forEach((im, k) => { const v = vp[k]; im.style.display = v ? '' : 'none'; if (v) Object.assign(im.style, { left: (x0 + v[0]) + 'px', top: (top + v[1]) + 'px', width: v[2] + 'px', height: v[3] + 'px' }); });
       }
       function frame(time, dt) {
         if (st.opt < 0) { choose(0); return; }
@@ -2975,8 +2985,11 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           renderer.render(view.s3, camera);
         });
         // the clock: given frames, then real time after release; bullet time says so
-        const L = st.tl, fr = Math.round(a.f), per = S0.clock / 24;
-        const lab = a.u >= 0 ? `bullet time · frozen at ${(L.F * per).toFixed(2)} s` : fr < S0.context ? `given frame ${fr + 1} of ${S0.context}` : `predicted · ${(a.f * per).toFixed(2)} s`;
+        const L = st.tl, fr = Math.round(a.f), per = S0.clock / 24, srec = st.recs.srec;
+        const op = a.intro == null || cam.user ? 0 : a.intro < INTRO ? 1 : Math.max(0, 1 - (a.intro - INTRO) / FADE);
+        inputs.forEach((im, k) => { const o2 = k < shown.length ? op : 0; if (im.style.opacity !== String(o2)) im.style.opacity = o2; });
+        const lab = a.intro != null ? (a.intro < INTRO ? `the ${srec.kind === 'photo' ? 'photo' : 'image'}` : 'reconstructed · lifted to the release pose')
+          : a.u >= 0 ? `bullet time · frozen at ${(L.F * per).toFixed(2)} s` : fr < S0.context ? `given frame ${fr + 1} of ${S0.context}` : `predicted · ${(a.f * per).toFixed(2)} s`;
         const txt = `${lab} · ${L.spd < 1 ? L.spd + '× speed' : 'real time'}`;
         if (clock.textContent !== txt) clock.textContent = txt;
       }
