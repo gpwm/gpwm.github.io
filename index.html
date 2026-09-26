@@ -354,8 +354,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <a href="#abstract">Abstract</a>
     <a href="#method">Method</a>
     <a href="#dataset">Dataset</a>
-    <a href="#comparison">Comparison</a>
     <a href="#streaming">Streaming</a>
+    <a href="#comparison">Comparison</a>
     <a href="#planning">Planning</a>
     <a href="#real-world">Real world</a>
     <a href="#results">Results</a>
@@ -405,15 +405,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="pd-stage" data-scene="dataset" role="img" aria-label="Six rows, one per domain of the dataset: its materials, actuation and number of training frames, and four looping recordings from it."></div>
   </section>
 
-  <section class="sec" id="comparison">
-    <div class="wrap">
-      <p class="eyebrow-s">Comparison</p>
-      <h2>Comparison with learned 3D dynamics models</h2>
-      <p class="lede">GNS, a graph-based particle simulator; PGND, a hybrid particle&ndash;grid model; PointWorld, a point-cloud world model; and PhysCtrl, a generative model of physical dynamics. All methods use the same evaluation trajectories and available actuator conditioning.</p>
-    </div>
-    <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
-  </section>
-
   <section class="sec" id="streaming">
     <div class="wrap">
       <p class="eyebrow-s">Streaming</p>
@@ -421,6 +412,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <p class="lede">Near-future frames are progressively resolved, while farther-future frames remain at higher noise levels and continue to be revised. Once the earliest frames are fully denoised, they are committed, the prediction window advances, and fresh Gaussian noise is appended at the far end of the horizon.</p>
     </div>
     <div class="pd-stage short" data-scene="stream" aria-label="A conveyor belt of frames for a shirt being folded: committed frames on the left, the model's sixteen-frame window on the right with each frame's noise level, above it the output so far and a timeline of the whole 600-frame rollout"></div>
+  </section>
+
+  <section class="sec" id="comparison">
+    <div class="wrap">
+      <p class="eyebrow-s">Comparison</p>
+      <h2>Comparison with learned 3D dynamics models</h2>
+      <p class="lede">GNS, a graph-based particle simulator; PGND, a hybrid particle&ndash;grid model; PointWorld, a point-cloud world model; and PhysCtrl, a generative model of physical dynamics. All methods use the same evaluation trajectories and available actuator conditioning.</p>
+    </div>
+    <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
   </section>
 
   <section class="sec" id="planning">
@@ -431,7 +431,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="planning" role="img" aria-label="A robot arm in simulation executes three plans for the same milk carton: an unguided sample, a plan guided to a target, and a plan guided to the target over a wall."></div>
-    <div class="pd-stage" data-scene="rwvideo" data-group="planning_more" data-title="More examples" role="img" aria-label="Six more guided plans executed by the robot arm, each carrying an object to its own target: an oil bottle, a peanut butter jar, two wine glasses, a ketchup bottle and a water bottle."></div>
+    <div class="pd-stage" data-scene="rwvideo" data-group="plan_vs" data-title="Against the baselines" role="img" aria-label="Picking a milk carton and a soda can: the initial configuration, then the executed end state of GPWM without guidance, PointWorld and GPWM with guidance, each with the object&rsquo;s path and the target."></div>
+    <div class="pd-stage" data-scene="rwvideo" data-group="planning_more" data-title="More examples" role="img" aria-label="Nine more guided plans executed by the robot arm, each carrying an object to its own target: an oil bottle, a peanut butter jar, two wine glasses, a ketchup bottle, a water bottle, a lemon and two milk cartons."></div>
+    <div class="pd-stage" data-scene="rwvideo" data-group="plan_push" data-title="Pushing" role="img" aria-label="Two guided pushes executed open-loop in simulation: the pusher moves a block onto the target."></div>
   </section>
 
   <section class="sec" id="real-world">
@@ -479,7 +481,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
-<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"68a2d89c9b","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"c53e92a950","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -3445,13 +3447,15 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
 /* Real world, as videos: path-traced renders of the real-world session's clean samples, composited into their images, with
    nothing to click and no camera movement. One stage per group (data-group), its tiles side by side and playing together on
    one clock: the input image, a crossfade to the objects lifted to the release pose (the video's first frame), the
-   prediction, a hold, again. Videos pause while their stage is off screen. Groups and files: encode_rw_video.py
+   prediction, a hold, again. Videos pause while their stage is off screen. A tile with an image instead of a video is a
+   still (the planning comparison's end states). Groups and files: encode_rw_video.py
    (data/rwvideo.json, media/rw_*.mp4 and the matching input images rw_*.jpg). */
 (function () {
   'use strict';
   const PD = window.PD;
   const INTRO = 1.2, FADE = 0.5, HOLD = 1.2, DRIFT = 0.25;
-  const ROWS = { photo: [1, 1], push: [4, 2], materials: [4, 2], generated: [3, 2], planning: [3, 1], planning_more: [3, 2] };   // tiles per row: desktop, phone
+  const ROWS = { photo: [1, 1], push: [4, 2], materials: [4, 2], generated: [3, 2], planning: [3, 1], plan_vs: [4, 2], planning_more: [3, 2],
+    plan_push: [2, 2] };   // tiles per row: desktop, phone
 
   PD.scene('rwvideo', {
     create(api) {
@@ -3464,12 +3468,18 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
 
       new IntersectionObserver(es => {                  // off screen: stop decoding; the clock resumes where it was
         onScreen = es.some(e => e.isIntersecting);
-        if (!onScreen) tiles.forEach(x => { if (x.v && !x.v.paused) x.v.pause(); });
+        if (!onScreen) tiles.forEach(x => { if (!x.still && x.v && !x.v.paused) x.v.pause(); });
       }).observe(host);
 
       PD.data('rwvideo').then(idx => {
         const G = idx.groups[group] || [];
         tiles = G.map(d => {
+          if (!d.video) {                                 // a still: the image alone
+            const v = el('img', 'rwv-video', box); v.alt = ''; v.src = d.image;
+            const tile = { d, v, img: null, still: true, lab: el('div', 'rwv-lab', ui, d.label), dur: 0 };
+            v.addEventListener('error', () => { tile.failed = true; lay = null; });
+            return tile;
+          }
           const v = el('video', 'rwv-video', box);
           Object.assign(v, { muted: true, playsInline: true, preload: 'auto', loop: false, disablePictureInPicture: true });
           v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
@@ -3480,7 +3490,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           v.addEventListener('error', () => { tile.failed = true; lay = null; });
           return tile;
         });
-        total = INTRO + FADE + Math.max(0, ...G.map(d => d.dur)) + HOLD;
+        total = INTRO + FADE + Math.max(0, ...G.map(d => d.dur || 0)) + HOLD;
         ready = tiles.length > 0; msg.hidden = ready; layout();          // laid out at once, not when first on screen: no jump
         if (!ready) msg.textContent = 'No clips for this group.';
       }).catch(e => { msg.textContent = 'The videos could not load here (' + (e && e.message ? e.message : e) + ').'; });
@@ -3506,7 +3516,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         Object.assign(msg.style, { left: pad + 'px', top: '0px', width: aw + 'px', height: Math.max(120, vh) + 'px' });
         tiles.forEach((tile, k) => {
           const [x, y0, w, h] = vp[k], r = { left: x + 'px', top: y0 + 'px', width: w + 'px', height: h + 'px' };
-          Object.assign(tile.v.style, r); Object.assign(tile.img.style, r);
+          Object.assign(tile.v.style, r); if (tile.img) Object.assign(tile.img.style, r);
           Object.assign(tile.lab.style, { left: x + 'px', top: (y0 + h + 6) + 'px', width: w + 'px' });
           tile.lab.textContent = tile.failed ? `${tile.d.label || 'clip'} · could not load` : tile.d.label;
           tile.lab.hidden = !tile.lab.textContent;
@@ -3549,6 +3559,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         else t = (t + dt) % total;
         const s = t - INTRO - FADE, op = t < INTRO ? 1 : t < INTRO + FADE ? 1 - (t - INTRO) / FADE : 0;
         tiles.forEach(tile => {
+          if (tile.still) return;
           if (tile.img.style.opacity !== String(op)) tile.img.style.opacity = op;
           if (onScreen) drive(tile, PD.reduced ? tile.dur : s);
         });
