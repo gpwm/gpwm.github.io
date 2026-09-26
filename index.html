@@ -210,6 +210,8 @@ a { color: inherit; }
 .pd-art table.tok tr.sep td { border-top: 1px solid var(--g300); }
 .pd-art .sm { position: absolute; font-size: 10px; line-height: 12px; color: var(--sub); white-space: nowrap; }
 /* the hero figure: three sizes only (11px notes and eyebrows, 12px box labels, 15px maths); the level notes sit in the bars */
+.scene--overview .pd-art .ovname { position: absolute; font-family: var(--serif); font-size: 28px; line-height: 32px; color: var(--ink); white-space: nowrap; }
+.scene--overview .pd-art .ovsub { text-align: center; }                          /* the model block's subtitle */
 .scene--hero .pd-art .lab b { font-weight: 500; }
 .scene--hero .pd-art .lab .d { display: block; font-size: var(--fs-xs); color: var(--sub); }
 .scene--hero .pd-art .compact .lab .d { display: none; }
@@ -386,9 +388,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <p class="lede" data-view="architecture" hidden>Every particle in every frame becomes a token, and every rigid body a pose token. Coarser levels keep real particles, chosen inside each object. Follow one forward pass through the network, block by block, for each kind of scene.</p>
       <div class="bars-switch view-switch" data-views role="group" aria-label="How much of the method to show"><button type="button" class="bars-sw on" data-show="overview">Overview</button><button type="button" class="bars-sw" data-show="architecture">Architecture</button></div>
     </div>
-    <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps: the scene so far as particles, GPWM removing noise from sixteen future frames with each frame at its own noise level, and the generated future frames."></div>
+    <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps: the scene so far as particles, the GPWM network, and the sixteen future frames it generates."></div>
     <div class="pd-stage tall" data-scene="hero" data-view="architecture" hidden role="img" aria-label="Six kinds of scene flow through one architecture: the history of each scene on the left, the multi-resolution network and one of its DiT blocks in the middle, and the generated future of every particle on the right."></div>
-    <div class="wrap"><p class="note-s" data-view="overview">The Free Fall specialist&rsquo;s real sampler states for one 16-frame window of a seven-object drop, at every denoising step: the middle view shows the window&rsquo;s last frame, the bars every frame&rsquo;s noise level. The given history is in <span class="tw" data-l="black" data-d="white"></span>, generated particles in one colour per object. Drag a view to turn the scene. Switch to Architecture to follow the network block by block, for every kind of scene.</p><p class="note-s" data-view="architecture" hidden>One example scene from each collection; the one in focus is drawn solid. Left, what the model is given: the history (<span class="tw" data-l="black" data-d="white"></span>) and any robot or tool motion (grey); in Dragging, the arrow is the given drag. Middle, the network. Every particle in every frame is a token (its noisy displacement <i>Δp<sub>τ</sub></i>, geometry <i>g</i>, physical parameters <i>E</i>, <i>ν</i>, <i>ρ</i> and any action <i>a</i>), and every rigid body adds a pose token (its noisy pose increment <i>Δq<sub>τ</sub></i>). The tokens pass through coarser point levels and back and leave as clean trajectories; sampling repeats this K times. One pass runs through the network block by block; the panel beside it follows the active block, showing that scene&rsquo;s particles at the block&rsquo;s resolution and what attention looks at for one marked particle (its own frames, then its object at L0 or anchors of every object above), over the DiT block itself. In the network, blue marks the two attention stages, the per-frame noise and the sampling loop. Right, what it generates, each object in its own colour. Hover a block to hold the pass there, a scene to follow it; drag a scene to turn it.</p></div>
+    <div class="wrap"><p class="note-s" data-view="overview">A seven-object drop: the Free Fall specialist generates the next 16 frames from 4 given ones. The given history is in <span class="tw" data-l="black" data-d="white"></span>, generated particles in one colour per object. Drag a view to turn the scene. Switch to Architecture to follow the network block by block, for every kind of scene.</p><p class="note-s" data-view="architecture" hidden>One example scene from each collection; the one in focus is drawn solid. Left, what the model is given: the history (<span class="tw" data-l="black" data-d="white"></span>) and any robot or tool motion (grey); in Dragging, the arrow is the given drag. Middle, the network. Every particle in every frame is a token (its noisy displacement <i>Δp<sub>τ</sub></i>, geometry <i>g</i>, physical parameters <i>E</i>, <i>ν</i>, <i>ρ</i> and any action <i>a</i>), and every rigid body adds a pose token (its noisy pose increment <i>Δq<sub>τ</sub></i>). The tokens pass through coarser point levels and back and leave as clean trajectories; sampling repeats this K times. One pass runs through the network block by block; the panel beside it follows the active block, showing that scene&rsquo;s particles at the block&rsquo;s resolution and what attention looks at for one marked particle (its own frames, then its object at L0 or anchors of every object above), over the DiT block itself. In the network, blue marks the two attention stages, the per-frame noise and the sampling loop. Right, what it generates, each object in its own colour. Hover a block to hold the pass there, a scene to follow it; drag a scene to turn it.</p></div>
   </section>
 
   <section class="sec" id="dataset">
@@ -457,6 +459,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","overview":"9d8a572d68","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rw_desk":"8593fcc54d","rw_tower":"1cd9cd9b6b","rw_drop":"6c143dc5b9","rw_nudge":"f830b22304","rw_beach":"22d98eb9d0","rw_materials":"0cefaf12e0","rw_dorm":"20345ed63d","rw_world":"b39755477f","rw_farm":"2a03dd4b80","rw_living":"dc41d1a68c","rw_candy":"97287bf7c1","rw_mars":"320445b586","rw_letgo":"b145ce95fa","rw_1970s":"e102de1563","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -542,7 +545,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     if (cache[name]) return cache[name];
     const el = document.getElementById('pd-data-' + name);
     const got = el ? Promise.resolve(JSON.parse(el.textContent))
-      : fetch(PD.DATA_BASE + name + '.json').then(r => { if (!r.ok) throw new Error('no data ' + name); return r.json(); });
+      : fetch(PD.DATA_BASE + name + '.json' + (PD.DATA_V && PD.DATA_V[name] ? '?v=' + PD.DATA_V[name] : ''))   // a new page never
+        .then(r => { if (!r.ok) throw new Error('no data ' + name); return r.json(); });                     // gets old cached data
     cache[name] = got.then(async rec => {
       if (rec.pos) {                                   // a clip
         rec.T = rec.t.length;
@@ -2269,85 +2273,85 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
 
 </script>
 <script>
-/* The method at a glance, for readers who want the idea before the architecture: three live blocks. 1, the history: the
-   scene so far, as particles. 2, GPWM denoises the future: all 16 future frames start as noise and lose it step by step,
-   each at its own level, the nearest first. These are the Free Fall specialist's real sampler states for one window of a
-   seven-object drop (pyramid schedule, every step; pack_overview.py): the view shows the window's last frame, the bars
-   every frame's noise level. The given history is drawn in ink, the generated particles in one tone per object. 3, the future: the 16 clean frames, played. A dashed return: the newest frames become the history
-   (the streaming section). The switch above the stage (PD.mountViews) swaps this for the block-by-block architecture. */
+/* The method at a glance, for readers who want the idea before the architecture: the scene so far goes through GPWM and
+   comes out as its future. Left, the history (the 4 given frames, in ink, played); middle, the model as one block (its
+   point levels, fine to coarse and back, light up in turn as the scene passes through); right, the 16 generated frames,
+   played, one tone per object. The Free Fall specialist's prediction for one 16-frame window of a seven-object drop, every
+   particle (pack_overview.py). The switch above the stage (PD.mountViews) swaps this for the block-by-block architecture. */
 (function () {
   'use strict';
   const PD = window.PD, C = PD.colors, D = PD.draw;
-  const PHASES = [['hist', 2.4], ['den', 6.2], ['fut', 4.0]];
+  const PHASES = [['hist', 2.6], ['model', 1.8], ['fut', 4.2]];   // the history plays; it goes through GPWM; the future plays
   const TOTAL = PHASES.reduce((s, p) => s + p[1], 0);
-  const HIST_FPS = 3, FUT_FPS = 8, AZ = -64, EL = 17, SWAY = 4, SWAY_T = 30;
+  const HIST_FPS = 3, FUT_FPS = 6, AZ = -64, EL = 17, SWAY = 4, SWAY_T = 30;
+  const LEVELS = [7, 5, 3, 5, 7];                                 // the block's glyph: point levels, fine to coarse and back
 
   PD.scene('overview', {
     create(api) {
       const v = new PD.View3D({ az: AZ, el: EL, spin: 0 });
       let d = null, lay = null, t = 0, E = null;
       const player = PD.player(api, TOTAL);
-      if (PD.reduced) player.seek(PHASES[0][1] + PHASES[1][1] * 0.72);
+      if (PD.reduced) player.seek(TOTAL - 0.01);
       const L = {};
       const mk = (k, cls, html) => { L[k] = PD.el('div', cls, api.el); if (html != null) L[k].innerHTML = html; return L[k]; };
-      ['1 · history', '2 · denoise with GPWM', '3 · the future'].forEach((s, i) => mk('t' + i, 'eyebrow', s));
+      ['1 · the scene so far', '2 · the model', '3 · its future'].forEach((s, i) => mk('t' + i, 'eyebrow', s));
       [
-        'The scene so far, as particles. Each particle carries its material (E, ν, ρ); a robot’s or tool’s motion, when there is one, is given as well.',
-        'A multi-resolution transformer over the particles removes noise from all 16 future frames at once, step by step. Each frame has its own noise level, so the nearest finish first.',
-        'The next 16 frames of every particle, generated.',
+        'Every particle, with its material (E, ν, ρ). A robot’s motion, when there is one, is given too.',
+        'One network generates all 16 future frames at once.',
+        'The next 16 frames of every particle.',
       ].forEach((s, i) => mk('c' + i, 'note wrap', s));
-      mk('step', 'note', ''); mk('barsN', 'note', 'noise per future frame, near to far');
-      mk('plus', 'note', '+ noise'); mk('back', 'note', 'the newest frames become the history, and it goes on (Streaming, below)');
-      mk('fut', 'note', '');
+      mk('name', 'ovname', 'GPWM'); mk('sub', 'note ovsub', 'multi-resolution transformer<br>over particle tokens');
+      mk('hc', 'note', ''); mk('fc', 'note', '');
 
       PD.data('overview').then(async rec => {
-        rec.L = await PD.traj(rec.last, rec.S, rec.n, rec.unit);               // [S, n, 3]: the window's last frame after every step
-        rec.K = await PD.traj(rec.clean, rec.F, rec.n, rec.unit);              // [F, n, 3]: the clean window
+        rec.K = await PD.traj(rec.clean, rec.F, rec.n, rec.unit);              // [F, n, 3]: the generated window
         rec.H = await PD.traj(rec.ctx, rec.C, rec.n, rec.unit);                // [C, n, 3]: the history
         rec.cls = new Uint8Array(await PD.inflate(rec.cls));
         let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity;
         const see = (A, off, n) => { for (let i = 0; i < n; i++) { const o = off + 3 * i; x0 = Math.min(x0, A[o]); x1 = Math.max(x1, A[o]); y0 = Math.min(y0, A[o + 1]); y1 = Math.max(y1, A[o + 1]); z0 = Math.min(z0, A[o + 2]); z1 = Math.max(z1, A[o + 2]); } };
-        for (let h = 0; h < rec.C; h++) see(rec.H, h * rec.n * 3, rec.n);
-        see(rec.K, 0, rec.F * rec.n);                                           // frame the history and the clean window
+        see(rec.H, 0, rec.C * rec.n); see(rec.K, 0, rec.F * rec.n);           // frame the history and the generated window
         E = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, z0, z1, r: Math.max(x1 - x0, y1 - y0, (z1 - z0) * 1.2) / 2, hxy: Math.hypot(x1 - x0, y1 - y0) / 2 };
         d = rec; lay = null;
       });
 
       function place(e, x, y, al = '') {
         e.style.left = Math.round(x) + 'px'; e.style.top = Math.round(y) + 'px';
-        e.style.transform = `translate(${al.includes('c') ? '-50%' : al.includes('r') ? '-100%' : '0'}, ${al.includes('b') ? '-100%' : '0'})`;
+        e.style.transform = `translate(${al.includes('c') ? '-50%' : al.includes('r') ? '-100%' : '0'}, ${al.includes('m') ? '-50%' : al.includes('b') ? '-100%' : '0'})`;
       }
-      function layout() {
+      function layout() {                                             // views left and right, the model block between them
         const W = api.w, H = api.h, mob = W < 760, pad = mob ? 16 : 40;
-        let P, capY;
+        let P, B, capY;
         if (!mob) {
-          const gap = 72, pw = Math.floor((W - 2 * pad - 2 * gap) / 3), vh = Math.min(Math.round(pw * 0.8), H - 250);
-          P = [0, 1, 2].map(i => [pad + i * (pw + gap), 62, pw, vh]);
-          capY = [0, 1, 2].map(() => 62 + vh + 70);                                 // captions aligned, under the bars
-        } else {
-          P = []; capY = [];
-          let y = 34;
-          for (let i = 0; i < 3; i++) {
-            const r = [pad, y + 22, W - 2 * pad, 170]; P.push(r);
-            capY.push(r[1] + r[3] + (i === 1 ? 70 : 14));
-            y = capY[i] + 58 + 24;
-          }
+          const bw = Math.round(PD.clamp(W * 0.15, 170, 230)), gap = 64, pw = Math.floor((W - 2 * pad - bw - 2 * gap) / 2);
+          const vh = Math.min(Math.round(pw * 0.8), H - 180), top = 62;
+          P = [[pad, top, pw, vh], [pad + pw + 2 * gap + bw, top, pw, vh]];
+          B = [pad + pw + gap, top + vh / 2 - 90, bw, 180];
+          capY = top + vh + 18;
+        } else {                                                      // phones: a column, each caption under its block
+          const w = W - 2 * pad, vh = 200, bh = 116;
+          P = [[pad, 52, w, vh]];
+          const a0 = 52 + vh + 6 + 34, b0 = a0 + 26 + 26;               // the history's caption, an arrow, the model's label
+          B = [pad + w / 2 - 100, b0, 200, bh];
+          const p1 = b0 + bh + 8 + 20 + 26 + 26;                         // its caption, an arrow, the future's label
+          P.push([pad, p1, w, vh]);
+          lay = { arrows: [[a0 - 2, b0 - 30], [b0 + bh + 34, p1 - 28]] };
+          const Hm = p1 + vh + 6 + 20 + 56;
+          if (Math.abs(api.h - Hm) > 1) api.stage.host.style.height = Hm + 'px';
         }
-        const bars = [P[1][0], P[1][1] + P[1][3] + 14, P[1][2], mob ? 20 : 26];
-        P.forEach((r, i) => {
-          place(L['t' + i], r[0], r[1] - 22);
-          place(L['c' + i], r[0], capY[i]); L['c' + i].style.width = r[2] + 'px';
-        });
-        const capEnd = Math.max(...P.map((r, i) => capY[i] + L['c' + i].offsetHeight));   // the way back runs under every caption
-        lay = { mob, P, bars, capY, capEnd, backY: Math.max(H - 60, capEnd + 44) };        // the player sits under the way back
-        place(L.step, P[1][0] + 10, P[1][1] + 8);                                // the counters sit inside their views
-        place(L.fut, P[2][0] + 10, P[2][1] + 8);
-        place(L.barsN, bars[0], bars[1] + bars[3] + 6);
-        place(L.plus, (P[0][0] + P[0][2] + P[1][0]) / 2, P[0][1] + P[0][3] / 2 - 24, 'c');
-        place(L.back, (P[0][0] + P[0][2] / 2 + P[2][0] + P[2][2] / 2) / 2, lay.backY - 20, 'c');
-        L.plus.hidden = L.back.hidden = mob;
+        lay = Object.assign(lay || {}, { mob, P, B });
+        place(L.t0, P[0][0], P[0][1] - 22); place(L.t2, P[1][0], P[1][1] - 22); place(L.t1, B[0], B[1] - 22);
+        if (!mob) {
+          place(L.c0, P[0][0], capY); place(L.c2, P[1][0], capY); place(L.c1, B[0], B[1] + B[3] + 12);
+          L.c0.style.width = L.c2.style.width = P[0][2] + 'px'; L.c1.style.width = B[2] + 'px';
+        } else {
+          place(L.c0, P[0][0], P[0][1] + P[0][3] + 6); place(L.c2, P[1][0], P[1][1] + P[1][3] + 6); place(L.c1, P[0][0], B[1] + B[3] + 8);
+          L.c0.style.width = L.c2.style.width = L.c1.style.width = P[0][2] + 'px';
+        }
+        place(L.name, B[0] + B[2] / 2, B[1] + (mob ? 16 : 26), 'c'); place(L.sub, B[0] + B[2] / 2, B[1] + B[3] - (mob ? 40 : 50), 'c');
+        L.sub.hidden = mob;
+        place(L.hc, P[0][0] + 10, P[0][1] + 8); place(L.fc, P[1][0] + 10, P[1][1] + 8);
       }
-      function drawPts(r, P, off, given, clean) {                             // given: ink; else each particle's material colour
+      function drawPts(r, P, off, given) {                            // given: ink; else one tone per object
         const n = d.n;
         v.panel(r[0], r[1], r[2], r[3]);
         const e = v.el * Math.PI / 180, hv = (E.z1 - E.z0) / 2 * Math.cos(e) + E.hxy * Math.sin(e);
@@ -2355,10 +2359,32 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         v.fit(E.r, E.z0, E.z1, E.cx, E.cy);
         const ctx = api.ctx;
         ctx.save(); ctx.beginPath(); ctx.rect(r[0], r[1], r[2], r[3]); ctx.clip();
-        const rp = lay.mob ? 1.35 : 1.8;
-        const pal = given ? [{ col: C.ink, r: rp, a: [1, 0.6] }] : PD.PARTICLE_KEYS.map(k => ({ col: C[k], r: rp, a: [1, 0.7] }));
-        v.points(ctx, P, n, given ? () => 0 : d.cls, pal, off, clean ? { shadow: { z: 0, alpha: 0.05, every: 2, r: 2.4 } } : {});
+        const rp = lay.mob ? 1.0 : 1.35;
+        const pal = given ? [{ col: C.ink, r: rp, a: [1, 0.6] }] : PD.PARTICLE_KEYS.map(k => ({ col: C[k], r: rp, a: [1, 0.72] }));
+        v.points(ctx, P, n, given ? () => 0 : d.cls, pal, off, { shadow: { z: 0, alpha: 0.05, every: 2, r: 2.4 } });
         ctx.restore();
+      }
+      function flow(ctx, x0, y0, x1, y1, on, time) {                  // an arrow; while the scene passes along it, moving dashes
+        ctx.save(); ctx.strokeStyle = on ? C.accent : C.g400; ctx.lineWidth = on ? 1.75 : 1;
+        if (on) { ctx.setLineDash([6, 4]); ctx.lineDashOffset = -time * 60; }
+        const l = Math.hypot(x1 - x0, y1 - y0) || 1, ux = (x1 - x0) / l, uy = (y1 - y0) / l;   // any direction (phones: down)
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - 6 * ux, y1 - 6 * uy); ctx.stroke(); ctx.restore();
+        D.arrow(ctx, x1 - 8 * ux, y1 - 8 * uy, x1, y1, on ? C.accent : C.g400, 6, null, on ? 1.75 : 1);
+      }
+      function block(ctx, ph, u) {                                    // the model: a box, its point levels lit in turn
+        const [x, y, w, h] = lay.B, on = ph === 'model';
+        ctx.save(); ctx.fillStyle = C.card; ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.restore();
+        D.box(ctx, x, y, w, h, { col: on ? C.ink : C.g400, lw: on ? 1.75 : 1 });
+        const gy = y + h / 2 + (lay.mob ? 10 : 4), gw = Math.min(w - 40, 120), step = gw / (LEVELS.length - 1);
+        const lit = on ? u * (LEVELS.length + 1) - 0.5 : ph === 'fut' ? LEVELS.length : -1;
+        LEVELS.forEach((k, j) => {
+          const cx = x + w / 2 - gw / 2 + j * step, a = PD.clamp(lit - j, 0, 1), sp = lay.mob ? 7 : 8;
+          for (let i = 0; i < k; i++) {
+            const cy = gy + (i - (k - 1) / 2) * sp;
+            ctx.fillStyle = a > 0 ? PD.rgba('accent', 0.35 + 0.65 * a) : C.g400;
+            ctx.beginPath(); ctx.arc(cx, cy, 2.4, 0, 7); ctx.fill();
+          }
+        });
       }
 
       function frame(time, dt) {
@@ -2369,43 +2395,37 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         let ph = 'hist', u = 0, acc = 0;
         for (const [id, dur] of PHASES) { if (t < acc + dur) { ph = id; u = (t - acc) / dur; break; } acc += dur; }
         if (!v.drag && !v.userTurned && !PD.reduced) v.az = AZ + SWAY * Math.sin(2 * Math.PI * time / SWAY_T);
-        const { P, bars } = lay, S = d.S, F = d.F, n = d.n, active = ph === 'hist' ? 0 : ph === 'den' ? 1 : 2;
-        const s = ph === 'hist' ? 0 : ph === 'den' ? Math.min(S - 1, Math.floor(u * S)) : S - 1;
-        // 1: the history, played while it is the active block
-        const h = ph === 'hist' ? Math.floor(time * HIST_FPS) % d.C : d.C - 1;
-        drawPts(P[0], d.H, h * n * 3, true, true);
-        // 2: the window's last frame after step s
-        drawPts(P[1], d.L, s * n * 3, false, d.noise[s][F - 1] === 0);
-        // 3: the clean frames, played once the window is done
+        const { P, B, mob } = lay, n = d.n, F = d.F;
+        // 1: the history, played while it is the active step, else its last given frame
+        const h = ph === 'hist' ? Math.min(d.C - 1, Math.floor(u * PHASES[0][1] * HIST_FPS) % (d.C + 1)) : d.C - 1;
+        drawPts(P[0], d.H, h * n * 3, true);
+        L.hc.textContent = `given frame ${h + 1} of ${d.C}`;
+        // 2: the model
+        block(ctx, ph, u);
+        // 3: the future, played once it is generated (then its last frame, held)
         if (ph === 'fut') {
-          const f = Math.floor(u * PHASES[2][1] * FUT_FPS) % F;
-          drawPts(P[2], d.K, f * n * 3, false, true);
-          L.fut.textContent = `frame ${f + 1} of ${F}`;
+          const f = Math.min(F - 1, Math.floor(u * PHASES[2][1] * FUT_FPS));
+          drawPts(P[1], d.K, f * n * 3, false);
+          L.fc.textContent = `frame ${f + 1} of ${F}`;
         } else {
-          D.box(ctx, P[2][0], P[2][1], P[2][2], P[2][3], { col: C.g400, dash: [2, 3] });
-          L.fut.textContent = '';
+          D.box(ctx, P[1][0], P[1][1], P[1][2], P[1][3], { col: C.g400, dash: [2, 3] });
+          L.fc.textContent = '';
         }
-        P.forEach((r, i) => {
-          if (i === active) D.box(ctx, r[0] - 6, r[1] - 6, r[2] + 12, r[3] + 12, { col: C.ink, lw: 1.5 });
-          else if (i !== 2 || ph === 'fut') D.corners(ctx, r[0], r[1], r[2], r[3], 6, C.g400);
-          L['t' + i].style.color = i === active ? 'var(--ink)' : '';
+        [P[0], null, P[1]].forEach((r, i) => {
+          const active = (i === 0 && ph === 'hist') || (i === 1 && ph === 'model') || (i === 2 && ph === 'fut');
+          if (r && active) D.box(ctx, r[0] - 6, r[1] - 6, r[2] + 12, r[3] + 12, { col: C.ink, lw: 1.5 });
+          else if (r && (i === 0 || ph === 'fut')) D.corners(ctx, r[0], r[1], r[2], r[3], 6, C.g400);
+          L['t' + i].style.color = active ? 'var(--ink)' : '';
         });
-        L.step.textContent = ph === 'hist' ? 'pure noise' : ph === 'den' ? `denoising step ${s} of ${S - 1}` : 'clean';
-        // every future frame's noise level; the frame on show outlined
-        const bw = (bars[2] - (F - 1) * 3) / F;
-        for (let f = 0; f < F; f++) {
-          const x = bars[0] + f * (bw + 3), lvl = d.noise[s][f] / (d.T_train - 1), hgt = Math.max(1, bars[3] * lvl);
-          ctx.fillStyle = C.accent; ctx.fillRect(x, bars[1] + bars[3] - hgt, bw, hgt);
-          D.line(ctx, x, bars[1] + bars[3] + 0.5, x + bw, bars[1] + bars[3] + 0.5, C.g300);
-          if (f === F - 1) D.box(ctx, x - 2, bars[1] - 2, bw + 4, bars[3] + 4, { col: C.ink });
-        }
-        if (!lay.mob) {                                                         // arrows between the blocks, and the way back
+        // the way through: into the model, out of it
+        if (!mob) {
           const ym = P[0][1] + P[0][3] / 2;
-          for (let i = 0; i < 2; i++) D.arrow(ctx, P[i][0] + P[i][2] + 14, ym, P[i + 1][0] - 14, ym, C.ink, 6);
-          const xa = P[0][0] + P[0][2] / 2, xc = P[2][0] + P[2][2] / 2, top = lay.capEnd + 8, yb = lay.backY;
-          ctx.save(); ctx.strokeStyle = C.g500; ctx.setLineDash([3, 3]); ctx.beginPath();
-          ctx.moveTo(xc, top); ctx.lineTo(xc, yb); ctx.lineTo(xa, yb); ctx.lineTo(xa, top + 8); ctx.stroke(); ctx.restore();
-          D.arrow(ctx, xa, top + 14, xa, top + 4, C.g500, 6);
+          flow(ctx, P[0][0] + P[0][2] + 14, ym, B[0] - 10, ym, ph === 'model' && u < 0.6, time);
+          flow(ctx, B[0] + B[2] + 10, ym, P[1][0] - 14, ym, (ph === 'model' && u >= 0.45) || (ph === 'fut' && u < 0.15), time);
+        } else {
+          const xm = B[0] + B[2] / 2, [a, b] = lay.arrows;
+          flow(ctx, xm, a[0], xm, a[1], ph === 'model' && u < 0.6, time);
+          flow(ctx, xm, b[0], xm, b[1], (ph === 'model' && u >= 0.45) || (ph === 'fut' && u < 0.15), time);
         }
       }
       function pointer(type, p) {
@@ -2528,6 +2548,10 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         for (const P of [rec.plan, rec.exe]) for (let i = 0; i < P.length; i += 3 * 7) see([P[i], P[i + 1], P[i + 2]]);   // the gripper too
         v.az = az0; v.fit(Math.max(R, z1 / 2) * 1.08, 0, z1, ux / 2, uy / 2);
         d = rec; lay = null;
+      }).catch(e => {                                                   // never a blank stage: say what failed
+        Object.values(L).forEach(x => { x.hidden = true; });
+        const m = PD.el('div', 'note wrap', api.el, 'The planning figure could not load (' + (e && e.message ? e.message : e) + '). Reloading the page usually fixes it.');
+        Object.assign(m.style, { left: '40px', top: '40px', width: '600px' });
       });
 
       function place(e, x, y, al = '') {
