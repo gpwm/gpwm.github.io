@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GPWM</title>
-<meta name="description" content="GPWM: generative 3D particle world models for prediction and planning.">
+<meta name="description" content="GPWM: Generative Particle World Models for 3D Prediction and Planning.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
@@ -149,8 +149,7 @@ a { color: inherit; }
 .scene--realworld .rw-ctl.rw-rows { display: grid; gap: 8px; }
 .scene--realworld .rw-input { position: absolute; pointer-events: none; border-radius: 10px; object-fit: fill; }
 .scene--realworld .rw-input[hidden] { display: none; }
-.view-switch { margin: 22px 0 0; }
-.sec [data-view][hidden] { display: none !important; }
+.wrap.after-stage { margin-top: 48px; }                                   /* a lede between two figures */
 .method-block { margin-top: 44px; }
 .eqline { margin: 18px 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
 .eqline .eq-m { font-family: var(--serif); font-size: 21px; }
@@ -373,7 +372,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="hero">
     <div class="wrap">
       <p class="eyebrow-s">ICLR 2027 submission</p>
-      <h1>GPWM: <b>G</b>enerative 3D <b>P</b>article <b>W</b>orld <b>M</b>odels<br class="brw"> for Prediction and Planning</h1>
+      <h1>GPWM: <b>G</b>enerative <b>P</b>article <b>W</b>orld <b>M</b>odels<br class="brw"> for 3D Prediction and Planning</h1>
       <p class="who">Anonymous authors &middot; paper under double-blind review</p>
       <div class="links"><span class="pill off">Paper &middot; under review</span><span class="pill off">Code &middot; coming soon</span></div>
     </div>
@@ -383,9 +382,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap abs-center">
       <p class="eyebrow-s">Abstract</p>
         <div class="abstract">
-          <p>Learned simulators of 3D physics are mostly deterministic, operate over short horizons, or specialize to particular materials and interactions. We introduce GPWM, <b>a generative world model for physical prediction and planning in 3D particle space</b>. GPWM represents motion through particle displacements and rigid-body transformations, supporting rigid objects, deformable solids, cloth, and granular materials within a common architecture. We also introduce <b>ParticleWorlds, a dataset of 25.5 million simulated frames</b> spanning diverse geometries, materials, and robotic interactions, and evaluate both collection-specific models and a unified model trained across its six domains.</p>
-          <p>An <b>object-aware, multi-resolution transformer</b> combines <b>flow matching with diffusion forcing</b> to generate physical trajectories, using independent noise levels across future frames to support streaming prediction beyond the training window. GPWM is <b>more accurate than existing learned simulators on all six test collections</b>, lowering the error of the strongest by <b>29% to 53%</b> on five of them, and it generalizes to unseen geometries, material parameters, and object counts. On cloth manipulation, a model trained with 16-frame prediction windows maintains coherent dynamics over <b>1,000-frame rollouts</b>.</p>
-          <p>For planning, task-specific models jointly generate actuator and object trajectories, allowing <b>rewards on future object configurations to guide actuator motion</b> through the generative process. Executed open-loop in simulation, these motions improve pushing, picking, and granular manipulation over unguided generation and over planning with prior learned simulators, <b>without training goal-specific policies</b>. These results demonstrate the potential of generative particle world models as a common framework for physical prediction and planning.</p>
+          <p>We introduce GPWM, <b>a generative world model that learns 3D physical dynamics directly from particle trajectories</b>. Its shared representation and architecture covers rigid, deformable, cloth, and granular materials, in both passive physics and robotic interaction. GPWM is an <b>object-aware multi-resolution transformer</b> that combines <b>flow matching with diffusion forcing</b> to enable streaming generation far beyond the training horizon. We train and evaluate GPWM on <b>ParticleWorlds, a 25.5-million-frame corpus</b> spanning diverse geometries, physical properties, interactions, and robot embodiments.</p>
+          <p>When trained within individual domains, GPWM <b>reduces prediction error by 29&ndash;53%</b> relative to the strongest applicable prior learned-dynamics models. Going beyond the domain-specific setting of prior methods, <b>a single <i>Unified</i> GPWM</b> jointly models heterogeneous physical regimes within one set of weights. GPWM further generalizes to unseen geometries, physical properties, object counts, and rollout horizons.</p>
+          <p>Beyond prediction, GPWM enables <b>contact-rich planning</b>. An object-space goal reward is backpropagated through the learned interaction dynamics to the latent noise, steering actuator motion and the contacts it establishes. Executed open-loop in simulation, the resulting plans <b>outperform unguided generation and planning with prior learned dynamics models</b> on pushing, picking, and granular manipulation.</p>
         </div>
     </div>
   </section>
@@ -393,20 +392,19 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="method">
     <div class="wrap">
       <p class="eyebrow-s">Method</p>
-      <h2>A multi-resolution transformer over particle tokens</h2>
-      <p class="lede" data-view="overview">From the scene so far, GPWM generates the future of every particle, denoising all future frames at once.</p>
-      <p class="lede" data-view="architecture" hidden>Every particle in every frame is a token, every rigid body a pose token. Follow one pass through the network, block by block.</p>
-      <div class="bars-switch view-switch" data-views role="group" aria-label="How much of the method to show"><button type="button" class="bars-sw on" data-show="overview">Overview</button><button type="button" class="bars-sw" data-show="architecture">Architecture</button></div>
+      <h2>An object-aware, multi-resolution spatio-temporal transformer</h2>
+      <p class="lede">Given the observed frames, GPWM models a distribution over the next frames, optionally conditioned on material properties and prescribed actuator motion.</p>
     </div>
-    <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps, for one scene of each collection in turn: the scene so far as particles, the GPWM network, and the future it generates."></div>
-    <div class="pd-stage tall" data-scene="hero" data-view="architecture" hidden role="img" aria-label="Six kinds of scene flow through one architecture: the history of each scene on the left, the multi-resolution network and one of its DiT blocks in the middle, and the generated future of every particle on the right."></div>
+    <div class="pd-stage mid" data-scene="overview" role="img" aria-label="The method in three steps, for one scene of each collection in turn: the scene so far as particles, the GPWM network, and the future it generates."></div>
+    <div class="wrap after-stage"><p class="lede">The network progressively compresses dense particles into a small set of anchor tokens, performs most global interaction modeling at coarse resolution, and propagates the resulting features back to the original particles.</p></div>
+    <div class="pd-stage tall" data-scene="hero" role="img" aria-label="Six kinds of scene flow through one architecture: the history of each scene on the left, the multi-resolution network and one of its DiT blocks in the middle, and the generated future of every particle on the right."></div>
   </section>
 
   <section class="sec" id="dataset">
     <div class="wrap">
       <p class="eyebrow-s">Dataset</p>
       <h2>ParticleWorlds: 25.5 million frames in six domains</h2>
-      <p class="lede">Simulator recordings of rigid, elastic, elastoplastic, granular and cloth materials, passive or moved by rods, grippers and hands.</p>
+      <p class="lede">Simulated trajectories spanning rigid objects, elastic and elastoplastic solids, granular materials, and cloth, covering passive dynamics and robotic manipulation with rods, parallel-jaw grippers, and articulated hands.</p>
     </div>
     <div class="pd-stage" data-scene="dataset" role="img" aria-label="Six rows, one per domain of the dataset: its materials, actuation and number of training frames, and four looping recordings from it."></div>
   </section>
@@ -414,8 +412,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="comparison">
     <div class="wrap">
       <p class="eyebrow-s">Comparison</p>
-      <h2>Side by side with other learned simulators</h2>
-      <p class="lede">Test clips from every domain: the simulator&rsquo;s recording, GPWM and the baselines.</p>
+      <h2>Comparison with learned 3D dynamics models</h2>
+      <p class="lede">GNS, a graph-based particle simulator; PGND, a hybrid particle&ndash;grid model; PointWorld, a point-cloud world model; and PhysCtrl, a generative model of physical dynamics. All methods use the same evaluation trajectories and available actuator conditioning.</p>
     </div>
     <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
   </section>
@@ -423,9 +421,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="streaming">
     <div class="wrap">
       <p class="eyebrow-s">Streaming</p>
-      <h2>Generating far beyond the training window</h2>
-      <p class="lede">Each future frame has its own noise level, so the nearest frames finish first and the window slides on. A model trained on 16-frame windows folds a shirt for 600 frames.</p>
-      <p class="eqline"><span class="eq-m"><i>x</i><sub><i>f</i></sub> = (1 &minus; <i>τ</i><sub><i>f</i></sub>) <i>x</i><sub>0,<i>f</i></sub> + <i>τ</i><sub><i>f</i></sub> <i>ε</i><sub><i>f</i></sub></span><span class="eq-n">noise level <i>τ</i><sub><i>f</i></sub> per frame, 0 clean to 1 noise</span></p>
+      <h2>Streaming long-horizon generation</h2>
+      <p class="lede">Near-future frames are progressively resolved, while farther-future frames remain at higher noise levels and continue to be revised. Once the earliest frames are fully denoised, they are committed, the prediction window advances, and fresh Gaussian noise is appended at the far end of the horizon.</p>
+      <p class="eqline"><span class="eq-m"><i>x</i><sup><i>t</i></sup><sub><i>τ</i></sub> = (1 &minus; <i>τ</i><sup><i>t</i></sup>) <i>x</i><sup><i>t</i></sup><sub>0</sub> + <i>τ</i><sup><i>t</i></sup> <i>ε</i><sup><i>t</i></sup></span><span class="eq-n">an independent noise level <i>τ</i><sup><i>t</i></sup> &isin; [0, 1] for each future frame</span></p>
     </div>
     <div class="pd-stage short" data-scene="stream" aria-label="A conveyor belt of frames for a shirt being folded: committed frames on the left, the model's sixteen-frame window on the right with each frame's noise level, above it the output so far and a timeline of the whole 600-frame rollout"></div>
   </section>
@@ -433,8 +431,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="planning">
     <div class="wrap">
       <p class="eyebrow-s">Planning</p>
-      <h2>Planning by steering the generation</h2>
-      <p class="lede">A reward on the imagined outcome steers the generation through its starting noise; the resulting plan is executed in a physics simulator.</p>
+      <h2>Reward-guided planning</h2>
+      <p class="lede">A differentiable reward specifies the desired final configuration of the passive objects. With the world model fixed, the object-space reward guides actuator motion through the learned joint dynamics, without requiring a reference actuator trajectory or training a goal-specific policy.</p>
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="planning" role="img" aria-label="A robot arm in simulation executes three plans for the same milk carton: an unguided sample, a plan guided to a target, and a plan guided to the target over a wall."></div>
@@ -444,8 +442,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="real-world">
     <div class="wrap">
       <p class="eyebrow-s">Real world</p>
-      <h2>From one image to a physical prediction</h2>
-      <p class="lede">Objects in a single image are reconstructed in 3D and let go; GPWM predicts what happens next.</p>
+      <h2>Predictions from a single image</h2>
+      <p class="lede">Previously unseen object geometries reconstructed from single RGB images, with their dynamics predicted by the Free Fall specialist. The resulting trajectories are rendered back into the scene.</p>
     </div>
     <div class="pd-stage" data-scene="rwvideo" data-group="photo" role="img" aria-label="A desk photo: four objects are lifted into a tower and let go, and the predicted fall plays from the photo's viewpoint."></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="push" role="img" aria-label="The same ball resting on a pepper, four times: no push, pushed left, toward the camera and away, each with its predicted future."></div>
@@ -474,7 +472,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">BibTeX</p>
       <div class="bib"><pre id="bibtex-text">@inproceedings{anonymous2027gpwm,
-  title     = {{GPWM}: Generative {3D} Particle World Models for Prediction and Planning},
+  title     = {{GPWM}: Generative Particle World Models for {3D} Prediction and Planning},
   author    = {Anonymous},
   booktitle = {Submitted to the International Conference on Learning Representations (ICLR)},
   year      = {2027},
@@ -486,7 +484,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
-<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"50de716796","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"68a2d89c9b","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -842,7 +840,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     document.querySelectorAll('.pd-stage[data-scene]').forEach(h => { const d = PD.scenes[h.dataset.scene]; if (d) mountScene(h, d); });
     document.querySelectorAll('.pd-stage[data-explainer]').forEach(h => mountExplainer(h, PD.defs));
     if (PD.mountCharts) PD.mountCharts();
-    if (PD.mountViews) PD.mountViews();
     const selectText = id => { const r = document.createRange(); r.selectNodeContents(document.getElementById(id)); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); };
     document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
       const t = document.getElementById(b.dataset.copy).textContent;
@@ -1040,8 +1037,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 </script>
 <script>
-/* The numbers behind the result charts, copied from the paper's experiments section (the tables "Prediction across
-   collections" and "Reward-guided planning"). This file is the only place they live on the site: update them here when
+/* The numbers behind the result charts, copied from the paper's final draft (2026-09-26; Table 1 "Prediction across
+   diverse physical settings" and Table 3 "Reward-guided planning"), captions in its words. This file is the only place they live on the site: update them here when
    the paper changes. Order, the same in every tab: ours first (the main variant, then the second), then the baselines.
    null = no number (drawn as N/A). Planning times are left out on purpose. */
 (function () {
@@ -1056,39 +1053,40 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         { name: 'Graph/grid-based', sub: 'specialist', role: 'base' },
       ],
       tabs: [
-        { name: 'Free Fall', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [44.4, 73.2, 66.4, null, 97.2] },
-        { name: 'Dragging', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [8.8, 11.4, 12.8, null, 48.6] },
-        { name: 'Garment Folding', tab: 'Garment', metric: 'Chamfer distance at frame 1,000', unit: 'mm', better: 'lower', values: [34.8, 64.0, 123.3, 73.4, 159.4] },
-        { name: 'Pushing', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [17.5, 27.2, 24.5, 32.7, 158.7] },
-        { name: 'Pick and Place', tab: 'Pick & Place', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [20.3, 17.7, 34.1, 171.2, null] },
-        { name: 'Dexterous Hands', tab: 'Dexterous', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [24.7, 32.3, 24.8, 27.4, null] },
+        { name: 'Free Fall', metric: 'mean particle position error', unit: 'mm', better: 'lower', values: [44.4, 73.2, 66.4, null, 97.2] },
+        { name: 'Dragging', metric: 'mean particle position error', unit: 'mm', better: 'lower', values: [8.8, 11.4, 12.8, null, 48.6] },
+        { name: 'Garment Folding', tab: 'Garment', metric: 'average symmetric Chamfer distance', unit: 'mm', better: 'lower', values: [34.8, 64.0, 123.3, 73.4, 159.4] },
+        { name: 'Pushing', metric: 'mean particle position error', unit: 'mm', better: 'lower', values: [17.5, 27.2, 24.5, 32.7, 158.7] },
+        { name: 'Pick and Place', tab: 'Pick & Place', metric: 'mean particle position error', unit: 'mm', better: 'lower', values: [20.3, 17.7, 34.1, 171.2, null] },
+        { name: 'Dexterous Hands', tab: 'Dexterous', metric: 'mean particle position error', unit: 'mm', better: 'lower', values: [24.7, 32.3, 24.8, 27.4, null] },
       ],
       fmt: v => v.toFixed(1),                    // as printed in the paper
-      short: 'A specialist is trained on one domain; GPWM unified is one model trained on all six.',
-      caption: 'Mean particle position error in millimetres, averaged within each trajectory and then across trajectories; ' +
-        'Garment Folding reports the symmetric Chamfer distance at frame 1,000. The baselines and GPWM specialist are ' +
-        'domain-specific models; GPWM unified is one model trained across all six domains. Graph/grid-based is GNS ' +
-        'or PGND, depending on the domain. N/A: not available.',
+      short: 'Baselines and GPWM specialists are trained separately for each setting; GPWM unified uses a single model across heterogeneous settings.',
+      caption: 'Prediction error in millimeters (lower is better): mean Euclidean position error over passive-object particles, ' +
+        'averaging over particles and frames and then equally across trajectories. Garment Folding reports average symmetric ' +
+        'Chamfer distance. Graph/grid-based denotes GNS or PGND, depending on the setting. N/A: not available.',
     },
     planning: {
       label: 'Planning',
       methods: [
-        { name: 'GPWM', sub: 'guided', role: 'ours' }, { name: 'GPWM', sub: 'without guidance', role: 'ours2' },
-        { name: 'PointWorld', sub: 'MPPI', role: 'base' }, { name: 'GNS', sub: 'best sample', role: 'base' },
+        { name: 'GPWM', sub: 'with guidance', role: 'ours' }, { name: 'GPWM', sub: 'without guidance', role: 'ours2' },
+        { name: 'PointWorld', sub: 'MPPI-style', role: 'base' }, { name: 'GNS', sub: 'MPPI-style', role: 'base' },
       ],
       tabs: [
-        { name: 'Pushing', metric: 'final distance to the target', unit: 'cm', better: 'lower', values: [4.26, 8.26, 8.30, 8.19], sd: [2.29, 4.33, 1.83, 2.00],
+        { name: 'Pushing', metric: 'final object-to-target distance', unit: 'cm', better: 'lower', values: [4.26, 8.26, 8.30, 8.19], sd: [2.29, 4.33, 1.83, 2.00],
           labels: ['4.26 ± 2.29', '8.26 ± 4.33', '8.30 ± 1.83', '8.19 ± 2.00'] },
-        { name: 'Pile Manipulation', tab: 'Pile', metric: 'pile displacement in the target direction', unit: 'cm', better: 'higher', values: [2.68, 1.48, 1.08, 0.36], sd: [0.8, 0.76, 0.66, 0.19],
-          labels: ['2.68 ± 0.8', '1.48 ± 0.76', '1.08 ± 0.66', '0.36 ± 0.19'] },
-        { name: 'Picking', metric: 'successful picks', unit: 'of 25 trials', axis: 'successes', better: 'higher', values: [21, 4, 0, 0], max: 25,
+        { name: 'Pile Manipulation', tab: 'Pile', metric: 'displacement in the target direction', unit: 'cm', better: 'higher', values: [3.07, 1.48, 1.28, 0.36], sd: [0.99, 0.76, 1.07, 0.19],
+          labels: ['3.07 ± 0.99', '1.48 ± 0.76', '1.28 ± 1.07', '0.36 ± 0.19'] },
+        { name: 'Picking', metric: 'success', unit: 'of 25 trials', axis: 'successes', better: 'higher', values: [21, 4, 0, 0], max: 25,
           labels: ['21/25', '4/25', '0/25', '0/25'] },
       ],
-      short: 'Plans executed open-loop in simulation, with no goal-specific policy.',
-      caption: 'Pushing: final distance to the target; Pile Manipulation: centroid displacement in the requested direction; ' +
-        'both are the mean and standard deviation over 50 trials. Picking: grasps that lift the object to within 6 cm of its ' +
-        'target, out of 25 trials. PointWorld plans with MPPI; GNS and GPWM without guidance keep the highest-reward sampled ' +
-        'trajectory, so the unguided comparison already uses the reward.',
+      short: 'Task performance after open-loop execution of generated actuator trajectories in simulation.',
+      caption: 'Results are aggregated over 50 seeds for Pushing and Pile Manipulation and 25 seeds for Picking (5 lift targets ' +
+        'for 5 objects). Pushing requires moving a rigid object toward a target over 60 steps; Pile Manipulation requires ' +
+        'displacing the centroid of a granular pile in a specified direction over 150 steps; and Picking requires grasping and ' +
+        'lifting an object to within 6 cm of its target. The baselines follow an MPPI-style procedure: candidate actuator ' +
+        'trajectories are evaluated by rolling them out in the corresponding learned world model over a 5-step lookahead, ' +
+        'and planning is repeated over the task horizon.',
     },
   };
 })();
@@ -2303,8 +2301,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
    angles, each predicted by its collection's specialist; pack_data.py). Left, the history (the given frames played; the
    passive particles in ink, robots and tools grey); middle, the model as one block (its point levels, fine to coarse and
    back, light up in turn as the scene passes through); right, the generated future, played (sped up or slowed to 2.5-5 s),
-   one tone per object. It plays on its own through the six. The switch above the stage (PD.mountViews) swaps this for the
-   block-by-block architecture. */
+   one tone per object. It plays on its own through the six. The block-by-block architecture (hero.js) follows under it. */
 (function () {
   'use strict';
   const PD = window.PD, C = PD.colors, D = PD.draw;
@@ -2325,11 +2322,11 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const mk = (k, cls, html) => { L[k] = PD.el('div', cls, api.el); if (html != null) L[k].innerHTML = html; return L[k]; };
       ['1 · the scene so far', '2 · the model', '3 · its future'].forEach((s, i) => mk('t' + i, 'eyebrow', s));
       [
-        'Every particle with its material (E, ν, ρ), and any robot motion.',
+        'Tracked 3D scene history, and optionally physical properties and future actuator motion.',
         '',
         '',
       ].forEach((s, i) => mk('c' + i, 'note wrap', s));
-      mk('name', 'ovname', 'GPWM'); mk('sub', 'note ovsub', 'multi-resolution transformer<br>over particle tokens');
+      mk('name', 'ovname', 'GPWM'); mk('sub', 'note ovsub', 'multi-resolution<br>spatio-temporal transformer');
       mk('hc', 'note', ''); mk('fc', 'note', '');
 
       Promise.all(WORLDS.map(w => PD.data(w.id))).then(recs => {
@@ -2496,19 +2493,6 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
     },
   });
 
-  // Overview | Architecture: a switch (data-views, buttons with data-show) shows the elements of its section whose data-view
-  // matches and hides the rest. A shown stage picks up its size through its ResizeObserver.
-  PD.mountViews = function () {
-    document.querySelectorAll('[data-views]').forEach(sw => {
-      const sec = sw.closest('section'), btns = [...sw.querySelectorAll('[data-show]')];
-      const show = name => {
-        btns.forEach(b => { const on = b.dataset.show === name; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-        sec.querySelectorAll('[data-view]').forEach(e => { e.hidden = e.dataset.view !== name; });
-      };
-      btns.forEach(b => b.addEventListener('click', () => show(b.dataset.show)));
-      show((btns.find(b => b.classList.contains('on')) || btns[0]).dataset.show);
-    });
-  };
 })();
 
 </script>
@@ -2536,12 +2520,12 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
   const TOTAL = PHASES.reduce((s, p) => s + p[1], 0), BEST_END = PHASES.slice(0, 5).reduce((s, p) => s + p[1], 0) - 0.01;   // reduced motion rests at the end of 'best'
   const CURVE = 0.2;                                                 // 'best': the first fifth completes the loss curve
   // the story in six steps, shown over the diagram: which phase is which step, a short name and a sentence
-  const STEPS = [['imagine', 'the model generates the whole motion from the starting noise, window by window'],
-    ['score', 'the reward: the object at the goal at the end, and nothing near the barrier on the way'],
-    ['backpropagate', 'its gradient flows back through every window to the starting noise'],
-    ['update', 'the noise is updated and the model imagines again, 122 times'],
-    ['choose', 'the plan: the update with the lowest loss'],
-    ['execute', 'its gripper motion is executed open-loop in a physics simulator']];
+  const STEPS = [['generate', 'the model jointly generates actuator and object trajectories from the latent noise, window by window'],
+    ['reward', 'a differentiable reward on the passive object: the target at the end, clear of the barrier on the way'],
+    ['backpropagate', 'gradients propagate through the rollout across window boundaries to the latent noise'],
+    ['update', 'a gradient ascent step on the latent noise, then the model generates again, 122 times'],
+    ['select', 'the highest-reward trajectory is kept'],
+    ['execute', 'the resulting actuator trajectory is executed open-loop in simulation']];   // wording after the paper's 3.5 and E.3
   const STEP_OF = { fwd: 0, rew: 1, grad: 2, search: 3, best: 4, exe: 5, hold: 5 };
   const SEARCHING = new Set(['fwd', 'rew', 'grad', 'search']);
   const LO = -3, YT = [1, 0.1, 0.01], XT = [0, 40, 80, 120];          // the loss axis: log10, 0.001 to 1
