@@ -19,7 +19,7 @@
   --accent: #1432F5; --accent-soft: rgba(20,50,245,.10); --bad: #b00000;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --fs-xs: 11px; --lh-xs: 14px; --fs-s: 12px; --lh-s: 15px;
+  --fs-xs: 12px; --lh-xs: 16px; --fs-s: 13px; --lh-s: 17px;
   --bar-h: 52px; --wrap: 1280px;
   color-scheme: light;
 }
@@ -65,8 +65,8 @@ a { color: inherit; }
 .sec { padding-block: 72px 24px; }
 .sec + .sec { border-top: 1px solid var(--g300); }
 .eyebrow-s { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
-.sec h2 { font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 14px; text-wrap: balance; max-width: 26ch; }
-.lede { font-size: 19px; line-height: 1.55; color: var(--sub); margin: 0; max-width: 68ch; text-wrap: pretty; }
+.sec h2 { font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 14px; text-wrap: balance; }
+.lede { font-size: 19px; line-height: 1.55; color: var(--sub); margin: 0; max-width: 62ch; text-wrap: pretty; }
 .prose { font-size: 18px; line-height: 1.6; max-width: 68ch; }
 .prose p { margin: 0 0 1em; }
 .note-s { font-family: var(--mono); font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--sub); margin-top: 12px; max-width: 110ch; }
@@ -120,7 +120,8 @@ a { color: inherit; }
 .scene--realworld .rw-gl:active { cursor: grabbing; }
 .scene--realworld .rw-bar { position: absolute; display: flex; flex-wrap: wrap; gap: 6px; }
 .scene--realworld .rw-bar[hidden] { display: none; }
-.pd-stage.scene--rwvideo { height: 360px; margin-top: 8px; }                         /* the scene sets its own height */
+.pd-stage.scene--rwvideo { height: 360px; margin-top: 44px; border: 0; }               /* the scene sets its own height; groups apart by space */
+.sec > .wrap + .pd-stage.scene--rwvideo { margin-top: 36px; }
 .scene--rwvideo .rwv-box { position: absolute; inset: 0; pointer-events: none; }
 .scene--rwvideo .rwv-video, .scene--rwvideo .rwv-input { position: absolute; display: block; pointer-events: none; object-fit: fill;
   border-radius: 6px; background: var(--card); }
@@ -129,7 +130,6 @@ a { color: inherit; }
 .scene--rwvideo .rwv-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
   color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
 .scene--rwvideo .rwv-msg[hidden] { display: none; }
-.rw-h { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--sub); margin: 40px 0 0; }
 .scene--realworld .rw-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
   color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
 .scene--realworld .rw-msg[hidden], .scene--realworld .rw-hint[hidden], .scene--realworld .rw-tag[hidden] { display: none; }
@@ -200,9 +200,9 @@ a { color: inherit; }
 .pd-scene-cap { font-size: var(--fs-xs); line-height: var(--lh-xs); color: var(--sub); }
 
 /* labels the modules place over their drawing */
-.pd-art .lab { position: absolute; color: var(--ink); white-space: nowrap; text-align: center; line-height: 14px; }
-.pd-art .eyebrow { position: absolute; font-size: var(--fs-xs); line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); white-space: nowrap; }
-.pd-art .note { position: absolute; font-size: var(--fs-xs); line-height: 14px; color: var(--sub); white-space: nowrap; }
+.pd-art .lab { position: absolute; color: var(--ink); white-space: nowrap; text-align: center; line-height: 16px; }
+.pd-art .eyebrow { position: absolute; font-size: var(--fs-xs); line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); white-space: nowrap; }
+.pd-art .note { position: absolute; font-size: var(--fs-xs); line-height: 16px; color: var(--sub); white-space: nowrap; }
 .pd-art .acc { color: var(--accent); }
 .pd-art .bad { color: var(--bad); }
 .pd-art .note-in { color: var(--sub); }
@@ -213,17 +213,18 @@ a { color: inherit; }
 .pd-art .eq { position: absolute; font-family: var(--serif); font-size: 19px; letter-spacing: 0; white-space: nowrap; }
 .pd-art .eq i { font-style: italic; }
 .pd-art .eq sub, .pd-art .eq sup { font-size: 68%; line-height: 0; }
-.pd-art .chip { position: absolute; font-size: var(--fs-xs); line-height: 14px; padding: 3px 8px; border-radius: 12px; background: var(--g200); color: var(--ink); white-space: nowrap; }
+.pd-art .chip { position: absolute; font-size: var(--fs-xs); line-height: 16px; padding: 3px 8px; border-radius: 12px; background: var(--g200); color: var(--ink); white-space: nowrap; }
 .pd-art .worlds { position: absolute; display: flex; gap: 6px; flex-wrap: wrap; }
 .pd-art table.tok { position: absolute; border-collapse: collapse; }
 .pd-art table.tok td { padding: 3px 10px 3px 0; vertical-align: baseline; white-space: nowrap; }
 .pd-art table.tok td.k { color: var(--sub); }
 .pd-art table.tok td.v { font-variant-numeric: tabular-nums; text-align: right; }
 .pd-art table.tok tr.sep td { border-top: 1px solid var(--g300); }
-.pd-art .sm { position: absolute; font-size: 10px; line-height: 12px; color: var(--sub); white-space: nowrap; }
+.pd-art .sm { position: absolute; font-size: 11px; line-height: 13px; color: var(--sub); white-space: nowrap; }
 /* the hero figure: three sizes only (11px notes and eyebrows, 12px box labels, 15px maths); the level notes sit in the bars */
 .scene--overview .pd-art .ovname { position: absolute; font-family: var(--serif); font-size: 28px; line-height: 32px; color: var(--ink); white-space: nowrap; }
 .scene--overview .pd-art .ovsub { text-align: center; }                          /* the model block's subtitle */
+.scene--overview .pd-art .eyebrow { font-size: 13px; }
 .scene--hero .pd-art .lab b { font-weight: 500; }
 .scene--hero .pd-art .lab .d { display: block; font-size: var(--fs-xs); color: var(--sub); }
 .scene--hero .pd-art .compact .lab .d { display: none; }
@@ -233,16 +234,19 @@ a { color: inherit; }
 .scene--hero .pd-art .note.wrap { white-space: normal; }
 .scene--planning .pd-art .chipw { background: var(--bg); padding: 1px 8px; font-size: var(--fs-xs); color: var(--sub); }
 .scene--planning .pd-art .chipw.on { color: var(--ink); font-weight: 500; }
-.scene--planning .pd-art .steps span { color: var(--g500); }                       /* the six steps: the one on show in ink */
+.scene--planning .pd-art .steps { font-family: var(--serif); font-size: 19px; line-height: 24px; letter-spacing: 0; }   /* the six steps */
+.scene--planning .pd-art .steps span { color: var(--g500); }                       /* the one on show in ink */
 .scene--planning .pd-art .steps span.on { color: var(--ink); }
-.scene--planning .pd-art .steps b { font-weight: 500; }
+.scene--planning .pd-art .steps b { font-family: var(--mono); font-size: 12px; font-weight: 500; margin-right: 6px; position: relative; top: -2px; }
 .scene--planning .pd-art .steps span.on b { color: var(--accent); }
-.scene--planning .pd-art .steps i { font-style: normal; color: var(--g400); padding: 0 8px; }
+.scene--planning .pd-art .steps i { font-style: normal; color: var(--g400); padding: 0 10px; }
+.scene--planning .pd-art .stepnote { font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 22px; letter-spacing: 0; color: var(--sub); }
 .scene--planning .pd-art .key { display: flex; gap: 12px; align-items: center; }                 /* the 3D view's colour key */
 .scene--planning .pd-art .key .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
 .scene--planning .pd-art .halo { text-shadow: 0 0 3px var(--bg), 0 0 3px var(--bg), 0 0 2px var(--bg); }             /* labels over the 3D scene */
 .pd-art .note.wrap { white-space: normal; }
 .pd-art .note.wrap:not(.ctr) { padding-inline: 0; }   /* 'wrap' is also the page container class (24px sides) */
+.scene--hero .pd-art .lab { line-height: 14px; }                                   /* two-line labels inside the network's boxes */
 .scene--hero .pd-art .mlab { font-size: 15px; line-height: 16px; }
 .scene--hero .pd-art .m { font-size: 14px; }
 .scene--hero .pd-art .m.up { font-style: normal; }
@@ -282,7 +286,7 @@ a { color: inherit; }
 .bars-title { font-family: var(--serif); font-size: 19px; line-height: 1.3; }
 .bars-better { flex: none; font-family: var(--mono); font-size: var(--fs-xs); line-height: 14px; letter-spacing: .02em; color: var(--ink);
   padding: 4px 10px; border-radius: 999px; border: 1px solid var(--ink); white-space: nowrap; }
-.bars-sub { font-family: var(--mono); font-size: 10.5px; fill: var(--faint); }
+.bars-sub { font-family: var(--mono); font-size: 11.5px; fill: var(--faint); }
 .bars-more { margin-top: 6px; }
 .bars-more summary { cursor: pointer; font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); list-style: none; }
 .bars-more summary::before { content: '+ '; }
@@ -292,11 +296,11 @@ a { color: inherit; }
 .bars-plot { width: 100%; }
 .bars-plot svg { display: block; overflow: visible; }
 .bars-axis { stroke: var(--g500); stroke-width: 1; }
-.bars-tick { font-family: var(--mono); font-size: 11px; fill: var(--sub); }
-.bars-ytitle { font-family: var(--mono); font-size: 11px; fill: var(--sub); letter-spacing: .02em; }
-.bars-name { font-family: var(--mono); font-size: 11.5px; fill: var(--sub); }
+.bars-tick { font-family: var(--mono); font-size: 12px; fill: var(--sub); }
+.bars-ytitle { font-family: var(--mono); font-size: 12px; fill: var(--sub); letter-spacing: .02em; }
+.bars-name { font-family: var(--mono); font-size: 12.5px; fill: var(--sub); }
 .bars-name.ours { fill: var(--ink); }
-.bars-val { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
+.bars-val { font-family: var(--mono); font-size: 12.5px; fill: var(--ink); }
 .bars-val.ours { fill: var(--accent); font-weight: 500; }
 .bars-val.muted { fill: var(--faint); }
 .bars-bar { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
@@ -388,51 +392,47 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Method</p>
       <h2>A multi-resolution transformer over particle tokens</h2>
-      <p class="lede" data-view="overview">GPWM treats a scene as particles. From the scene so far, and a robot&rsquo;s motion when there is one, it generates the future of every particle by removing noise from all the future frames at once.</p>
-      <p class="lede" data-view="architecture" hidden>Every particle in every frame becomes a token, and every rigid body a pose token. Coarser levels keep real particles, chosen inside each object. Follow one forward pass through the network, block by block, for each kind of scene.</p>
+      <p class="lede" data-view="overview">From the scene so far, GPWM generates the future of every particle, denoising all future frames at once.</p>
+      <p class="lede" data-view="architecture" hidden>Every particle in every frame is a token, every rigid body a pose token. Follow one pass through the network, block by block.</p>
       <div class="bars-switch view-switch" data-views role="group" aria-label="How much of the method to show"><button type="button" class="bars-sw on" data-show="overview">Overview</button><button type="button" class="bars-sw" data-show="architecture">Architecture</button></div>
     </div>
     <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps, for one scene of each collection in turn: the scene so far as particles, the GPWM network, and the future it generates."></div>
     <div class="pd-stage tall" data-scene="hero" data-view="architecture" hidden role="img" aria-label="Six kinds of scene flow through one architecture: the history of each scene on the left, the multi-resolution network and one of its DiT blocks in the middle, and the generated future of every particle on the right."></div>
-    <div class="wrap"><p class="note-s" data-view="overview">One scene from each collection in turn, each predicted by its collection&rsquo;s specialist (the scenes of the Architecture view). The given history is in <span class="tw" data-l="black" data-d="white"></span>, robots and tools in grey, generated particles in one colour per object. Drag a view to turn the scene. Switch to Architecture to follow the network block by block, for every kind of scene.</p><p class="note-s" data-view="architecture" hidden>One example scene from each collection; the one in focus is drawn solid. Left, what the model is given: the history (<span class="tw" data-l="black" data-d="white"></span>) and any robot or tool motion (grey); in Dragging, the arrow is the given drag. Middle, the network. Every particle in every frame is a token (its noisy displacement <i>Δp<sub>τ</sub></i>, geometry <i>g</i>, physical parameters <i>E</i>, <i>ν</i>, <i>ρ</i> and any action <i>a</i>), and every rigid body adds a pose token (its noisy pose increment <i>Δq<sub>τ</sub></i>). The tokens pass through coarser point levels and back and leave as clean trajectories; sampling repeats this K times. One pass runs through the network block by block; the panel beside it follows the active block, showing that scene&rsquo;s particles at the block&rsquo;s resolution and what attention looks at for one marked particle (its own frames, then its object at L0 or anchors of every object above), over the DiT block itself. In the network, blue marks the two attention stages, the per-frame noise and the sampling loop. Right, what it generates, each object in its own colour. Hover a block to hold the pass there, a scene to follow it; drag a scene to turn it.</p></div>
   </section>
 
   <section class="sec" id="dataset">
     <div class="wrap">
       <p class="eyebrow-s">Dataset</p>
       <h2>ParticleWorlds: 25.5 million frames in six domains</h2>
-      <p class="lede">Rigid objects, elastic and elastoplastic solids, granular materials and cloth, passive or moved by rods, grippers and articulated hands, all in one particle representation with 256 to 12,000 particles per scene.</p>
+      <p class="lede">Simulator recordings of rigid, elastic, elastoplastic, granular and cloth materials, passive or moved by rods, grippers and hands.</p>
     </div>
     <div class="pd-stage" data-scene="dataset" role="img" aria-label="Six rows, one per domain of the dataset: its materials, actuation and number of training frames, and four looping recordings from it."></div>
-    <div class="wrap"><p class="note-s">Every clip is a recording from the dataset (simulator output, no model), drawn as its particles: each object in its own colour, cloth violet, robots and tools grey. Frame counts are training frames, from the paper&rsquo;s dataset table: 25,463,677 in 267,864 episodes. Pushing combines rod pushing and gripper pushing, and Pick and Place single objects and cluttered scenes. In Dragging, the arrow is the commanded drag of the driven patch (grey), shown while the drag is on.</p></div>
   </section>
 
   <section class="sec" id="comparison">
     <div class="wrap">
       <p class="eyebrow-s">Comparison</p>
       <h2>Side by side with other learned simulators</h2>
-      <p class="lede">Test clips from every collection: the simulator&rsquo;s recording next to the predictions of GPWM and of the baselines compared in the results.</p>
+      <p class="lede">Test clips from every domain: the simulator&rsquo;s recording, GPWM and the baselines.</p>
     </div>
     <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
-    <div class="wrap"><p class="note-s">The given frames are drawn in <span class="tw" data-l="black" data-d="white"></span>, robots and the dragged patch in grey, each object in its own colour. Drag a view to turn them all.</p></div>
   </section>
 
   <section class="sec" id="streaming">
     <div class="wrap">
       <p class="eyebrow-s">Streaming</p>
       <h2>Generating far beyond the training window</h2>
-      <p class="lede">Every future frame carries its own noise level, so the nearest frames finish first. Each clean frame is committed, the window slides on and fresh noise enters at the far end, so a model trained on 16-frame windows keeps generating. Here a gripper folds a shirt for 600 frames, 37.5 times the training window.</p>
-      <p class="eqline"><span class="eq-m"><i>x</i><sub><i>f</i></sub> = (1 &minus; <i>τ</i><sub><i>f</i></sub>) <i>x</i><sub>0,<i>f</i></sub> + <i>τ</i><sub><i>f</i></sub> <i>ε</i><sub><i>f</i></sub></span><span class="eq-n">every future frame <i>f</i> has its own noise level <i>τ</i><sub><i>f</i></sub>, from 0 (clean) to 1 (pure noise)</span></p>
+      <p class="lede">Each future frame has its own noise level, so the nearest frames finish first and the window slides on. A model trained on 16-frame windows folds a shirt for 600 frames.</p>
+      <p class="eqline"><span class="eq-m"><i>x</i><sub><i>f</i></sub> = (1 &minus; <i>τ</i><sub><i>f</i></sub>) <i>x</i><sub>0,<i>f</i></sub> + <i>τ</i><sub><i>f</i></sub> <i>ε</i><sub><i>f</i></sub></span><span class="eq-n">noise level <i>τ</i><sub><i>f</i></sub> per frame, 0 clean to 1 noise</span></p>
     </div>
     <div class="pd-stage short" data-scene="stream" aria-label="A conveyor belt of frames for a shirt being folded: committed frames on the left, the model's sixteen-frame window on the right with each frame's noise level, above it the output so far and a timeline of the whole 600-frame rollout"></div>
-    <div class="wrap"><p class="note-s">The Garment Folding specialist on a short-sleeved shirt (the Garment Folding scene of the Method figure), from 2 history frames; the gripper&rsquo;s motion is given. The committed frames are the model&rsquo;s output (a new sample of the paper&rsquo;s model, seed 0). The belt replays the sampler&rsquo;s own noise schedule; its window tiles illustrate that schedule by mixing each frame&rsquo;s final output with noise at its level, because the sampler&rsquo;s intermediate states were not saved. Hover a tile or a marked frame to see it large; drag the large view to turn it.</p></div>
   </section>
 
   <section class="sec" id="planning">
     <div class="wrap">
       <p class="eyebrow-s">Planning</p>
       <h2>Planning by steering the generation</h2>
-      <p class="lede">Task-specific models generate the robot&rsquo;s motion together with the scene&rsquo;s. A reward scores the imagined outcome; its gradient flows back through every model window to the starting noise, and the noise is updated until the imagined motion reaches the goal. The plan is then executed open-loop in a physics simulator. On all three tasks, guidance does better than unguided generation and than planning with other learned simulators (results at the end).</p>
+      <p class="lede">A reward on the imagined outcome steers the generation through its starting noise; the resulting plan is executed in a physics simulator.</p>
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
   </section>
@@ -441,24 +441,19 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Real world</p>
       <h2>From one image to a physical prediction</h2>
-      <p class="lede">One image, a phone photo or a generated one, becomes particles: each object is reconstructed in 3D, lifted and let go, and the Free Fall specialist predicts what happens next. It was trained only on simulated drops and never saw these scenes.</p>
-      <p class="rw-h">A phone photo</p>
+      <p class="lede">Objects in a single image are reconstructed in 3D and let go; GPWM predicts what happens next.</p>
     </div>
     <div class="pd-stage" data-scene="rwvideo" data-group="photo" role="img" aria-label="A desk photo: four objects are lifted into a tower and let go, and the predicted fall plays from the photo's viewpoint."></div>
-    <div class="wrap"><p class="rw-h">One push, four futures</p></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="push" role="img" aria-label="The same ball resting on a pepper, four times: no push, pushed left, toward the camera and away, each with its predicted future."></div>
-    <div class="wrap"><p class="rw-h">Dry or damp sand</p></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="materials" role="img" aria-label="A ball dropped onto a sand castle made of dry and of damp sand, and a ball of sand let go, wet and dry."></div>
-    <div class="wrap"><p class="rw-h">Generated images</p></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="generated" role="img" aria-label="Six generated or stylized images, each with a predicted drop: a dorm desk, a farmhouse, a living room, a candy shop, a Mars habitat and a 1970s film photo."></div>
-    <div class="wrap"><p class="note-s">Each clip plays from its image&rsquo;s own viewpoint: the image, then the objects lifted and let go. The model is given four frames and predicts the rest. Each object is rendered from its 3D reconstruction, carried by the model&rsquo;s particles (sand as small grains around them), and path-traced into the image. At the push, the ball turns orange and a green arrow shows the direction.</p></div>
   </section>
 
   <section class="sec" id="try-it">
     <div class="wrap">
       <p class="eyebrow-s">Try it</p>
       <h2>Drop a ball anywhere on the desk</h2>
-      <p class="lede">Click the desk photo: an elastic or a sand ball drops where you click, and the model predicts what follows.</p>
+      <p class="lede">Click the table to drop an elastic or a sand ball.</p>
     </div>
     <div class="pd-stage" data-scene="realworld" data-only="drop" role="img" aria-label="An interactive 3D view of the desk photo: click the table to drop an elastic or a sand ball there and watch the predicted fall."></div>
   </section>
@@ -487,7 +482,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
-<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"f159c16a29","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"36c857d5aa","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -1065,11 +1060,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         { name: 'Dexterous Hands', tab: 'Dexterous', metric: 'mean particle error', unit: 'mm', better: 'lower', values: [24.7, 32.3, 24.8, 27.4, null] },
       ],
       fmt: v => v.toFixed(1),                    // as printed in the paper
-      short: 'A specialist is trained on one collection; GPWM unified is one model trained on all six.',
+      short: 'A specialist is trained on one domain; GPWM unified is one model trained on all six.',
       caption: 'Mean particle position error in millimetres, averaged within each trajectory and then across trajectories; ' +
         'Garment Folding reports the symmetric Chamfer distance at frame 1,000. The baselines and GPWM specialist are ' +
-        'collection-specific models; GPWM unified is one model trained across all six domains. Graph/grid-based is GNS ' +
-        'or PGND, depending on the collection. N/A: not available.',
+        'domain-specific models; GPWM unified is one model trained across all six domains. Graph/grid-based is GNS ' +
+        'or PGND, depending on the domain. N/A: not available.',
     },
     planning: {
       label: 'Planning',
@@ -2326,9 +2321,9 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const mk = (k, cls, html) => { L[k] = PD.el('div', cls, api.el); if (html != null) L[k].innerHTML = html; return L[k]; };
       ['1 · the scene so far', '2 · the model', '3 · its future'].forEach((s, i) => mk('t' + i, 'eyebrow', s));
       [
-        'Every particle, with its material (E, ν, ρ). A robot’s motion, when there is one, is given too.',
-        'The same network for every kind of scene.',
-        'The future of every particle, generated.',
+        'Every particle with its material (E, ν, ρ), and any robot motion.',
+        '',
+        '',
       ].forEach((s, i) => mk('c' + i, 'note wrap', s));
       mk('name', 'ovname', 'GPWM'); mk('sub', 'note ovsub', 'multi-resolution transformer<br>over particle tokens');
       mk('hc', 'note', ''); mk('fc', 'note', '');
@@ -2388,7 +2383,8 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           if (Math.abs(api.h - Hm) > 1) api.stage.host.style.height = Hm + 'px';
         }
         lay = Object.assign(lay || {}, { mob, P, B });
-        place(L.t0, P[0][0], P[0][1] - 22); place(L.t2, P[1][0], P[1][1] - 22); place(L.t1, B[0], B[1] - 22);
+        const ly = mob ? 22 : 30, lx = 6;                   // desktop: clear of the corner marks; phones: under the arrows
+        place(L.t0, P[0][0] + lx, P[0][1] - ly); place(L.t2, P[1][0] + lx, P[1][1] - ly); place(L.t1, B[0], B[1] - (mob ? 22 : 26));
         if (!mob) {
           place(L.c0, P[0][0], capY); place(L.c2, P[1][0], capY); place(L.c1, B[0], B[1] + B[3] + 12);
           L.c0.style.width = L.c2.style.width = P[0][2] + 'px'; L.c1.style.width = B[2] + 'px';
@@ -2472,8 +2468,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         }
         [P[0], null, P[1]].forEach((r, i) => {
           const active = (i === 0 && ph === 'hist') || (i === 1 && ph === 'model') || (i === 2 && (ph === 'fut' || ph === 'hold'));
-          if (r && active) D.box(ctx, r[0] - 6, r[1] - 6, r[2] + 12, r[3] + 12, { col: C.ink, lw: 1.5 });
-          else if (r && (i === 0 || ph === 'fut' || ph === 'hold')) D.corners(ctx, r[0], r[1], r[2], r[3], 6, C.g400);
+          if (r && (i === 0 || ph === 'fut' || ph === 'hold')) D.corners(ctx, r[0], r[1], r[2], r[3], 6, active ? C.ink : C.g400);
           L['t' + i].style.color = active ? 'var(--ink)' : '';
         });
         // the way through: into the model, out of it
@@ -2571,7 +2566,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       mk('lossEye', 'eyebrow', 'loss after each update');
       mk('chosen', 'note', 'chosen');
       mk('vEye', 'eyebrow', ''); mk('key', 'note key', ''); mk('vNote', 'note wrap', ''); mk('goal', 'note halo', 'goal'); mk('bar', 'note halo', 'barrier');
-      mk('steps', 'note steps', ''); mk('stepNote', 'note wrap', '');
+      mk('steps', 'note steps', ''); mk('stepNote', 'note wrap stepnote', '');
 
       PD.data('guided').then(async rec => {
         const F = rec.full, S = rec.search, mm = a => { for (let i = 0; i < a.length; i++) a[i] *= 1000; return a; };
@@ -2623,7 +2618,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const dw = mob ? W - 2 * pad - 44 : Math.min(700, W * 0.49), ts = Math.floor(Math.min(40, (dw - 30) / TILES - 5)), pitch = ts + 5;
         const wh = Math.max(20, Math.round(ts * 0.82)), wg = 9;
         const toEq = mob ? 44 : 40, eqH = 30, ch = mob ? 50 : 60;          // the equation, then the chart
-        const stH = mob ? 58 : 60;                                         // the six steps and their sentence
+        const stH = mob ? 90 : 68;                                         // the six steps and their sentence
         const dh = stH + 22 + ts + 16 + NWIN * (wh + wg) + 6 + ts + toEq + eqH + 22 + ch + 20;  // the left column's height
         const x0 = pad + 44, y0 = mob ? 40 : Math.max(40, Math.round((H - dh) / 2)), sy = y0;
         const rowA = y0 + stH + 22, win0 = rowA + ts + 16, rowB = win0 + NWIN * (wh + wg) + 6;
@@ -2636,7 +2631,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const view = [vx, vy, mob ? W - 2 * pad : W - vx - pad, mob ? H - vy - 104 : H - vy - 70];   // phones: a two-line note, then the player
         lay = { mob, ts, pitch, x0, rowA, rowB, tx, wins, gx, view, chart };
         v.panel(...view);
-        place(L.steps, x0 - 40, sy); place(L.stepNote, x0 - 40, sy + 20); L.stepNote.style.width = (TILES * pitch + 40) + 'px'; lastStep = -1;
+        place(L.steps, x0 - 40, sy); place(L.stepNote, x0 - 40, sy + 30); L.stepNote.style.width = (TILES * pitch + 40) + 'px'; lastStep = -1;
         place(L.noiseEye, x0, rowA - 22); place(L.genEye, x0, rowB + ts + 11);
         wins.forEach((r, w) => place(L['win' + w], r[0] + r[2] / 2, r[1] + r[3] / 2, 'cm'));
         place(L.rLab, tx(TILES - 1) + ts / 2, rowB + ts / 2, 'cm');
@@ -3035,6 +3030,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const bBullet = el('button', 'bars-sw', tog, 'bullet time'), bParts = el('button', 'bars-sw', tog, 'particles'), bView = el('button', 'bars-sw', tog, 'photo view');
       [bBullet, bParts, bView].forEach(b => { b.type = 'button'; });
       const cap = el('div', 'rw-cap', panel);
+      if (host.dataset.only) title.hidden = sub.hidden = cap.hidden = true;           // a demo in its own section: its heading says it
       let st = { opt: -1, sub: 0, alt: 0, recs: null, views: [], bullet: true, parts: false, variant: 0, point: -1, tl: null, lastT: 0, ready: false };
       let renderer = null, camera = null, base = null, lay = null, bg = '';
       const cam = { az: 0, po: 0, user: false, drag: null };
@@ -3496,13 +3492,14 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           return tile;
         });
         total = INTRO + FADE + Math.max(0, ...G.map(d => d.dur)) + HOLD;
-        ready = tiles.length > 0; msg.hidden = ready; lay = null;
+        ready = tiles.length > 0; msg.hidden = ready; layout();          // laid out at once, not when first on screen: no jump
         if (!ready) msg.textContent = 'No clips for this group.';
       }).catch(e => { msg.textContent = 'The videos could not load here (' + (e && e.message ? e.message : e) + ').'; });
 
       // ---- layout: rows of tiles at equal heights, each at its video's aspect, a label under each
       function layout() {
-        const W = api.w, mob = W < 760, pad = mob ? 16 : 40, gap = mob ? 8 : 14, aw = W - 2 * pad, labH = mob ? 34 : 24;
+        const W = api.w, mob = W < 760, gap = mob ? 8 : 14, labH = tiles.some(x => x.d.label) ? (mob ? 34 : 24) : 0;
+        const aw = Math.min(W - 2 * (mob ? 16 : 40), 1120), pad = (W - aw) / 2;             // one width for every group
         const per = (ROWS[group] || [3, 2])[mob ? 1 : 0], maxH = group === 'photo' ? (mob ? 300 : Math.min(560, innerHeight * 0.62)) : mob ? 200 : 300;
         const rows = [], vp = [];
         for (let i = 0; i < tiles.length; i += per) rows.push(tiles.slice(i, i + per));
@@ -3522,7 +3519,8 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           const [x, y0, w, h] = vp[k], r = { left: x + 'px', top: y0 + 'px', width: w + 'px', height: h + 'px' };
           Object.assign(tile.v.style, r); Object.assign(tile.img.style, r);
           Object.assign(tile.lab.style, { left: x + 'px', top: (y0 + h + 6) + 'px', width: w + 'px' });
-          tile.lab.textContent = tile.failed ? `${tile.d.label} · could not load` : tile.d.label;
+          tile.lab.textContent = tile.failed ? `${tile.d.label || 'clip'} · could not load` : tile.d.label;
+          tile.lab.hidden = !tile.lab.textContent;
         });
         lay = { vp };
       }
@@ -3565,7 +3563,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           if (onScreen) drive(tile, PD.reduced ? tile.dur : s);
         });
       }
-      return { enter() { lay = null; }, resize() { lay = null; }, frame };
+      return { enter() { lay = null; }, resize() { if (ready) layout(); else lay = null; }, frame };
     },
   });
 })();
