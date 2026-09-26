@@ -115,6 +115,7 @@ a { color: inherit; }
 .scene--realworld .rw-ctl [hidden] { display: none; }
 .scene--realworld .rw-player { position: static; }
 .scene--realworld .rw-cap { font-family: var(--mono); font-size: var(--fs-xs); line-height: 17px; color: var(--sub); }
+.scene--realworld .rw-ctl.rw-rows { display: grid; gap: 8px; }
 .view-switch { margin: 22px 0 0; }
 .sec [data-view][hidden] { display: none !important; }
 .method-block { margin-top: 44px; }
@@ -2483,7 +2484,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     { id: 'drop', label: 'Click to drop', data: ['rw_desk', 'rw_drop'], speed: 0.5 },
     { id: 'nudge', label: 'Change the future', data: ['rw_desk', 'rw_nudge'], speed: 0.5 },
     { id: 'materials', label: 'Two materials', data: ['rw_beach', 'rw_materials'], speed: 1 },
-    { id: 'world', label: 'Generated image', data: ['rw_dorm', 'rw_world'], speed: 0.5 },
+    { id: 'world', label: 'Generated image', speed: 0.5, scenes: [
+      { label: 'Dorm desk', data: ['rw_dorm', 'rw_world'] }, { label: 'Farmhouse', data: ['rw_farm'] },
+      { label: 'Living room', data: ['rw_living'] }, { label: 'Candy shop', data: ['rw_candy'] },
+      { label: 'Mars habitat', data: ['rw_mars'] }, { label: 'Let go', data: ['rw_letgo'] }, { label: '1970s photo', data: ['rw_1970s'] }] },
   ];
   const HOLD = 1.1, SWING = 3.4, AZ = 0.87, PO = [-0.5, 0.3], D2R = Math.PI / 180;
   const MAT = { elastic: 'elastic', elastoplastic: 'plasticine', plasticine: 'plasticine', sand: 'sand' };
@@ -2583,16 +2587,19 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const bBullet = el('button', 'bars-sw', tog, 'bullet time'), bParts = el('button', 'bars-sw', tog, 'particles'), bView = el('button', 'bars-sw', tog, 'photo view');
       [bBullet, bParts, bView].forEach(b => { b.type = 'button'; });
       const cap = el('div', 'rw-cap', panel);
-      let st = { opt: -1, recs: null, views: [], bullet: true, parts: false, variant: 0, point: -1, tl: null, lastT: 0, ready: false };
+      let st = { opt: -1, sub: 0, alt: 0, recs: null, views: [], bullet: true, parts: false, variant: 0, point: -1, tl: null, lastT: 0, ready: false };
       let renderer = null, camera = null, base = null, lay = null, bg = '';
       const cam = { az: 0, po: 0, user: false, drag: null };
       bBullet.onclick = () => { st.bullet = !st.bullet; retime(true); paintToggles(); };
       bParts.onclick = () => { st.parts = !st.parts; paintToggles(); };
       bView.onclick = () => { cam.az = 0; cam.po = 0; cam.user = false; };
+      const shownViews = () => (OPTS[st.opt] && OPTS[st.opt].id === 'materials' ? st.views : st.views.slice(st.alt, st.alt + 1));
       function paintToggles() {
         bBullet.classList.toggle('on', st.bullet); bParts.classList.toggle('on', st.parts);
-        const o = OPTS[st.opt]; bBullet.hidden = !o || o.id === 'drop';
+        const o = OPTS[st.opt], v = shownViews()[0];
+        bBullet.hidden = !o || o.id === 'drop' || !(v && v.S.bullet);
       }
+      const matsOf = S => S.mats || (S.variants && S.variants[st.variant] && S.variants[st.variant].mats) || {};
 
       // ---- three.js objects
       function camPose(m) {
@@ -2649,8 +2656,8 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const uScale = { value: 800 }, uLight = { value: null };
       const pointMat = radius => new THREE.ShaderMaterial({ vertexShader: pointVS, fragmentShader: pointFS,
         uniforms: { uRadius: { value: radius }, uScale, uLight, uTint: { value: new THREE.Vector4(0, 0, 0, 0) } } });
-      async function buildView(m, dd, S) {            // one setup's scene: backdrop, objects, shadows
-        const s3 = new THREE.Scene(), img = await image(S.plate), tex = new THREE.Texture(img);
+      async function buildView(m, dd, S, plate) {     // one setup's scene: backdrop, objects, shadows
+        const s3 = new THREE.Scene(), img = await image(S.plate || plate), tex = new THREE.Texture(img);
         tex.needsUpdate = true; tex.anisotropy = 4;
         const moving = new Set(S.moving), flatIds = m.mask_names.map((n, j) => (moving.has(n) ? j + 1 : -1)).filter(v => v > 0);
         const shell = buildShell(m, dd, flatIds, tex), board = makeBoard(m, dd, tex), floor = makeFloor(m, dd, img);
@@ -2679,7 +2686,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const { groups, cur, N, S } = view, T = S.frames, a = Math.min(T - 1, Math.max(0, f)), f0 = Math.floor(a), f1 = Math.min(T - 1, f0 + 1), w = a - f0;
         const A = f0 * N * 3, B = f1 * N * 3;
         for (let i = 0; i < N * 3; i++) cur[i] = P[A + i] * (1 - w) + P[B + i] * w;
-        const mats = S.mats || (S.variants && S.variants[st.variant] && S.variants[st.variant].mats) || {};
+        const mats = matsOf(S);
         for (const g of groups) {
           const o = g.o, p0 = g.p0, sand = (mats[g.name] || '') === 'sand', parts = st.parts || sand;
           g.part.visible = parts; g.dense.visible = !parts;
@@ -2709,22 +2716,26 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       }
 
       // ---- the chosen option
-      async function choose(i) {
-        if (i === st.opt) return;
+      let token = 0;
+      async function choose(i, sub) {
         const o = OPTS[i];
-        st.opt = i; st.ready = false; st.variant = 0; st.point = -1;
+        if (i === st.opt && (sub == null || sub === st.sub)) return;
+        const my = ++token;
+        st.opt = i; st.sub = sub != null ? sub : 0; st.ready = false; st.variant = 0; st.point = -1; st.alt = 0;
         btns.forEach((b, k) => b.classList.toggle('on', k === i));
         msg.hidden = false; msg.textContent = 'Loading…';
         try {
           await loadThree();
           if (!renderer) setupRenderer();
-          const [srec, orec] = await Promise.all(o.data.map(n => PD.data(n)));
-          if (st.opt !== i) return;
+          const names = o.scenes ? o.scenes[st.sub].data : o.data;
+          const recs = await Promise.all(names.map(n => PD.data(n)));
+          if (my !== token) return;
+          const srec = recs[0], orec = recs[recs.length - 1];
           const dd = await sceneData(srec);
           base = camPose(srec);
           const views = [];
-          for (const S of orec.setups) views.push(await buildView(srec, dd, S));
-          if (st.opt !== i) return;
+          for (const S of orec.setups) views.push(await buildView(srec, dd, S, orec.plate));
+          if (my !== token) return;
           st.recs = { srec, orec, dd }; st.views = views;
           if (o.id === 'drop') addDropMarks(views[0]);
           if (o.id === 'nudge') { views[0].arrow = arrowMesh(0xf28e2b); views[0].s3.add(views[0].arrow); }
@@ -2733,7 +2744,12 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           await prepare();
           st.ready = true; msg.hidden = true; lay = null;
         } catch (e) {
-          msg.hidden = false; msg.textContent = 'The 3D viewer could not start here (' + (e && e.message ? e.message : e) + ').';
+          if (my !== token) return;
+          const m = e && e.message ? e.message : String(e);
+          msg.hidden = false; st.views = []; st.ready = false;
+          msg.textContent = /^no data rw_/.test(m) ? 'This scene is on the public site, gpwm.github.io: this preview page has no room for it.'
+            : 'The 3D viewer could not start here (' + m + ').';
+          if (o.scenes) controls(o, null);
         }
       }
       function setupRenderer() {
@@ -2745,12 +2761,21 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         uLight.value = new THREE.Vector3(-0.45, 0.6, 0.66).normalize();
         canvas.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up);
       }
+      const cap1 = x => x[0].toUpperCase() + x.slice(1);
+      const KIND = { photo: 'real photo', generated: 'generated image', stylized: 'stylized image · beyond the training data' };
       function controls(o, orec) {                    // the option's own buttons and caption
-        ctl.innerHTML = ''; hint.textContent = '';
-        const f = orec.facts, S = orec.setups[0], srec = st.recs.srec, M = st.recs.dd.objects;
+        ctl.innerHTML = ''; hint.textContent = ''; ctl.classList.toggle('rw-rows', !!o.scenes);
+        if (o.scenes) {                               // the generated-image option: its scenes first
+          const row = el('div', 'rw-ctl', ctl);
+          o.scenes.forEach((x, k) => { const b = el('button', 'bars-sw' + (k === st.sub ? ' on' : ''), row, x.label); b.type = 'button'; b.onclick = () => choose(st.opt, k); });
+        }
+        if (!orec) { title.textContent = o.scenes ? o.scenes[st.sub].label : o.label; sub.textContent = ''; cap.innerHTML = ''; hint.hidden = true; return; }
+        const f = orec.facts, S = orec.setups[st.alt] || orec.setups[0], srec = st.recs.srec, M = st.recs.dd.objects;
         const lab = n => (M[n] ? M[n].label : n);
-        title.textContent = o.id === 'materials' ? 'Dry sand or damp sand' : o.id === 'drop' ? 'Drop the ball anywhere' : S.title;
-        sub.textContent = `${srec.title} · ${srec.kind === 'photo' ? 'real photo' : 'generated image'}`;
+        const alts = o.id !== 'materials' && orec.setups.length > 1;
+        title.textContent = o.id === 'materials' ? 'Dry sand or damp sand' : o.id === 'drop' ? 'Drop the ball anywhere'
+          : alts ? srec.title : S.label ? cap1(S.label) : S.title;
+        sub.textContent = (title.textContent === srec.title ? '' : srec.title + ' · ') + KIND[srec.kind];
         const seg = (labels, on) => labels.map((t, k) => { const b = el('button', 'bars-sw', ctl, t); b.type = 'button'; b.onclick = () => on(k); return b; });
         let html = '';
         const mats = S.mats ? Object.entries(S.mats).map(([n, m]) => `${lab(n)} (${MAT[m] || m})`) : [];
@@ -2780,7 +2805,13 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         } else if (o.id === 'materials') {
           html = `${f.what}. ${f.dry} ${f.damp} ${f.sel[0].toUpperCase() + f.sel.slice(1)}. ${f.limit} ${srec.note}`;
         } else {
-          html = `${f.what}. ${f.sel[0].toUpperCase() + f.sel.slice(1)}. In the image only, not simulated: ${list(f.photo_only)}. ${f.limit} ${srec.note}`;
+          if (alts) {                                 // alternatives of one scene (let go: wet or dry sand)
+            const row = el('div', 'rw-ctl', ctl);
+            const bs = orec.setups.map((x, k) => { const b = el('button', 'bars-sw' + (k === st.alt ? ' on' : ''), row, x.label); b.type = 'button';
+              b.onclick = () => { st.alt = k; bs.forEach((y, j) => y.classList.toggle('on', j === k)); retime(false); paintToggles(); lay = null; }; return b; });
+          }
+          const only = f.photo_only && f.photo_only.length ? ` In the image only, not simulated: ${list(f.photo_only)}.` : '';
+          html = `${f.what}. ${f.extra || f.limit || ''} ${cap1(f.sel)}.${only} ${srec.note}`;
         }
         cap.innerHTML = html; hint.hidden = !hint.textContent;
         tags.forEach((t, k) => { t.hidden = o.id !== 'materials'; if (o.id === 'materials') t.textContent = orec.setups[k].label; });
@@ -2794,11 +2825,12 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         }
       }
       function retime(keep) {                         // the timeline: play, (freeze and swing), play on, hold
-        const o = OPTS[st.opt], S = st.views[0] && st.views[0].S;
+        const o = OPTS[st.opt], v0 = shownViews()[0], S = v0 && v0.S;
         if (!S) return;
-        const fps = 24 / S.clock * o.speed, T = S.frames, bt = st.bullet && S.bullet && o.id !== 'drop';
+        const spd = (st.recs && st.recs.orec.speed) || o.speed;
+        const fps = 24 / S.clock * spd, T = S.frames, bt = st.bullet && S.bullet && o.id !== 'drop';
         const F = bt ? S.bullet.freeze : 0, d1 = F / fps, sw = bt ? SWING : 0, d2 = (T - 1 - F) / fps;
-        st.tl = { fps, T, F, d1, sw, d2, total: d1 + sw + d2 + HOLD, bt };
+        st.tl = { fps, T, F, d1, sw, d2, total: d1 + sw + d2 + HOLD, bt, spd };
         const frac = keep ? player.t / player.total : 0;
         player.total = st.tl.total; player.seek(frac * st.tl.total);
       }
@@ -2913,8 +2945,9 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       function frame(time, dt) {
         if (st.opt < 0) { choose(0); return; }
         if (!lay) layout();
-        if (!st.ready || !renderer || !st.tl) return;
-        const o = OPTS[st.opt], t = player.advance(dt), a = at(t), S0 = st.views[0].S;
+        const shown = shownViews();
+        if (!st.ready || !renderer || !st.tl || !shown[0]) return;
+        const o = OPTS[st.opt], t = player.advance(dt), a = at(t), S0 = shown[0].S;
         const b = S0.bullet, sw = cam.user ? 0 : swingAngle(a.u, st.tl.bt ? b : null);
         // camera: the photo's pose, turned about the pivot (drag) and swung (bullet time); the photo's roll is kept
         const Z = new THREE.Vector3(0, 0, 1), off = base.pos.clone().sub(base.target), right = new THREE.Vector3().crossVectors(off, Z).normalize();
@@ -2929,7 +2962,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         if (colour !== bg) { bg = colour; renderer.setClearColor(new THREE.Color(colour)); }
         renderer.setScissor(0, 0, lay.aw, lay.vh); renderer.setViewport(0, 0, lay.aw, lay.vh); renderer.clear();
         const tz = st.recs.srec.table_z;
-        st.views.forEach((view, k) => {
+        shown.forEach((view, k) => {
           const v = lay.vp[k]; if (!v || !view.P) return;
           pose(view, view.P, a.f, tz);
           view.board.material.opacity = PD.clamp((12 - turn) / 9, 0, 1); view.floor.material.opacity = 1 - view.board.material.opacity;
@@ -2944,7 +2977,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         // the clock: given frames, then real time after release; bullet time says so
         const L = st.tl, fr = Math.round(a.f), per = S0.clock / 24;
         const lab = a.u >= 0 ? `bullet time · frozen at ${(L.F * per).toFixed(2)} s` : fr < S0.context ? `given frame ${fr + 1} of ${S0.context}` : `predicted · ${(a.f * per).toFixed(2)} s`;
-        const txt = `${lab} · ${o.speed < 1 ? o.speed + '× speed' : 'real time'}`;
+        const txt = `${lab} · ${L.spd < 1 ? L.spd + '× speed' : 'real time'}`;
         if (clock.textContent !== txt) clock.textContent = txt;
       }
       function nudgeMarks(view, a) {                  // the push: an arrow behind the ball and its particles in orange
