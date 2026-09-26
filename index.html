@@ -119,6 +119,15 @@ a { color: inherit; }
 .scene--realworld .rw-gl { position: absolute; display: block; border-radius: 10px; touch-action: pan-y; cursor: grab; }
 .scene--realworld .rw-gl:active { cursor: grabbing; }
 .scene--realworld .rw-bar { position: absolute; display: flex; flex-wrap: wrap; gap: 6px; }
+.scene--realworld .rw-bar[hidden] { display: none; }
+.pd-stage.scene--rwplay { height: 360px; margin-top: 8px; }                          /* the scene sets its own height */
+.scene--rwplay .rwp-gl { position: absolute; display: block; pointer-events: none; }
+.scene--rwplay .rwp-input { position: absolute; pointer-events: none; object-fit: fill; opacity: 0; }
+.scene--rwplay .rwp-lab { position: absolute; pointer-events: none; font-family: var(--mono); font-size: var(--fs-xs); line-height: 14px; color: var(--sub); }
+.scene--rwplay .rwp-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
+  color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
+.scene--rwplay .rwp-msg[hidden] { display: none; }
+.rw-h { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--sub); margin: 40px 0 0; }
 .scene--realworld .rw-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
   color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
 .scene--realworld .rw-msg[hidden], .scene--realworld .rw-hint[hidden], .scene--realworld .rw-tag[hidden] { display: none; }
@@ -291,7 +300,6 @@ a { color: inherit; }
 .bars-bar { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
 .bars-bar.h { transform-origin: 0 50%; }
 .bars-val.inbar { fill: var(--bg); }
-.bars-pending { fill: none; stroke: var(--g400); stroke-dasharray: 3 3; }
 .bars-sd { stroke: var(--ink); stroke-width: 1; opacity: .55; }
 .bars-cap { margin: 10px 0 0; font-family: var(--serif); font-style: italic; font-size: 15px; line-height: 1.5; color: var(--sub); }
 .bars-more .bars-cap { margin-top: 6px; }
@@ -431,10 +439,26 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Real world</p>
       <h2>From one image to a physical prediction</h2>
-      <p class="lede">One image, a phone photo or a generated one, becomes particles: each object is reconstructed in 3D, lifted and let go, and the Free Fall specialist predicts what happens next. The model was trained only on simulated drops and never saw these scenes. Click through the options above the viewer.</p>
+      <p class="lede">One image, a phone photo or a generated one, becomes particles: each object is reconstructed in 3D, lifted and let go, and the Free Fall specialist predicts what happens next. It was trained only on simulated drops and never saw these scenes.</p>
+      <p class="rw-h">A phone photo</p>
     </div>
-    <div class="pd-stage" data-scene="realworld" role="img" aria-label="An interactive 3D viewer of predictions from single images: a four-object tower in bullet time, a ball dropped where you click, a push that changes the future, a castle as dry and as damp sand, and a generated dorm desk."></div>
-    <div class="wrap"><p class="note-s">Every clip shown passes every check: no elastic or plasticine object ends deep under the table, resting objects stay still until something reaches them, objects pass into each other by no more than one grid cell of the simulator the model learned from, and nothing enters an object that exists only in the photo. The model is given 4 frames of free fall, built from the release pose, and predicts the rest (the Free Fall specialist, 25 sampling steps). Each object is drawn as its reconstruction&rsquo;s surface points, carried by the model&rsquo;s particles; sand is drawn as the particles themselves, and sand below the table is drawn resting on it. &ldquo;Particles&rdquo; shows the model&rsquo;s own particles for every object. The backdrop is the photo laid on its estimated depth, with the moving objects removed from it: exact from the photo&rsquo;s viewpoint, a shell from other angles. Drag the view to turn it.</p></div>
+    <div class="pd-stage" data-scene="rwplay" data-group="photo" role="img" aria-label="A desk photo: four objects are lifted into a tower and let go, and the predicted fall plays from the photo's viewpoint."></div>
+    <div class="wrap"><p class="rw-h">One push, four futures</p></div>
+    <div class="pd-stage" data-scene="rwplay" data-group="push" role="img" aria-label="The same ball resting on a pepper, four times: no push, pushed left, toward the camera and away, each with its predicted future."></div>
+    <div class="wrap"><p class="rw-h">Dry or damp sand</p></div>
+    <div class="pd-stage" data-scene="rwplay" data-group="materials" role="img" aria-label="A ball dropped onto a sand castle made of dry and of damp sand, and a ball of sand let go, wet and dry."></div>
+    <div class="wrap"><p class="rw-h">Generated images</p></div>
+    <div class="pd-stage" data-scene="rwplay" data-group="generated" role="img" aria-label="Six generated or stylized images, each with a predicted drop: a dorm desk, a farmhouse, a living room, a candy shop, a Mars habitat and a 1970s film photo."></div>
+    <div class="wrap"><p class="note-s">Each clip plays from its image&rsquo;s own viewpoint: the image, then the objects lifted and let go. The model is given four frames and predicts the rest; each object is drawn as its reconstruction&rsquo;s surface points, carried by the model&rsquo;s particles, and sand as the particles themselves. The orange arrow marks the push.</p></div>
+  </section>
+
+  <section class="sec" id="try-it">
+    <div class="wrap">
+      <p class="eyebrow-s">Try it</p>
+      <h2>Drop a ball anywhere on the desk</h2>
+      <p class="lede">Click the desk photo: an elastic or a sand ball drops where you click, and the model predicts what follows.</p>
+    </div>
+    <div class="pd-stage" data-scene="realworld" data-only="drop" role="img" aria-label="An interactive 3D view of the desk photo: click the table to drop an elastic or a sand ball there and watch the predicted fall."></div>
   </section>
 
   <section class="sec" id="results">
@@ -1018,7 +1042,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 /* The numbers behind the result charts, copied from the paper's experiments section (the tables "Prediction across
    collections" and "Reward-guided planning"). This file is the only place they live on the site: update them here when
    the paper changes. Order, the same in every tab: ours first (the main variant, then the second), then the baselines.
-   null = pending in the paper (drawn as an empty slot). Planning times are left out on purpose. */
+   null = no number (drawn as N/A). Planning times are left out on purpose. */
 (function () {
   'use strict';
   const PD = window.PD;
@@ -1043,7 +1067,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       caption: 'Mean particle position error in millimetres, averaged within each trajectory and then across trajectories; ' +
         'Garment Folding reports the symmetric Chamfer distance at frame 1,000. The baselines and GPWM specialist are ' +
         'collection-specific models; GPWM unified is one model trained across all six domains. Graph/grid-based is GNS ' +
-        'or PGND, depending on the collection. An empty slot is a result the paper still lists as pending.',
+        'or PGND, depending on the collection. N/A: not available.',
     },
     planning: {
       label: 'Planning',
@@ -1152,9 +1176,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         svg('line', { x1: cx, y1: mt + ph + 0.5, x2: cx, y2: mt + ph + 4.5, class: 'bars-axis' }, s);
         const nm = svg('text', { x: cx, y: mt + ph + 18, class: 'bars-name' + (m.role !== 'base' ? ' ours' : ''), 'text-anchor': 'middle' }, s, m.name);
         if (m.sub) { void nm; svg('text', { x: cx, y: mt + ph + 32, class: 'bars-sub', 'text-anchor': 'middle' }, s, m.sub); }
-        if (v == null) {                          // pending in the paper: an empty dashed slot
-          svg('rect', { x: x + 0.5, y: mt + ph - 22.5, width: bw - 1, height: 22, class: 'bars-pending' }, s);
-          svg('text', { x: cx, y: mt + ph - 30, class: 'bars-val muted', 'text-anchor': 'middle' }, s, 'pending');
+        if (v == null) {                          // no number: N/A over the axis
+          svg('text', { x: cx, y: mt + ph - 8, class: 'bars-val muted', 'text-anchor': 'middle' }, s, 'N/A');
           return;
         }
         const h = Math.max(1.5, ph * v / top), r = svg('rect', { x, y: mt + ph - h, width: bw, height: h, fill: FILL[m.role], class: 'bars-bar' }, s);
@@ -1195,9 +1218,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         const m = spec.methods[i], cy = mt + i * rowH + rowH / 2, two = !!m.sub;
         svg('text', { x: lw, y: cy + 4 - (two ? 6.5 : 0), class: 'bars-name' + (m.role !== 'base' ? ' ours' : ''), 'text-anchor': 'end' }, s, m.name);
         if (two) svg('text', { x: lw, y: cy + 10.5, class: 'bars-sub', 'text-anchor': 'end' }, s, m.sub);
-        if (v == null) {
-          svg('rect', { x: ml + 0.5, y: cy - 8.5, width: 34, height: 16, class: 'bars-pending' }, s);
-          svg('text', { x: W - 2, y: cy + 4, class: 'bars-val muted', 'text-anchor': 'end' }, s, 'pending');
+        if (v == null) {                          // no number: N/A at the start of the bar
+          svg('text', { x: ml + 6, y: cy + 4, class: 'bars-val muted', 'text-anchor': 'start' }, s, 'N/A');
           return;
         }
         const w = Math.max(1.5, pw * v / top), r = svg('rect', { x: ml + 1, y: cy - 8, width: w, height: 16, fill: FILL[m.role], class: 'bars-bar h' }, s);
@@ -2990,10 +3012,12 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
   PD.scene('realworld', {
     create(api) {
       const host = api.stage.host, ui = api.stage.ui;
+      const opts = host.dataset.only ? OPTS.filter(o => o.id === host.dataset.only) : OPTS;   // data-only="drop": the drop demo alone
       const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
       // ---- DOM: the options, the viewer's canvas and labels, the panel
       const bar = el('div', 'rw-bar', ui);
-      const btns = OPTS.map((o, i) => { const b = el('button', 'bars-sw', bar, o.label); b.type = 'button'; b.onclick = () => choose(i); return b; });
+      bar.hidden = opts.length < 2;                                                 // one option: no option bar
+      const btns = opts.map((o, i) => { const b = el('button', 'bars-sw', bar, o.label); b.type = 'button'; b.onclick = () => choose(i); return b; });
       const canvas = el('canvas', 'rw-gl', host); host.insertBefore(canvas, api.stage.art);
       const msg = el('div', 'rw-msg', ui, 'Loading the 3D viewer…');
       const inputs = [el('img', 'rw-input', ui), el('img', 'rw-input', ui)];       // under the labels
@@ -3015,10 +3039,10 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       bBullet.onclick = () => { st.bullet = !st.bullet; retime(true); paintToggles(); };
       bParts.onclick = () => { st.parts = !st.parts; paintToggles(); };
       bView.onclick = () => { cam.az = 0; cam.po = 0; cam.user = false; };
-      const shownViews = () => (OPTS[st.opt] && OPTS[st.opt].id === 'materials' ? st.views : st.views.slice(st.alt, st.alt + 1));
+      const shownViews = () => (opts[st.opt] && opts[st.opt].id === 'materials' ? st.views : st.views.slice(st.alt, st.alt + 1));
       function paintToggles() {
         bBullet.classList.toggle('on', st.bullet); bParts.classList.toggle('on', st.parts);
-        const o = OPTS[st.opt], v = shownViews()[0];
+        const o = opts[st.opt], v = shownViews()[0];
         bBullet.hidden = !o || o.id === 'drop' || !(v && v.S.bullet);
       }
       const matsOf = S => S.mats || (S.variants && S.variants[st.variant] && S.variants[st.variant].mats) || {};
@@ -3140,7 +3164,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       // ---- the chosen option
       let token = 0;
       async function choose(i, sub) {
-        const o = OPTS[i];
+        const o = opts[i];
         if (i === st.opt && (sub == null || sub === st.sub)) return;
         const my = ++token;
         st.opt = i; st.sub = sub != null ? sub : 0; st.ready = false; st.variant = 0; st.point = -1; st.alt = 0;
@@ -3240,7 +3264,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         tags.forEach((t, k) => { t.hidden = o.id !== 'materials'; if (o.id === 'materials') t.textContent = orec.setups[k].label; });
       }
       async function prepare() {                      // decode what the current choice shows
-        const o = OPTS[st.opt];
+        const o = opts[st.opt];
         for (const v of st.views) {
           if (o.id === 'drop') { if (st.point < 0) dropPick(); v.P = await positions(v.S, st.variant + ':' + st.point); }
           else if (o.id === 'nudge') v.P = await positions(v.S, String(st.variant));
@@ -3248,7 +3272,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         }
       }
       function retime(keep) {                         // the timeline: play, (freeze and swing), play on, hold
-        const o = OPTS[st.opt], v0 = shownViews()[0], S = v0 && v0.S;
+        const o = opts[st.opt], v0 = shownViews()[0], S = v0 && v0.S;
         if (!S) return;
         const spd = (st.recs && st.recs.orec.speed) || o.speed;
         const fps = 24 / S.clock * spd, T = S.frames, bt = st.bullet && S.bullet && o.id !== 'drop';
@@ -3334,24 +3358,24 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       function up(e) {
         const d = cam.drag; cam.drag = null;
         if (!d || d.moved || performance.now() - d.t > 500) return;
-        if (OPTS[st.opt].id === 'drop') dropAt(e.clientX, e.clientY);
+        if (opts[st.opt].id === 'drop') dropAt(e.clientX, e.clientY);
       }
 
       // ---- layout and drawing
       function layout() {
         const W = api.w, mob = W < 900, pad = mob ? 16 : 40, gap = 28;
-        const o = OPTS[st.opt], two = o && o.id === 'materials', asp = base ? base.aspect : 0.75;
+        const o = opts[st.opt], two = o && o.id === 'materials', asp = base ? base.aspect : 0.75;
         let vp = [], aw, vh, x0, top, pw;
         if (!mob) {                                  // the view at the photo's aspect and a fixed height, the panel beside it
           const VH = Math.round(PD.clamp(innerHeight * 0.78, 520, 700)), maxW = W - 2 * pad - gap - 300;
           let h = two ? Math.floor((VH - 10) / 2) : VH, w = Math.round(h * asp);
           if (w > maxW) { w = maxW; h = Math.round(w / asp); }
-          aw = w; vh = two ? 2 * h + 10 : h; top = 10 + (bar.offsetHeight || 32) + 16;
+          aw = w; vh = two ? 2 * h + 10 : h; top = bar.hidden ? 10 : 10 + (bar.offsetHeight || 32) + 16;
           vp = two ? [[0, 0, w, h], [0, h + 10, w, h]] : [[0, 0, w, h]];
           pw = Math.min(400, W - 2 * pad - gap - w); x0 = Math.round((W - (w + gap + pw)) / 2);
         } else {                                     // phones: the view full width, the panel below
           aw = W - 2 * pad; const h = Math.round(aw / asp);
-          vh = two ? 2 * h + 10 : h; pw = aw; x0 = pad; bar.style.width = aw + 'px'; top = 10 + (bar.offsetHeight || 80) + 14;
+          vh = two ? 2 * h + 10 : h; pw = aw; x0 = pad; bar.style.width = aw + 'px'; top = bar.hidden ? 10 : 10 + (bar.offsetHeight || 80) + 14;
           vp = two ? [[0, 0, aw, h], [0, h + 10, aw, h]] : [[0, 0, aw, h]];
         }
         const panelX = mob ? x0 : x0 + aw + gap, panelY = mob ? top + vh + 16 : top;
@@ -3374,7 +3398,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         if (!lay) layout();
         const shown = shownViews();
         if (!st.ready || !renderer || !st.tl || !shown[0]) return;
-        const o = OPTS[st.opt], t = player.advance(dt), a = at(t), S0 = shown[0].S;
+        const o = opts[st.opt], t = player.advance(dt), a = at(t), S0 = shown[0].S;
         const b = S0.bullet, sw = cam.user ? 0 : swingAngle(a.u, st.tl.bt ? b : null);
         // camera: the photo's pose, turned about the pivot (drag) and swung (bullet time); the photo's roll is kept
         const Z = new THREE.Vector3(0, 0, 1), off = base.pos.clone().sub(base.target), right = new THREE.Vector3().crossVectors(off, Z).normalize();
@@ -3424,6 +3448,315 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
           view.arrow.position.set(cx - d.x * (R + 0.07), cy - d.y * (R + 0.07), cz);
           view.arrow.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
         }
+      }
+      return { enter() { lay = null; }, resize() { lay = null; }, frame };
+    },
+  });
+})();
+
+</script>
+<script>
+/* Real world, played: the clean samples of the real-world session with nothing to click and no camera movement. One stage
+   per group (data-group), its tiles side by side and playing together, each from its photo's own viewpoint: the input
+   image, a crossfade to the objects lifted to the release pose, the prediction, a hold, again. Drawing as in the
+   interactive viewer (realworld.js): the photo on its depth behind (the moving objects inpainted away), each object as its
+   reconstruction's surface points carried by the model's particles (sand as the particles themselves), lit spheres with
+   soft shadows. The push group marks the push (the ball orange, an arrow) and holds on it for a moment. Groups:
+     photo      the desk photo's four-object tower
+     push       the ball resting on the pepper, four pushes written into its input frames (none, left, toward, away)
+     materials  one generated beach castle as dry and as damp sand; a ball of sand let go, wet and dry
+     generated  six generated (and one stylized) images, one drop each
+   three.js comes from the CDN on first use. Data: pack_realworld.py (rw_*.json). */
+(function () {
+  'use strict';
+  const PD = window.PD;
+  const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
+  let THREE = null;
+  const loadThree = () => (THREE ? Promise.resolve(THREE) : import(THREE_URL).then(m => (THREE = m)));
+  const INTRO = 1.2, FADE = 0.5, HOLD = 1.2, PUSH_HOLD = 0.7, D2R = Math.PI / 180;
+  const T = (data, extra) => Object.assign({ data }, extra);
+  const GROUPS = {
+    photo: { speed: 0.5, row: [1, 1], tiles: [T(['rw_desk', 'rw_tower'], { label: 'A desk, from a phone photo' })] },
+    push: { speed: 0.5, row: [4, 2], tiles: [['no push', 0], ['pushed left', 1], ['pushed toward the camera', 2], ['pushed away', 3]]
+      .map(([label, variant]) => T(['rw_desk', 'rw_nudge'], { label, variant })) },
+    materials: { speed: 1, row: [4, 2], tiles: [T(['rw_beach', 'rw_materials'], { setup: 0, label: 'dry sand castle' }),
+      T(['rw_beach', 'rw_materials'], { setup: 1, label: 'damp sand castle' }),
+      T(['rw_letgo'], { setup: 0, label: 'wet ball of sand' }), T(['rw_letgo'], { setup: 1, label: 'dry ball of sand' })] },
+    generated: { speed: 0.5, row: [3, 2], tiles: [T(['rw_dorm', 'rw_world'], { label: 'dorm desk: a gummy bear onto a donut' }),
+      T(['rw_farm'], { label: 'farmhouse: a peach onto rice' }), T(['rw_living'], { label: 'living room: cushions onto a bean bag' }),
+      T(['rw_candy'], { label: 'candy shop: a jelly cube onto sprinkles' }), T(['rw_mars'], { label: 'Mars habitat: a gel cube onto regolith' }),
+      T(['rw_1970s'], { label: '1970s film photo: a lemon onto a jelly mould' })] },
+  };
+
+  // ---- data (as in realworld.js)
+  function f16(h) {
+    const s = h & 0x8000 ? -1 : 1, e = (h >> 10) & 0x1f, m = h & 0x3ff;
+    if (e === 0) return s * m * 5.960464477539063e-8;
+    if (e === 31) return m ? NaN : s * Infinity;
+    return s * Math.pow(2, e - 15) * (1 + m / 1024);
+  }
+  const f16array = u => Float32Array.from(u, f16);
+  const image = src => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; });
+  async function sceneData(rec) {                     // depth grid, object ids, the objects' surface points (decoded once)
+    if (rec._d) return rec._d;
+    const g = await PD.inflate(rec.grid), n = rec.depth.w * rec.depth.h;
+    const grid = f16array(new Uint16Array(g, 0, n)), ids = new Uint8Array(g.slice(2 * n, 3 * n));
+    const ob = await PD.inflate(rec.obj), objects = {};
+    for (const o of rec.objects) {
+      let off = o.offset; const nd = o.ndense, np = o.npart;
+      const r = f16array(new Uint16Array(ob.slice(off, off + nd * 6))); off += nd * 6;
+      const bind = new Uint16Array(ob.slice(off, off + nd * 8)); off += nd * 8;
+      const w = new Uint8Array(ob.slice(off, off + nd * 4)); off += nd * 4;
+      const dcol = new Uint8Array(ob.slice(off, off + nd * 3)); off += nd * 3;
+      const scol = new Uint8Array(ob.slice(off, off + np * 3));
+      objects[o.name] = { ...o, r, bind, w, dcol, scol };
+    }
+    let maxDepth = 0; for (const x of grid) if (Number.isFinite(x) && x > maxDepth) maxDepth = x;
+    return (rec._d = { grid, ids, objects, maxDepth });
+  }
+  async function positions(S, which) {               // a setup's (or one variant's) positions, [T][N][3] metres, decoded once
+    const key = '_p' + which;
+    if (S[key]) return S[key];
+    const Tn = S.frames, N = S.npart.reduce((a, b) => a + b, 0), q = S.quantum, o = S.origin;
+    const d = new Int16Array(await PD.inflate(which === 'main' ? S.block : S.variants[+which].block)), out = new Float32Array(Tn * N * 3);
+    for (let c = 0; c < 3; c++) for (let i = 0; i < N; i++) {
+      let acc = 0;
+      for (let t = 0; t < Tn; t++) { acc += d[(t * 3 + c) * N + i]; out[(t * N + i) * 3 + c] = acc * q + o[c]; }
+    }
+    return (S[key] = out);
+  }
+
+  // ---- shaders (lit spheres; soft ground shadows), as in realworld.js
+  const pointVS = `attribute vec3 aCol; uniform float uRadius; uniform float uScale; varying vec3 vCol;
+void main() { vCol = aCol; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+  gl_PointSize = max(1.5, 2.0 * uRadius * uScale / -mv.z); }`;
+  const pointFS = `varying vec3 vCol; uniform vec3 uLight; uniform vec4 uTint;
+void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 > 1.0) discard;
+  vec3 n = vec3(p.x, -p.y, sqrt(1.0 - r2)); float d = max(dot(n, uLight), 0.0);
+  vec3 c = mix(vCol, uTint.rgb, uTint.a); float s = pow(max(dot(reflect(-uLight, n), vec3(0.0, 0.0, 1.0)), 0.0), 24.0);
+  gl_FragColor = vec4(c * (0.58 + 0.5 * d) + 0.08 * s, 1.0); }`;
+  const shadowVS = `attribute float aH; uniform float uScale; uniform float uUnit; varying float vA;
+void main() { vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+  float r = 1.1 * uUnit + 0.25 * aH; vA = 0.022 * exp(-aH / (9.0 * uUnit)); gl_PointSize = max(1.0, 2.0 * r * uScale / -mv.z); }`;
+  const shadowFS = `varying float vA;
+void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 > 1.0) discard;
+  gl_FragColor = vec4(0.0, 0.0, 0.0, vA * (1.0 - r2) * (1.0 - r2)); }`;
+
+  PD.scene('rwplay', {
+    create(api) {
+      const host = api.stage.host, ui = api.stage.ui, G = GROUPS[host.dataset.group];
+      const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
+      const canvas = el('canvas', 'rwp-gl', host); host.insertBefore(canvas, api.stage.art);
+      const msg = el('div', 'rwp-msg', ui, 'Loading…');
+      let renderer = null, camera = null, lay = null, tiles = [], total = 0, t = 0, ready = false, bg = '';
+      const uScale = { value: 800 }, uLight = { value: null };
+
+      // ---- three.js objects (as in realworld.js, for the photo's own viewpoint only)
+      function camPose(m) {
+        const M = m.c2w, K = m.K, W = m.photo.w, H = m.photo.h;
+        const pos = new THREE.Vector3(M[0][3], M[1][3], M[2][3]), fwd = new THREE.Vector3(M[0][2], M[1][2], M[2][2]);
+        const up = new THREE.Vector3(-M[0][1], -M[1][1], -M[2][1]);          // the photo's up (OpenCV y is down), roll included
+        return { pos, target: pos.clone().add(fwd), up, fov: 2 * Math.atan(H / 2 / K[1][1]) / D2R, aspect: W / H,
+          ppx: 1 - 2 * K[0][2] / W, ppy: 2 * K[1][2] / H - 1 };
+      }
+      function buildShell(m, dd, flatIds, tex) {       // the photo on its depth, cut at occlusion edges
+        const { w: gw, h: gh, step, K } = m.depth, M = m.c2w, tz = m.table_z, flat = new Set(flatIds);
+        const pos = new Float32Array(gw * gh * 3), uv = new Float32Array(gw * gh * 2), dep = new Float32Array(gw * gh);
+        for (let i = 0; i < gh; i++) for (let j = 0; j < gw; j++) {
+          const q = i * gw + j, u = j * step + 0.5, v = i * step + 0.5, x = (u - K[0][2]) / K[0][0], y = (v - K[1][2]) / K[1][1];
+          const dx = M[0][0] * x + M[0][1] * y + M[0][2], dy = M[1][0] * x + M[1][1] * y + M[1][2], dz = M[2][0] * x + M[2][1] * y + M[2][2];
+          let d = dd.grid[q];
+          if (flat.has(dd.ids[q])) { const s = (tz - M[2][3]) / dz; if (s > 0) d = s; }
+          dep[q] = d;
+          pos[3 * q] = M[0][3] + d * dx; pos[3 * q + 1] = M[1][3] + d * dy; pos[3 * q + 2] = M[2][3] + d * dz;
+          uv[2 * q] = u / m.depth.dw; uv[2 * q + 1] = 1 - v / m.depth.dh;
+        }
+        const idx = [], ok = (a, b, c) => { const lo = Math.min(dep[a], dep[b], dep[c]), hi = Math.max(dep[a], dep[b], dep[c]); return lo > 0 && hi / lo < 1.08; };
+        for (let i = 0; i < gh - 1; i++) for (let j = 0; j < gw - 1; j++) {
+          const a = i * gw + j, b = a + 1, c = a + gw, d = c + 1;
+          if (ok(a, c, b)) idx.push(a, c, b);
+          if (ok(b, c, d)) idx.push(b, c, d);
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
+        return new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide }));
+      }
+      function makeBoard(m, dd, tex) {                // the plate on a far plane: fills the shell's cut edges
+        const M = m.c2w, K = m.K, W = m.photo.w, H = m.photo.h, D = 1.3 * dd.maxDepth;
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(W / K[0][0] * D, H / K[1][1] * D), new THREE.MeshBasicMaterial({ map: tex, depthWrite: false }));
+        mesh.quaternion.setFromRotationMatrix(new THREE.Matrix4().set(M[0][0], -M[0][1], -M[0][2], 0, M[1][0], -M[1][1], -M[1][2], 0, M[2][0], -M[2][1], -M[2][2], 0, 0, 0, 0, 1));
+        const cx = (K[0][2] - W / 2) / K[0][0] * D, cy = (K[1][2] - H / 2) / K[1][1] * D;
+        mesh.position.set(M[0][3] + D * M[0][2] + cx * M[0][0] + cy * M[0][1], M[1][3] + D * M[1][2] + cx * M[1][0] + cy * M[1][1], M[2][3] + D * M[2][2] + cx * M[2][0] + cy * M[2][1]);
+        mesh.renderOrder = -2; return mesh;
+      }
+      const pointMat = radius => new THREE.ShaderMaterial({ vertexShader: pointVS, fragmentShader: pointFS,
+        uniforms: { uRadius: { value: radius }, uScale, uLight, uTint: { value: new THREE.Vector4(0, 0, 0, 0) } } });
+      async function buildView(m, dd, S, plate) {     // one tile's scene: backdrop, objects, shadows
+        const s3 = new THREE.Scene(), img = await image(S.plate || plate), tex = new THREE.Texture(img);
+        tex.needsUpdate = true; tex.anisotropy = 4;
+        const moving = new Set(S.moving), flatIds = m.mask_names.map((n, j) => (moving.has(n) ? j + 1 : -1)).filter(v => v > 0);
+        s3.add(makeBoard(m, dd, tex), buildShell(m, dd, flatIds, tex));
+        const groups = []; let p0 = 0;
+        for (let j = 0; j < S.moving.length; j++) {
+          const o = dd.objects[S.moving[j]], dg = new THREE.BufferGeometry(), sg = new THREE.BufferGeometry();
+          dg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(o.ndense * 3), 3));
+          dg.setAttribute('aCol', new THREE.BufferAttribute(o.dcol, 3, true));
+          sg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(o.npart * 3), 3));
+          sg.setAttribute('aCol', new THREE.BufferAttribute(o.scol, 3, true));
+          const dense = new THREE.Points(dg, pointMat(0.8 * (o.dense_spacing || 0.0021))), part = new THREE.Points(sg, pointMat(0.55 * (o.part_spacing || 0.0044)));
+          dense.frustumCulled = part.frustumCulled = false; s3.add(dense, part);
+          groups.push({ name: S.moving[j], o, p0, dense, part, lift: 0.55 * (o.part_spacing || 0.0044) }); p0 += S.npart[j];
+        }
+        const N = p0, shg = new THREE.BufferGeometry();
+        shg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+        shg.setAttribute('aH', new THREE.BufferAttribute(new Float32Array(N), 1));
+        const unit = S.moving.map(n => dd.objects[n].part_spacing || 0.0044).sort()[Math.floor(S.moving.length / 2)];
+        const shadow = new THREE.Points(shg, new THREE.ShaderMaterial({ vertexShader: shadowVS, fragmentShader: shadowFS,
+          uniforms: { uScale, uUnit: { value: unit } }, transparent: true, depthWrite: false }));
+        shadow.frustumCulled = false; shadow.renderOrder = 1; s3.add(shadow);
+        return { s3, groups, shadow, cur: new Float32Array(N * 3), N };
+      }
+      function pose(view, P, Tn, f, tz, mats) {       // frame f (fractional) of positions P into the view's points
+        const { groups, cur, N } = view, a = Math.min(Tn - 1, Math.max(0, f)), f0 = Math.floor(a), f1 = Math.min(Tn - 1, f0 + 1), w = a - f0;
+        const A = f0 * N * 3, B = f1 * N * 3;
+        for (let i = 0; i < N * 3; i++) cur[i] = P[A + i] * (1 - w) + P[B + i] * w;
+        for (const g of groups) {
+          const o = g.o, p0 = g.p0, sand = (mats[g.name] || '') === 'sand';
+          g.part.visible = sand; g.dense.visible = !sand;
+          if (sand) {                                 // sand: the particles, those below the table drawn resting on it
+            const out = g.part.geometry.attributes.position.array;
+            for (let i = 0; i < o.npart; i++) { const s = (p0 + i) * 3; out[3 * i] = cur[s]; out[3 * i + 1] = cur[s + 1]; out[3 * i + 2] = Math.max(cur[s + 2], tz + g.lift); }
+            g.part.geometry.attributes.position.needsUpdate = true;
+          } else {                                    // the surface points, each carried by four particles
+            const out = g.dense.geometry.attributes.position.array, r = o.r, bind = o.bind, wt = o.w;
+            for (let i = 0; i < o.ndense; i++) {
+              let x = r[3 * i], y = r[3 * i + 1], z = r[3 * i + 2];
+              for (let q = 0; q < 4; q++) { const s = (p0 + bind[4 * i + q]) * 3, ww = wt[4 * i + q] / 255; x += ww * cur[s]; y += ww * cur[s + 1]; z += ww * cur[s + 2]; }
+              out[3 * i] = x; out[3 * i + 1] = y; out[3 * i + 2] = z;
+            }
+            g.dense.geometry.attributes.position.needsUpdate = true;
+          }
+        }
+        const sp = view.shadow.geometry.attributes.position.array, sh = view.shadow.geometry.attributes.aH.array, lift = 0.5 * view.shadow.material.uniforms.uUnit.value;
+        for (let i = 0; i < N; i++) { sp[3 * i] = cur[3 * i]; sp[3 * i + 1] = cur[3 * i + 1]; sp[3 * i + 2] = tz + lift; sh[i] = Math.max(0, cur[3 * i + 2] - tz); }
+        view.shadow.geometry.attributes.position.needsUpdate = true; view.shadow.geometry.attributes.aH.needsUpdate = true;
+      }
+      function arrowMesh(col) {                       // the push: shaft and head along +y
+        const g = new THREE.Group(), m = new THREE.MeshBasicMaterial({ color: col });
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.05, 16), m); shaft.position.y = 0.025;
+        const head = new THREE.Mesh(new THREE.ConeGeometry(0.0065, 0.016, 20), m); head.position.y = 0.058;
+        g.add(shaft, head); return g;
+      }
+      function pushMarks(tile, f) {                    // the ball orange and an arrow behind it, at the push
+        const v = tile.S.variants[tile.variant], g = tile.view.groups[0], F = tile.S.bullet.freeze;
+        const tint = !v.dir ? 0 : f < F - 0.01 ? 0 : f <= F + 1 ? 1 : Math.max(0, 1 - (f - F - 1) / 3);
+        [g.dense, g.part].forEach(p => p.material.uniforms.uTint.value.set(0.95, 0.557, 0.169, tint));
+        const show = v.dir && f >= F - 0.01 && f <= F + 3;
+        tile.arrow.visible = !!show;
+        if (show) {
+          let cx = 0, cy = 0, cz = 0, R = 0; const n = g.o.npart, cur = tile.view.cur;
+          for (let i = 0; i < n; i++) { cx += cur[3 * i]; cy += cur[3 * i + 1]; cz += cur[3 * i + 2]; }
+          cx /= n; cy /= n; cz /= n;
+          for (let i = 0; i < n; i++) R = Math.max(R, Math.hypot(cur[3 * i] - cx, cur[3 * i + 1] - cy));
+          const d = new THREE.Vector3(v.dir[0], v.dir[1], 0).normalize();
+          tile.arrow.position.set(cx - d.x * (R + 0.07), cy - d.y * (R + 0.07), cz);
+          tile.arrow.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+        }
+      }
+
+      // ---- load the group: every tile's scene, positions and timeline; the group plays on one clock
+      (async () => {
+        try {
+          await loadThree();
+          renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          renderer.outputColorSpace = THREE.LinearSRGBColorSpace;             // photo and point colours pass through unchanged
+          renderer.setScissorTest(true); renderer.setClearColor(0x000000, 0);
+          camera = new THREE.PerspectiveCamera(40, 1, 0.01, 50);
+          uLight.value = new THREE.Vector3(-0.45, 0.6, 0.66).normalize();
+          for (const d of G.tiles) {
+            const tile = { d, img: el('img', 'rwp-input', ui), lab: el('div', 'rwp-lab', ui, d.label) };
+            tile.img.alt = '';
+            try {
+              const recs = await Promise.all(d.data.map(n => PD.data(n)));
+              const srec = recs[0], orec = recs[recs.length - 1], S = orec.setups[d.setup || 0];
+              const dd = await sceneData(srec);
+              Object.assign(tile, { srec, S, dd, base: camPose(srec), variant: d.variant, mats: S.mats || (S.variants && d.variant != null && S.variants[d.variant].mats) || {} });
+              tile.view = await buildView(srec, dd, S, orec.plate);
+              tile.P = await positions(S, d.variant != null ? String(d.variant) : 'main');
+              if (d.variant != null) { tile.arrow = arrowMesh(0xf28e2b); tile.view.s3.add(tile.arrow); }
+              if (srec.input) tile.img.src = srec.input;
+              const fps = 24 / S.clock * (orec.speed || G.speed), hold = d.variant != null && S.bullet ? PUSH_HOLD : 0;
+              tile.tl = { fps, hold, F: S.bullet ? S.bullet.freeze : 0, play: (S.frames - 1) / fps + hold };
+            } catch (e) {                             // a scene this page does not carry (the preview's size limit)
+              tile.missing = /^no data rw_/.test(e && e.message ? e.message : '') ? 'on the public site, gpwm.github.io' : 'could not load';
+            }
+            tiles.push(tile);
+          }
+          total = INTRO + FADE + Math.max(...tiles.map(x => (x.tl ? x.tl.play : 0))) + HOLD;
+          ready = true; msg.hidden = true; lay = null;
+        } catch (e) {
+          msg.textContent = 'The 3D view could not start here (' + (e && e.message ? e.message : e) + ').';
+        }
+      })();
+
+      // ---- layout: rows of tiles at equal heights, each tile at its photo's aspect, a label under each
+      function layout() {
+        const W = api.w, mob = W < 760, pad = mob ? 16 : 40, gap = mob ? 8 : 14, aw = W - 2 * pad, labH = mob ? 34 : 24;
+        const per = G.row[mob ? 1 : 0], maxH = host.dataset.group === 'photo' ? (mob ? 260 : Math.min(560, innerHeight * 0.62)) : mob ? 200 : 300;
+        const vp = [], rows = [];
+        for (let i = 0; i < tiles.length; i += per) rows.push(tiles.slice(i, i + per));
+        let y = 0;
+        rows.forEach(row => {
+          const asp = row.map(x => (x.srec ? x.srec.photo.w / x.srec.photo.h : 4 / 3)), sum = asp.reduce((a, b) => a + b, 0);
+          const h = Math.floor(Math.min(maxH, (aw - (row.length - 1) * gap) / sum)), used = asp.reduce((a, b) => a + Math.round(b * h), 0) + (row.length - 1) * gap;
+          let x = Math.round((aw - used) / 2);
+          row.forEach((tile, k) => { const w = Math.round(asp[k] * h); vp.push([x, y, w, h]); x += w + gap; });
+          y += h + labH + gap;
+        });
+        const vh = y - gap, H = vh + 16;
+        if (Math.abs(api.h - H) > 1) host.style.height = H + 'px';
+        Object.assign(canvas.style, { left: pad + 'px', top: '0px', width: aw + 'px', height: vh + 'px' });
+        if (renderer) renderer.setSize(aw, vh, false);
+        Object.assign(msg.style, { left: pad + 'px', top: '0px', width: aw + 'px', height: Math.max(120, vh) + 'px' });
+        tiles.forEach((tile, k) => {
+          const r = vp[k];
+          Object.assign(tile.img.style, { left: (pad + r[0]) + 'px', top: r[1] + 'px', width: r[2] + 'px', height: r[3] + 'px' });
+          Object.assign(tile.lab.style, { left: (pad + r[0]) + 'px', top: (r[1] + r[3] + 6) + 'px', width: r[2] + 'px' });
+          tile.lab.textContent = tile.missing ? `${tile.d.label} · ${tile.missing}` : tile.d.label;
+        });
+        lay = { pad, aw, vh, vp };
+      }
+
+      function frame(time, dt) {
+        if (!lay) layout();
+        if (!ready || !renderer) return;
+        t = PD.reduced ? total - HOLD : (t + dt) % total;
+        const colour = PD.colors.card;
+        if (colour !== bg) { bg = colour; }
+        renderer.setScissor(0, 0, lay.aw, lay.vh); renderer.setViewport(0, 0, lay.aw, lay.vh); renderer.clear();
+        const intro = t < INTRO + FADE, op = t < INTRO ? 1 : intro ? 1 - (t - INTRO) / FADE : 0;
+        tiles.forEach((tile, k) => {
+          const r = lay.vp[k];
+          if (tile.img.style.opacity !== String(op)) tile.img.style.opacity = op;
+          if (!tile.view || !r) return;
+          const L = tile.tl, s = Math.max(0, t - INTRO - FADE);                 // seconds into the play (the push holds a moment)
+          let f;
+          if (!L.hold || s < L.F / L.fps) f = s * L.fps;
+          else if (s < L.F / L.fps + L.hold) f = L.F;
+          else f = L.F + (s - L.F / L.fps - L.hold) * L.fps;
+          f = Math.min(tile.S.frames - 1, f);
+          pose(tile.view, tile.P, tile.S.frames, f, tile.srec.table_z, tile.mats);
+          if (tile.arrow) pushMarks(tile, f);
+          const b = tile.base;
+          camera.position.copy(b.pos); camera.up.copy(b.up); camera.lookAt(b.target);
+          camera.fov = b.fov; camera.aspect = r[2] / r[3]; camera.near = 0.01; camera.far = Math.max(50, 4 * tile.dd.maxDepth); camera.updateProjectionMatrix();
+          const e = camera.projectionMatrix.elements; e[8] = b.ppx; e[9] = b.ppy; camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+          uScale.value = r[3] * renderer.getPixelRatio() / (2 * Math.tan(camera.fov * D2R / 2));
+          const y = lay.vh - r[1] - r[3];
+          renderer.setScissor(r[0], y, r[2], r[3]); renderer.setViewport(r[0], y, r[2], r[3]);
+          renderer.render(tile.view.s3, camera);
+        });
       }
       return { enter() { lay = null; }, resize() { lay = null; }, frame };
     },
