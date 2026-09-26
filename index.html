@@ -3030,7 +3030,8 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
       const bBullet = el('button', 'bars-sw', tog, 'bullet time'), bParts = el('button', 'bars-sw', tog, 'particles'), bView = el('button', 'bars-sw', tog, 'photo view');
       [bBullet, bParts, bView].forEach(b => { b.type = 'button'; });
       const cap = el('div', 'rw-cap', panel);
-      if (host.dataset.only) title.hidden = sub.hidden = cap.hidden = true;           // a demo in its own section: its heading says it
+      const demo = !!host.dataset.only;               // a demo in its own section: its heading says it; nothing but the interaction
+      if (demo) { title.hidden = sub.hidden = cap.hidden = true; [player.box, tog, clock].forEach(e => { e.style.display = 'none'; }); }
       let st = { opt: -1, sub: 0, alt: 0, recs: null, views: [], bullet: true, parts: false, variant: 0, point: -1, tl: null, lastT: 0, ready: false };
       let renderer = null, camera = null, base = null, lay = null, bg = '';
       const cam = { az: 0, po: 0, user: false, drag: null };
@@ -3278,7 +3279,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const i0 = st.recs.srec.input ? INTRO + FADE : 0;
         st.tl = { fps, T, F, d1, sw, d2, total: i0 + d1 + sw + d2 + HOLD, bt, spd, i0 };
         const frac = keep ? player.t / player.total : 0;
-        player.total = st.tl.total; player.seek(frac * st.tl.total);
+        player.total = st.tl.total; player.seek(demo && st.seen ? st.tl.i0 : frac * st.tl.total);
       }
       function at(t) {                                // timeline seconds -> model frame, swing phase
         const L = st.tl;
@@ -3365,20 +3366,20 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         const o = opts[st.opt], two = o && o.id === 'materials', asp = base ? base.aspect : 0.75;
         let vp = [], aw, vh, x0, top, pw;
         if (!mob) {                                  // the view at the photo's aspect and a fixed height, the panel beside it
-          const VH = Math.round(PD.clamp(innerHeight * 0.78, 520, 700)), maxW = W - 2 * pad - gap - 300;
+          const VH = Math.round(PD.clamp(innerHeight * 0.78, 520, 700)), maxW = W - 2 * pad - (demo ? 0 : gap + 300);
           let h = two ? Math.floor((VH - 10) / 2) : VH, w = Math.round(h * asp);
           if (w > maxW) { w = maxW; h = Math.round(w / asp); }
           aw = w; vh = two ? 2 * h + 10 : h; top = bar.hidden ? 10 : 10 + (bar.offsetHeight || 32) + 16;
           vp = two ? [[0, 0, w, h], [0, h + 10, w, h]] : [[0, 0, w, h]];
-          pw = Math.min(400, W - 2 * pad - gap - w); x0 = Math.round((W - (w + gap + pw)) / 2);
+          pw = demo ? 0 : Math.min(400, W - 2 * pad - gap - w); x0 = Math.round((W - (demo ? w : w + gap + pw)) / 2);
         } else {                                     // phones: the view full width, the panel below
           aw = W - 2 * pad; const h = Math.round(aw / asp);
           vh = two ? 2 * h + 10 : h; pw = aw; x0 = pad; bar.style.width = aw + 'px'; top = bar.hidden ? 10 : 10 + (bar.offsetHeight || 80) + 14;
           vp = two ? [[0, 0, aw, h], [0, h + 10, aw, h]] : [[0, 0, aw, h]];
         }
-        const panelX = mob ? x0 : x0 + aw + gap, panelY = mob ? top + vh + 16 : top;
-        Object.assign(panel.style, { left: panelX + 'px', top: panelY + 'px', width: pw + 'px' });
-        const ph = panel.offsetHeight || 420, H = mob ? panelY + ph + 20 : top + Math.max(vh, ph) + 24;
+        const panelX = demo ? x0 + 12 : mob ? x0 : x0 + aw + gap, panelY = demo ? top + vh - 46 : mob ? top + vh + 16 : top;
+        Object.assign(panel.style, { left: panelX + 'px', top: panelY + 'px', width: demo ? 'auto' : pw + 'px' });
+        const ph = panel.offsetHeight || 420, H = demo ? top + vh + 24 : mob ? panelY + ph + 20 : top + Math.max(vh, ph) + 24;
         lay = { mob, aw, vh, top, vp, H };
         if (Math.abs(api.h - H) > 1) host.style.height = H + 'px';
         Object.assign(canvas.style, { left: x0 + 'px', top: top + 'px', width: aw + 'px', height: vh + 'px' });
@@ -3396,7 +3397,11 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         if (!lay) layout();
         const shown = shownViews();
         if (!st.ready || !renderer || !st.tl || !shown[0]) return;
-        const o = opts[st.opt], t = player.advance(dt), a = at(t), S0 = shown[0].S;
+        let t;
+        if (demo) {                                     // the demo plays once from each drop and holds the outcome
+          player.seek(PD.reduced ? st.tl.total : player.t + dt); t = player.t; if (t >= st.tl.i0) st.seen = true;
+        } else t = player.advance(dt);
+        const o = opts[st.opt], a = at(t), S0 = shown[0].S;
         const b = S0.bullet, sw = cam.user ? 0 : swingAngle(a.u, st.tl.bt ? b : null);
         // camera: the photo's pose, turned about the pivot (drag) and swung (bullet time); the photo's roll is kept
         const Z = new THREE.Vector3(0, 0, 1), off = base.pos.clone().sub(base.target), right = new THREE.Vector3().crossVectors(off, Z).normalize();
