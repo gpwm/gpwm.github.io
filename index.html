@@ -436,6 +436,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
     <div class="pd-stage" data-scene="rwvideo" data-group="planning" role="img" aria-label="A robot arm in simulation executes three plans for the same milk carton: an unguided sample, a plan guided to a target, and a plan guided to the target over a wall."></div>
+    <div class="pd-stage" data-scene="rwvideo" data-group="planning_more" role="img" aria-label="Six more guided plans executed by the robot arm, each carrying an object to its own target: an oil bottle, a peanut butter jar, two wine glasses, a ketchup bottle and a water bottle."></div>
   </section>
 
   <section class="sec" id="real-world">
@@ -483,7 +484,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
-<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"6e6818fea5","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rwvideo":"50de716796","rw_desk":"8593fcc54d","rw_drop":"6c143dc5b9","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -3469,7 +3470,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
   'use strict';
   const PD = window.PD;
   const INTRO = 1.2, FADE = 0.5, HOLD = 1.2, DRIFT = 0.25;
-  const ROWS = { photo: [1, 1], push: [4, 2], materials: [4, 2], generated: [3, 2], planning: [3, 1] };   // tiles per row: desktop, phone
+  const ROWS = { photo: [1, 1], push: [4, 2], materials: [4, 2], generated: [3, 2], planning: [3, 1], planning_more: [3, 2] };   // tiles per row: desktop, phone
 
   PD.scene('rwvideo', {
     create(api) {
