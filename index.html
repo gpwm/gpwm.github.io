@@ -98,6 +98,23 @@ a { color: inherit; }
 .pd-stage.scene--dataset { height: 1300px; }   /* the scene sets its own height */
 .scene--dataset .pd-art .dsname { position: absolute; font-family: var(--serif); font-size: 22px; line-height: 26px; color: var(--ink); white-space: nowrap; }
 .pd-stage.scene--realworld { height: 780px; }                                    /* the scene sets its own height */
+.pd-stage.scene--compare { height: 860px; }                                        /* the scene sets its own height */
+.scene--compare .cmp-bar { position: absolute; display: flex; flex-wrap: wrap; gap: 6px; }
+.scene--compare .cmp-clips .bars-sw { font-size: var(--fs-xs); padding: 3px 10px; }
+.scene--compare .cmp-bar[hidden], .scene--compare .cmp-msg[hidden], .scene--compare .cmp-hint[hidden] { display: none; }
+.scene--compare .cmp-tiles { position: absolute; inset: 0; pointer-events: none; }
+.scene--compare .cmp-tile { position: absolute; background: var(--card); border-radius: 10px; }
+.scene--compare .cmp-gl { position: absolute; display: block; touch-action: pan-y; cursor: grab; }
+.scene--compare .cmp-gl:active { cursor: grabbing; }
+.scene--compare .cmp-msg { position: absolute; display: grid; place-items: center; font-family: var(--mono); font-size: var(--fs-s);
+  color: var(--sub); background: var(--card); border-radius: 10px; pointer-events: none; text-align: center; padding: 24px; box-sizing: border-box; }
+.scene--compare .cmp-lab { position: absolute; pointer-events: none; font-family: var(--mono); font-size: var(--fs-s); line-height: 16px; color: var(--ink); white-space: nowrap; }
+.scene--compare .cmp-lab.ours { color: var(--accent); }
+.scene--compare .cmp-lab span { color: var(--sub); font-size: var(--fs-xs); margin-left: 6px; }
+.scene--compare .cmp-lab .off[hidden] { display: none; }
+@media (max-width: 759px) { .scene--compare .cmp-lab span:not(.off) { display: none; } }   /* phones: the name only */
+.scene--compare .cmp-pill, .scene--compare .cmp-hint { position: absolute; pointer-events: none; font-family: var(--mono); font-size: var(--fs-xs);
+  line-height: 14px; color: var(--sub); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
 .scene--realworld .rw-gl { position: absolute; display: block; border-radius: 10px; touch-action: pan-y; cursor: grab; }
 .scene--realworld .rw-gl:active { cursor: grabbing; }
 .scene--realworld .rw-bar { position: absolute; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -207,6 +224,9 @@ a { color: inherit; }
 .scene--planning .pd-art .steps b { font-weight: 500; }
 .scene--planning .pd-art .steps span.on b { color: var(--accent); }
 .scene--planning .pd-art .steps i { font-style: normal; color: var(--g400); padding: 0 8px; }
+.scene--planning .pd-art .key { display: flex; gap: 12px; align-items: center; }                 /* the 3D view's colour key */
+.scene--planning .pd-art .key .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+.scene--planning .pd-art .halo { text-shadow: 0 0 3px var(--bg), 0 0 3px var(--bg), 0 0 2px var(--bg); }             /* labels over the 3D scene */
 .pd-art .note.wrap { white-space: normal; }
 .pd-art .note.wrap:not(.ctr) { padding-inline: 0; }   /* 'wrap' is also the page container class (24px sides) */
 .scene--hero .pd-art .mlab { font-size: 15px; line-height: 16px; }
@@ -322,6 +342,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <a href="#abstract">Abstract</a>
     <a href="#method">Method</a>
     <a href="#dataset">Dataset</a>
+    <a href="#comparison">Comparison</a>
     <a href="#streaming">Streaming</a>
     <a href="#planning">Planning</a>
     <a href="#real-world">Real world</a>
@@ -380,6 +401,16 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap"><p class="note-s">Every clip is a recording from the dataset (simulator output, no model), drawn as its particles: each object in its own colour, cloth violet, robots and tools grey. Frame counts are training frames, from the paper&rsquo;s dataset table: 25,463,677 in 267,864 episodes. Pushing combines rod pushing and gripper pushing, and Pick and Place single objects and cluttered scenes. In Dragging, the arrow is the commanded drag of the driven patch (grey), shown while the drag is on.</p></div>
   </section>
 
+  <section class="sec" id="comparison">
+    <div class="wrap">
+      <p class="eyebrow-s">Comparison</p>
+      <h2>Side by side with other learned simulators</h2>
+      <p class="lede">Test clips from every collection: the simulator&rsquo;s recording next to the predictions of GPWM and of the baselines compared at the top.</p>
+    </div>
+    <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
+    <div class="wrap"><p class="note-s">The given frames are drawn in <span class="tw" data-l="black" data-d="white"></span>, robots and the dragged patch in grey, each object in its own colour. Drag a view to turn them all.</p></div>
+  </section>
+
   <section class="sec" id="streaming">
     <div class="wrap">
       <p class="eyebrow-s">Streaming</p>
@@ -395,10 +426,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Planning</p>
       <h2>Planning by steering the generation</h2>
-      <p class="lede">Task-specific models generate the robot&rsquo;s motion together with the scene&rsquo;s. A reward scores only the last frame; its gradient flows back through every model window to the starting noise, and the noise is updated until the imagined motion reaches the goal. The plan is then executed open-loop in a physics simulator. On all three tasks, guidance does better than unguided generation and than planning with other learned simulators (results at the top).</p>
+      <p class="lede">Task-specific models generate the robot&rsquo;s motion together with the scene&rsquo;s. A reward scores the imagined outcome; its gradient flows back through every model window to the starting noise, and the noise is updated until the imagined motion reaches the goal. The plan is then executed open-loop in a physics simulator. On all three tasks, guidance does better than unguided generation and than planning with other learned simulators (results at the top).</p>
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
-    <div class="wrap"><p class="note-s">One pick-and-place over a barrier. Left: guided generation, after the paper&rsquo;s figure, and the loss after each of the 122 updates of the noise. Right: the search, what the model imagines after each update, then the chosen plan (the update with the lowest loss) as the model imagines it, the gripper and the object generated together, and the gripper&rsquo;s motion executed in a physics simulator. The model never sees the barrier; only the reward does. Hover the loss curve to hold an update; drag the view to turn it. Every number is the original run&rsquo;s; the drawn paths replay it exactly through update 85, then hold that path until the chosen update.</p></div>
   </section>
 
   <section class="sec" id="real-world">
@@ -1183,6 +1213,322 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       if (specs.length) mount(h, specs);
     });
   };
+})();
+
+</script>
+<script>
+/* Comparison: test clips of every collection predicted by GPWM and by the baselines of the prediction results, side by side
+   in 3D. One WebGL canvas cut into one view per method (the simulator's recording, GPWM, then the baselines), sharing one
+   camera (drag any view to turn them all) and one clock (the player: play, pause, scrub). Every particle of every stored
+   frame (pack_compare.py): objects in their own colours, cloth violet, the dragged patch and the grippers and hands grey
+   (grippers and hands drawn from their display points at the recorded poses: every model is given them), and each
+   method's given frames in ink. The clips are the ones picked for the paper's appendix. three.js comes from the CDN on
+   first use, as in the real-world viewer. */
+(function () {
+  'use strict';
+  const PD = window.PD;
+  const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
+  let THREE = null;
+  const loadThree = () => (THREE ? Promise.resolve(THREE) : import(THREE_URL).then(m => (THREE = m)));
+  const HOLD0 = 1.0, HOLD1 = 1.4, FOV = 28, D2R = Math.PI / 180, EL = [4 * D2R, 80 * D2R];
+  const TITLE = { gt: 'Simulator', ours: 'GPWM (ours)', physctrl: 'PhysCtrl', gns: 'GNS', pgnd: 'PGND', pointworld: 'PointWorld' };
+
+  // ---- shaders: lit spheres with a radius per point, soft ground shadows (after the real-world viewer)
+  const pointVS = `attribute vec3 aCol; attribute float aRad; uniform float uScale; varying vec3 vCol;
+void main() { vCol = aCol; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+  gl_PointSize = max(1.5, 2.0 * aRad * uScale / -mv.z); }`;
+  const pointFS = `varying vec3 vCol; uniform vec3 uLight; uniform vec4 uTint;
+void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 > 1.0) discard;
+  vec3 n = vec3(p.x, -p.y, sqrt(1.0 - r2)); float d = max(dot(n, uLight), 0.0);
+  vec3 c = mix(vCol, uTint.rgb, uTint.a); float s = pow(max(dot(reflect(-uLight, n), vec3(0.0, 0.0, 1.0)), 0.0), 24.0);
+  gl_FragColor = vec4(c * (0.58 + 0.5 * d) + 0.08 * s, 1.0); }`;
+  const shadowVS = `attribute float aH; uniform float uScale; uniform float uUnit; uniform float uGain; varying float vA;
+void main() { vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+  float r = 1.2 * uUnit + 0.25 * aH; vA = uGain * 0.035 * exp(-aH / (9.0 * uUnit));
+  gl_PointSize = vA < 0.0015 ? 0.0 : max(1.0, 2.0 * r * uScale / -mv.z); }`;          // too faint to see: not drawn
+  const shadowFS = `varying float vA;
+void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 > 1.0) discard;
+  gl_FragColor = vec4(0.0, 0.0, 0.0, vA * (1.0 - r2) * (1.0 - r2)); }`;
+  const rgb = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+
+  PD.scene('compare', {
+    create(api) {
+      const host = api.stage.host, ui = api.stage.ui;
+      const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
+      const bar = el('div', 'cmp-bar', ui), clips = el('div', 'cmp-bar cmp-clips', ui);
+      const tiles = document.createElement('div'); tiles.className = 'cmp-tiles'; host.insertBefore(tiles, api.stage.art);
+      const canvas = document.createElement('canvas'); canvas.className = 'cmp-gl'; host.insertBefore(canvas, api.stage.art);
+      const msg = el('div', 'cmp-msg', ui, 'Loading the 3D viewer…');
+      const clock = el('div', 'cmp-pill', ui), hint = el('div', 'cmp-hint', ui, 'drag a view to turn them all');
+      const player = PD.player(api, 10);
+      let idx = null, rec = null, views = [], labs = [], tileEls = [], act = null, tl = null, fit = null, lay = null, token = 0, theme = null;
+      let renderer = null, camera = null, uLight = null, ci = -1, ck = -1;
+      const cam = { az: 0, po: 0, drag: null };
+      let tmp = null;                                // a scratch vector (three.js loads later)
+
+      PD.data('compare').then(d => {
+        idx = d;
+        idx.collections.forEach((c, i) => { const b = el('button', 'bars-sw', bar, c.title); b.type = 'button'; b.onclick = () => choose(i, 0); });
+        choose(0, 0);
+      }).catch(e => { msg.textContent = 'The comparison could not load (' + (e && e.message ? e.message : e) + ').'; });
+
+      // ---- data
+      async function decode(r) {                     // the clip's arrays, decoded once
+        if (r._d) return r._d;
+        const obj = new Uint8Array(await PD.inflate(r.obj)), patch = new Uint8Array(await PD.inflate(r.patch)), P = {};
+        for (const k of ['gt', ...r.methods.map(m => m.key)]) P[k] = await PD.traj(r.tracks[k], r.T, r.n, r.unit);
+        let a = null;
+        if (r.actuator) {
+          const x = r.actuator;
+          a = { M: x.M, L: x.L, radius: x.radius, tmpl: new Float32Array(await PD.inflate(x.tmpl)),
+            link: new Uint8Array(await PD.inflate(x.link)), poses: new Float32Array(await PD.inflate(x.poses)) };
+        }
+        return (r._d = { obj, patch, P, a });
+      }
+      function colours(r, d) {                       // per particle: the dragged patch grey, cloth violet, else its object's tone
+        const C = PD.colors, tone = r.material.map((m, j) => rgb(m === 5 ? C.cloth : C[PD.PARTICLE_KEYS[PD.objectClass(j)]]));
+        const grey = rgb(C.robot), out = new Uint8Array(r.n * 3);
+        for (let i = 0; i < r.n; i++) out.set(d.patch[i] ? grey : tone[d.obj[i]], 3 * i);
+        return out;
+      }
+
+      // ---- the scene of each method: its particles, the given actuator (shared), their shadows, a floor grid
+      const pointMat = () => new THREE.ShaderMaterial({ vertexShader: pointVS, fragmentShader: pointFS,
+        uniforms: { uScale: { value: 800 }, uLight, uTint: { value: new THREE.Vector4(0, 0, 0, 0) } } });
+      const shadowMat = (unit, gain = 1) => new THREE.ShaderMaterial({ vertexShader: shadowVS, fragmentShader: shadowFS,
+        uniforms: { uScale: { value: 800 }, uUnit: { value: unit }, uGain: { value: gain } }, transparent: true, depthWrite: false });
+      const SHADOW_EVERY = 12;                       // the actuator's shadow: cast by every 12th display point, as dark in sum
+      function geometry(n, col, rad) {
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+        g.setAttribute('aCol', new THREE.BufferAttribute(col, 3, true));
+        g.setAttribute('aRad', new THREE.BufferAttribute(rad, 1));
+        return g;
+      }
+      function shadowGeometry(n) {
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+        g.setAttribute('aH', new THREE.BufferAttribute(new Float32Array(n), 1));
+        return g;
+      }
+      function grid(r, d) {                          // a faint grid on the floor, over the recording's footprint
+        const P = d.P.gt; let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+        for (let i = 0; i < P.length; i += 3 * 7) { x0 = Math.min(x0, P[i]); x1 = Math.max(x1, P[i]); y0 = Math.min(y0, P[i + 1]); y1 = Math.max(y1, P[i + 1]); }
+        const span = Math.max(x1 - x0, y1 - y0), step = span > 0.9 ? 0.1 : 0.05, m = 1.5 * step;
+        const a = [Math.floor((x0 - m) / step) * step, Math.ceil((x1 + m) / step) * step], b = [Math.floor((y0 - m) / step) * step, Math.ceil((y1 + m) / step) * step];
+        const v = [], z = r.floor;
+        for (let x = a[0]; x <= a[1] + 1e-9; x += step) v.push(x, b[0], z, x, b[1], z);
+        for (let y = b[0]; y <= b[1] + 1e-9; y += step) v.push(a[0], y, z, a[1], y, z);
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+        return g;
+      }
+      function build(r, d) {
+        const col = colours(r, d), rad = Float32Array.from(d.obj, j => r.radius[j]);
+        const radii = [...r.radius].sort((p, q) => p - q), unit = 2 * radii[Math.floor(radii.length / 2)];
+        const gridGeo = grid(r, d), gridMat = new THREE.LineBasicMaterial({ color: new THREE.Color(PD.colors.g300), transparent: true, opacity: 0.6 });
+        act = null;
+        if (d.a) {                                   // the actuator: one geometry drawn in every view
+          const a = d.a, grey = rgb(PD.colors.robot), g = geometry(a.M, new Uint8Array(a.M * 3).map((_, i) => grey[i % 3]), new Float32Array(a.M).fill(a.radius));
+          act = { g, mat: pointMat(), sg: shadowGeometry(Math.ceil(a.M / SHADOW_EVERY)), smat: shadowMat(Math.max(0.004, 2 * a.radius), 2.5), Q: new Float32Array(a.L * 12) };
+        }
+        return ['gt', ...r.methods.map(m => m.key)].map(key => {
+          const s3 = new THREE.Scene(), g = geometry(r.n, col, rad), mat = pointMat(), sg = shadowGeometry(r.n), smat = shadowMat(unit);
+          const pts = new THREE.Points(g, mat), sh = new THREE.Points(sg, smat), floor = new THREE.LineSegments(gridGeo, gridMat);
+          [pts, sh, floor].forEach(o => { o.frustumCulled = false; });
+          sh.renderOrder = 1; floor.renderOrder = -1; s3.add(floor, sh, pts);
+          if (act) {
+            const ap = new THREE.Points(act.g, act.mat), as = new THREE.Points(act.sg, act.smat);
+            ap.frustumCulled = as.frustumCulled = false; as.renderOrder = 1; s3.add(as, ap);
+          }
+          const m = r.methods.find(x => x.key === key);
+          return { key, s3, g, mat, sg, smat, P: d.P[key], given: m ? m.given : Math.min(...r.methods.map(x => x.given)), gridMat };
+        });
+      }
+      function recolour() {                          // after a theme change: the palette follows the page
+        if (!rec) return;
+        const col = colours(rec, rec._d);
+        views.forEach(v => { v.g.attributes.aCol.array.set(col); v.g.attributes.aCol.needsUpdate = true; v.gridMat.color.set(PD.colors.g300); });
+        if (act) { const c = rgb(PD.colors.robot), a = act.g.attributes.aCol.array; for (let i = 0; i < a.length; i++) a[i] = c[i % 3]; act.g.attributes.aCol.needsUpdate = true; }
+      }
+
+      // ---- the camera: the paper's viewing direction, fitted to the recording (and the actuator), turned by dragging
+      function fitCamera(r, d) {                     // sample points of everything the recording shows, over the clip
+        const P = d.P.gt, n = r.n, T = r.T, ft = Math.max(1, Math.floor(T / 24)), pe = Math.max(1, Math.floor(n / 150)), out = [];
+        for (let t = 0; t < T; t += ft) for (let i = 0; i < n; i += pe) { const o = (t * n + i) * 3; out.push(P[o], P[o + 1], P[o + 2]); }
+        if (d.a) for (let t = 0; t < T; t += ft) {
+          poseActuator(d.a, t); const A = act.g.attributes.position.array, pa = Math.max(1, Math.floor(d.a.M / 150));
+          for (let i = 0; i < d.a.M; i += pa) out.push(A[3 * i], A[3 * i + 1], A[3 * i + 2]);
+        }
+        const c0 = new THREE.Vector3(...r.camera.target);
+        return { pts: Float32Array.from(out), c0, dir: new THREE.Vector3(...r.camera.origin).sub(c0).normalize() };
+      }
+      function place(aspect) {                       // the shared camera: the paper's direction turned by dragging, the nearest
+        const Z = new THREE.Vector3(0, 0, 1), d = fit.dir.clone().applyAxisAngle(Z, cam.az);   // distance that keeps every point in view
+        let right = new THREE.Vector3().crossVectors(Z, d).normalize();
+        const el0 = Math.asin(PD.clamp(d.z, -1, 1)), el = PD.clamp(el0 + cam.po, EL[0], EL[1]);
+        d.applyAxisAngle(right, -(el - el0));
+        right = new THREE.Vector3().crossVectors(Z, d).normalize();
+        const up = new THREE.Vector3().crossVectors(d, right), S = fit.pts, c = fit.c0, t = Math.tan(FOV * D2R / 2);
+        let u0 = Infinity, u1 = -Infinity, w0 = Infinity, w1 = -Infinity;
+        for (let i = 0; i < S.length; i += 3) {
+          const x = S[i] - c.x, y = S[i + 1] - c.y, z = S[i + 2] - c.z, u = x * right.x + y * right.y + z * right.z, w = x * up.x + y * up.y + z * up.z;
+          if (u < u0) u0 = u; if (u > u1) u1 = u; if (w < w0) w0 = w; if (w > w1) w1 = w;
+        }
+        const um = (u0 + u1) / 2, wm = (w0 + w1) / 2, cen = c.clone().addScaledVector(right, um).addScaledVector(up, wm);
+        let D = 0;                                   // a point q nearer than the centre needs D >= q + its offset / tan
+        for (let i = 0; i < S.length; i += 3) {
+          const x = S[i] - cen.x, y = S[i + 1] - cen.y, z = S[i + 2] - cen.z;
+          const u = x * right.x + y * right.y + z * right.z, w = x * up.x + y * up.y + z * up.z, q = x * d.x + y * d.y + z * d.z;
+          D = Math.max(D, q + Math.max(Math.abs(u) / (t * aspect), Math.abs(w) / t));
+        }
+        D *= 1.06;
+        camera.position.copy(cen).addScaledVector(d, D); camera.up.set(0, 0, 1); camera.lookAt(cen);
+        camera.fov = FOV; camera.aspect = aspect; camera.near = Math.max(0.005, D * 0.02); camera.far = D * 10; camera.updateProjectionMatrix();
+      }
+
+      // ---- the clock: a hold on the last given frame, the prediction, a hold on the end
+      function retime() {
+        const g0 = Math.min(...rec.methods.map(m => m.given)), f0 = Math.max(0, g0 - 1), fps = rec.speed / rec.dt;
+        const play = (rec.T - 1 - f0) / fps;
+        tl = { f0, fps, play, total: HOLD0 + play + HOLD1 };
+        player.total = tl.total; player.seek(0);
+      }
+      const frameAt = t => (t < HOLD0 ? tl.f0 : Math.min(rec.T - 1, tl.f0 + (t - HOLD0) * tl.fps));
+      function pose(v, f) {                          // frame f (fractional) into a method's points and their shadows
+        const n = rec.n, T = rec.T, a = Math.floor(f), b = Math.min(T - 1, a + 1), w = f - a, A = a * n * 3, B = b * n * 3;
+        const P = v.P, out = v.g.attributes.position.array, sp = v.sg.attributes.position.array, sh = v.sg.attributes.aH.array, z = rec.floor;
+        for (let i = 0; i < n; i++) {
+          const o = 3 * i;
+          for (let c = 0; c < 3; c++) out[o + c] = P[A + o + c] + (P[B + o + c] - P[A + o + c]) * w;
+          sp[o] = out[o]; sp[o + 1] = out[o + 1]; sp[o + 2] = z + 0.0005; sh[i] = Math.max(0, out[o + 2] - z);
+        }
+        v.g.attributes.position.needsUpdate = true; v.sg.attributes.position.needsUpdate = true; v.sg.attributes.aH.needsUpdate = true;
+        const tint = PD.clamp(v.given - f, 0, 1), ink = new THREE.Color(PD.colors.ink);   // given frames in ink, fading out over the first predicted one
+        v.mat.uniforms.uTint.value.set(ink.r, ink.g, ink.b, tint);
+      }
+      function poseActuator(a, f) {                  // the given actuator: each display point moved by its link's pose
+        const T = rec.T, L = a.L, f0 = Math.floor(f), f1 = Math.min(T - 1, f0 + 1), w = f - f0, Q = act.Q, p = a.poses;
+        for (let j = 0; j < L * 12; j++) Q[j] = p[f0 * L * 12 + j] + (p[f1 * L * 12 + j] - p[f0 * L * 12 + j]) * w;
+        const out = act.g.attributes.position.array, sp = act.sg.attributes.position.array, sh = act.sg.attributes.aH.array, X = a.tmpl, z = rec.floor;
+        for (let i = 0; i < a.M; i++) {
+          const q = a.link[i] * 12, x = X[3 * i], y = X[3 * i + 1], zz = X[3 * i + 2];
+          for (let c = 0; c < 3; c++) out[3 * i + c] = Q[q + 3 * c] * x + Q[q + 3 * c + 1] * y + Q[q + 3 * c + 2] * zz + Q[q + 9 + c];
+          if (i % SHADOW_EVERY === 0) { const j = i / SHADOW_EVERY; sp[3 * j] = out[3 * i]; sp[3 * j + 1] = out[3 * i + 1]; sp[3 * j + 2] = z + 0.0005; sh[j] = Math.max(0, out[3 * i + 2] - z); }
+        }
+        act.g.attributes.position.needsUpdate = true; act.sg.attributes.position.needsUpdate = true; act.sg.attributes.aH.needsUpdate = true;
+      }
+
+      // ---- choosing a collection and a clip
+      async function choose(i, k) {
+        if (!idx || (i === ci && k === ck)) return;
+        const my = ++token, c = idx.collections[i];
+        ci = i; ck = k;
+        [...bar.children].forEach((b, j) => b.classList.toggle('on', j === i));
+        clips.innerHTML = '';
+        c.clips.forEach((x, j) => { const b = el('button', 'bars-sw' + (j === k ? ' on' : ''), clips, x.label); b.type = 'button'; b.onclick = () => choose(i, j); });
+        clips.hidden = c.clips.length < 2;
+        msg.hidden = false; msg.textContent = 'Loading…'; views = []; rec = null; lay = null;
+        try {
+          await loadThree();
+          if (!renderer) setup();
+          const r = await PD.data(c.clips[k].id), d = await decode(r);
+          if (my !== token) return;
+          rec = r; views = build(r, d); theme = PD.theme(); fit = fitCamera(r, d); cam.az = 0; cam.po = 0;
+          retime(); labels(); lay = null; msg.hidden = true;
+        } catch (e) {
+          if (my !== token) return;
+          const m = e && e.message ? e.message : String(e);
+          msg.hidden = false; views = []; rec = null;
+          msg.textContent = /^no data cmp_/.test(m) ? 'This clip is on the public site, gpwm.github.io: this preview page has no room for it.'
+            : 'The 3D viewer could not start here (' + m + ').';
+        }
+      }
+      function setup() {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.outputColorSpace = THREE.LinearSRGBColorSpace;             // the site's colours pass through unchanged
+        renderer.setScissorTest(true); renderer.setClearColor(0x000000, 0);
+        camera = new THREE.PerspectiveCamera(FOV, 1, 0.01, 50); tmp = new THREE.Vector3();
+        uLight = { value: new THREE.Vector3(-0.45, 0.6, 0.66).normalize() };
+        canvas.addEventListener('pointerdown', down); addEventListener('pointermove', move); addEventListener('pointerup', up);
+      }
+      function labels() {                            // one label per view: the method's name
+        labs.forEach(e => e.remove()); tileEls.forEach(e => e.remove());
+        labs = views.map(v => el('div', 'cmp-lab' + (v.key === 'ours' ? ' ours' : ''), ui,
+          TITLE[v.key] + (v.key === 'gt' ? ' <span>ground truth</span>' : '') + ' <span class="off" hidden>out of view</span>'));
+        tileEls = views.map(() => el('div', 'cmp-tile', tiles));
+      }
+
+      // ---- layout: the views two by two (three: two, and one centred under them), the collection and clip buttons above
+      let clipH = 26;                                // the tallest clip row so far (phones wrap it): the views never jump up
+      function layout() {
+        const W = api.w, mob = W < 760, pad = mob ? 16 : 40, gap = mob ? 8 : 12, n = views.length || 4;
+        const cols = 2, rows = Math.ceil(n / cols);
+        bar.style.left = clips.style.left = pad + 'px'; bar.style.width = clips.style.width = (W - 2 * pad) + 'px';
+        const bh = bar.offsetHeight || 32; bar.style.top = '10px'; clips.style.top = (10 + bh + 8) + 'px';   // collections, then its clips
+        if (!clips.hidden) clipH = Math.max(clipH, clips.offsetHeight || 26);
+        const top = 10 + bh + 8 + clipH + 8 + 6;    // the clip row's space is kept even when a collection has one clip
+        const aw = W - 2 * pad, tw = Math.floor((aw - gap) / 2), th = mob ? Math.round(tw * 1.05) : Math.round(PD.clamp(tw * 0.56, 300, 420));
+        const vp = [...Array(n)].map((_, k) => [k === 2 && n === 3 ? Math.round((aw - tw) / 2) : (k % cols) * (tw + gap), Math.floor(k / cols) * (th + gap), tw, th]);
+        const vh = rows * th + (rows - 1) * gap, H = top + vh + 58;
+        if (Math.abs(api.h - H) > 1) host.style.height = H + 'px';
+        Object.assign(canvas.style, { left: pad + 'px', top: top + 'px', width: aw + 'px', height: vh + 'px' });
+        if (renderer) renderer.setSize(aw, vh, false);
+        Object.assign(msg.style, { left: pad + 'px', top: top + 'px', width: aw + 'px', height: vh + 'px' });
+        vp.forEach((v, k) => {
+          if (tileEls[k]) Object.assign(tileEls[k].style, { left: (pad + v[0]) + 'px', top: (top + v[1]) + 'px', width: v[2] + 'px', height: v[3] + 'px' });
+          if (labs[k]) Object.assign(labs[k].style, { left: (pad + v[0] + 12) + 'px', top: (top + v[1] + 10) + 'px' });
+        });
+        Object.assign(clock.style, { right: pad + 'px', top: (top + vh + 14) + 'px' });
+        Object.assign(hint.style, { right: pad + 'px', top: (top + vh + 38) + 'px' });
+        hint.hidden = mob;
+        lay = { mob, pad, top, aw, vh, vp };
+      }
+
+      // ---- pointer: drag inside any view turns the shared camera
+      const inside = e => {
+        if (!lay) return false;
+        const b = canvas.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top;
+        return lay.vp.some(v => x >= v[0] && x <= v[0] + v[2] && y >= v[1] && y <= v[1] + v[3]);
+      };
+      function down(e) { if (!rec || !inside(e)) return; cam.drag = { x: e.clientX, y: e.clientY, az: cam.az, po: cam.po }; canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); }
+      function move(e) {
+        const d = cam.drag; if (!d) return;
+        cam.az = PD.clamp(d.az - (e.clientX - d.x) * 0.006, -1.4, 1.4); cam.po = PD.clamp(d.po + (e.clientY - d.y) * 0.004, -0.9, 0.9);
+      }
+      function up() { cam.drag = null; }
+
+      function frame(time, dt) {
+        if (!lay) layout();
+        if (!rec || !renderer || !views.length) return;
+        if (PD.theme() !== theme) { theme = PD.theme(); recolour(); }
+        const t = player.advance(dt), f = frameAt(t);
+        views.forEach(v => pose(v, f));
+        if (act) poseActuator(rec._d.a, f);
+        renderer.setScissor(0, 0, lay.aw, lay.vh); renderer.setViewport(0, 0, lay.aw, lay.vh); renderer.clear();
+        if (lay.vp[0]) place(lay.vp[0][2] / lay.vp[0][3]);
+        views.forEach((v, k) => {
+          const r = lay.vp[k]; if (!r) return;
+          const s = r[3] * renderer.getPixelRatio() / (2 * Math.tan(FOV * D2R / 2));
+          v.mat.uniforms.uScale.value = s; v.smat.uniforms.uScale.value = s;
+          if (act) { act.mat.uniforms.uScale.value = s; act.smat.uniforms.uScale.value = s; }
+          const y = lay.vh - r[1] - r[3];
+          renderer.setScissor(r[0], y, r[2], r[3]); renderer.setViewport(r[0], y, r[2], r[3]);
+          renderer.render(v.s3, camera);
+        });
+        views.forEach((v, k) => {                    // a prediction that has left the shared view says so
+          const P = v.g.attributes.position.array, step = 3 * Math.max(1, Math.floor(rec.n / 300)); let inside = 0, all = 0;
+          for (let i = 0; i < P.length; i += step) { tmp.set(P[i], P[i + 1], P[i + 2]).project(camera); all++; if (Math.abs(tmp.x) <= 1 && Math.abs(tmp.y) <= 1 && tmp.z < 1) inside++; }
+          const off = inside < 0.1 * all, e = labs[k] && labs[k].querySelector('.off');
+          if (e && e.hidden === off) e.hidden = !off;
+        });
+        const secs = Math.max(0, (f - tl.f0) * rec.dt), spd = rec.speed;
+        const txt = (t < HOLD0 ? 'the given frames' : `${secs.toFixed(1)} s`) + ' · ' + (spd === 1 ? 'real time' : `${spd}× speed`);
+        if (clock.textContent !== txt) clock.textContent = txt;
+      }
+      return { enter() { lay = null; }, resize() { lay = null; }, frame };
+    },
+  });
 })();
 
 </script>
@@ -2090,22 +2436,29 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 <script>
 /* Planning by guided generation. Left, an autoplaying block diagram after the paper's guidance figure: the starting noise
    of the whole horizon (top row), the model windows the rollout streams through (staggered, each a near-to-far noise
-   staircase), the generated frames (bottom row) and the reward, which scores only the last frame; its gradient flows back
-   through every window to the starting noise. Under it, the loss after each update of the noise (hover it to hold an
-   update). Right, the search in 3D: what the model imagines after each update (the object's path and last frame, the
-   gripper's path; earlier updates faint, update 0 dashed), then the chosen plan (the update with the lowest loss) as the
-   model imagines it, then its gripper motion executed by a physics simulator. One pick-and-place over a barrier;
-   millimetres, z up, the table at z = 0. Numbers: the original run's receipts. Paths: a replay of the run, exact through
-   update 85, then that path held, and the chosen plan from the chosen update on (pack_planning3d.py, pack_guided.py). */
+   staircase), the generated frames (bottom row) and the reward (yellow, as the paper's R): the object at the goal on the
+   last frame, and every body clear of the barrier on the way (the line under the frames). Its gradient flows back through
+   every window to the starting noise. Under it, the loss after each update of the noise (hover it to hold an update).
+   Right, the scene in 3D: the object in its own colour, the gripper grey, the same particles in every phase (every other one
+   of the object and the fingers, every one of the sparser hand). The
+   search was recorded as a subset of particles; every body is rigid, so it gives each body's pose exactly (pack_planning3d.py)
+   and the scene is drawn from the poses. First update 0 generated frame by frame, then the search (each update's imagined object path and last frame, earlier updates faint grey, the barrier red
+   while the imagined motion hits it), then the chosen plan (the update with the lowest loss) as the model imagines it, then
+   its gripper motion executed by a physics simulator, with the imagined outcome faint. Only recorded motion is drawn:
+   updates 0 to 85 (a replay of the original run, equal to its loss within 1e-4) and the chosen update (the original run's
+   plan). The autoplay searches through update 85 and then completes the loss curve; hovering the curve snaps to the
+   nearest recorded update. Millimetres, z up, the table at z = 0. Numbers: the original run's receipts
+   (pack_planning3d.py, pack_guided.py). */
 (function () {
   'use strict';
   const PD = window.PD, C = PD.colors, D = PD.draw;
   const TILES = 15, WIN = 6, STRIDE = 3, NWIN = 4;                   // the diagram, as in the paper's figure
-  const PHASES = [['fwd', 5.0], ['rew', 2.6], ['grad', 3.0], ['search', 11], ['best', 4.4], ['exe', 5.2], ['hold', 2.6]];
+  const PHASES = [['fwd', 5.0], ['rew', 2.6], ['grad', 3.0], ['search', 10], ['best', 4.8], ['exe', 5.2], ['hold', 2.6]];
   const TOTAL = PHASES.reduce((s, p) => s + p[1], 0), BEST_END = PHASES.slice(0, 5).reduce((s, p) => s + p[1], 0) - 0.01;   // reduced motion rests at the end of 'best'
+  const CURVE = 0.2;                                                 // 'best': the first fifth completes the loss curve
   // the story in six steps, shown over the diagram: which phase is which step, a short name and a sentence
-  const STEPS = [['imagine', 'the model generates the whole horizon from the starting noise, window by window'],
-    ['score', 'the reward scores the last frame only'],
+  const STEPS = [['imagine', 'the model generates the whole motion from the starting noise, window by window'],
+    ['score', 'the reward: the object at the goal at the end, and nothing near the barrier on the way'],
     ['backpropagate', 'its gradient flows back through every window to the starting noise'],
     ['update', 'the noise is updated and the model imagines again, 122 times'],
     ['choose', 'the plan: the update with the lowest loss'],
@@ -2115,12 +2468,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   const LO = -3, YT = [1, 0.1, 0.01], XT = [0, 40, 80, 120];          // the loss axis: log10, 0.001 to 1
   const ease = x => x * x * (3 - 2 * x);
   const hash = n => { const s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); };
+  const EVERY = [2, 1, 2, 2];                                        // particles drawn per body: object, hand, two fingers
+  const REWARD = () => (PD.theme() === 'dark' ? '#e3bf4a' : '#f2c230'), REWARD_EDGE = () => (PD.theme() === 'dark' ? '#e3bf4a' : '#c99a00');
 
   PD.scene('planning', {
     create(api) {
       const v = new PD.View3D({ fill: 0.53, el: 22, persp: 0.3, spin: 0 });
-      let d = null, lay = null, t = 0, az0 = 0, hold = -1, lastNote = null, lastStep = -1;
-      const ptr = {};                                                   // the 3D view's pointer labels, eased toward their targets
+      let d = null, lay = null, t = 0, az0 = 0, hold = -1, lastNote = null, lastStep = -1, lastKey = null;
+      let IDX = null, CLS = null, BOD = null, BUF = null, BUF2 = null;  // the particles drawn (object, then gripper), their bodies
       const player = PD.player(api, TOTAL);
       if (PD.reduced) player.seek(BEST_END);
       const L = {};
@@ -2129,16 +2484,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       mk('noiseEye', 'eyebrow', `starting noise ${M('z')}`);
       mk('genEye', 'eyebrow', 'generated frames');
       for (let w = 0; w < NWIN; w++) mk('win' + w, 'lab chipw', `model window ${w + 1}`);
-      mk('rLab', 'mlab', 'r'); mk('rNote', 'note', 'reward on the last frame only');
+      mk('rLab', 'mlab', 'r'); L.rLab.style.color = '#111';                // on the yellow tile, in both themes
       mk('grad', 'mlab up', '∇<sub><i>z</i></sub> <i>r</i>');
       mk('noisy', 'note', 'noisy'); mk('clean', 'note', 'clean');
-      mk('eq', 'eq', '<i>z</i> ← <i>z</i> + <i>η</i> ∇<sub><i>z</i></sub> <i>r</i>(Π<sub>pass</sub>(<i>ŝ</i><sub><i>H</i></sub>(<i>z</i>)))');
-      mk('eqn', 'note wrap', '<i>ŝ</i><sub><i>H</i></sub> the generated scene at the last frame · Π<sub>pass</sub> its passive objects · <i>r</i> the reward: the object at the goal, clear of the barrier, with contact and support priors');
-      mk('lossEye', 'eyebrow', `loss ${M('−r')} after each update`);
+      mk('eq', 'eq', '<i>z</i> ← <i>z</i> + <i>η</i> ∇<sub><i>z</i></sub> <i>r</i>');
+      mk('lossEye', 'eyebrow', 'loss after each update');
       mk('chosen', 'note', 'chosen');
-      mk('vEye', 'eyebrow', ''); mk('vNote', 'note wrap', ''); mk('goal', 'note', 'goal'); mk('bar', 'note', 'barrier');
+      mk('vEye', 'eyebrow', ''); mk('key', 'note key', ''); mk('vNote', 'note wrap', ''); mk('goal', 'note halo', 'goal'); mk('bar', 'note halo', 'barrier');
       mk('steps', 'note steps', ''); mk('stepNote', 'note wrap', '');
-      mk('pObj', 'note', ''); mk('pGrip', 'note', ''); mk('pImg', 'note', 'the imagined outcome');
 
       PD.data('guided').then(async rec => {
         const F = rec.full, S = rec.search, mm = a => { for (let i = 0; i < a.length; i++) a[i] *= 1000; return a; };
@@ -2156,17 +2509,23 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           for (let i = 0; i < a.length; i += 3 * m) { const g = []; for (let j = i; j < i + 3 * m; j += 3) g.push([a[j], a[j + 1], a[j + 2]]); out.push(g); }
           return out;
         };
-        rec.S = { n: S.n, sel: S.selected, loss: S.loss, goal: S.goal_mm, clr: S.clear_mm, ok: S.ok,
-          obj: await groups(S.obj, S.T), grip: await groups(S.grip, S.T),
-          objLast: await groups(S.obj_last, S.P_obj),
-          firstObj: await groups(S.first_obj, S.P_obj), firstGrip: await groups(S.first_grip, S.P_grip) };
+        rec.S = { n: S.n, sel: S.selected, exact: S.exact_through, loss: S.loss, goal: S.goal_mm, clr: S.clear_mm, ok: S.ok,
+          obj: await groups(S.obj, S.T), nb: S.bodies,
+          posesLast: new Float32Array(await PD.inflate(S.poses_last)), posesFirst: new Float32Array(await PD.inflate(S.poses_first)) };
+        const bodies = new Uint8Array(await PD.inflate(F.bodies));
+        // the particles drawn, the same in every phase: the object's, then the gripper's, thinned per body
+        const o = [], g = [], seen = new Array(S.bodies).fill(0);
+        for (let i = 0; i < F.N; i++) if (seen[bodies[i]]++ % EVERY[bodies[i]] === 0) (rec.body[i] ? g : o).push(i);
+        IDX = Int32Array.from([...o, ...g]); CLS = Uint8Array.from(IDX, (_, j) => (j < o.length ? 0 : 1)); BOD = Uint8Array.from(IDX, i => bodies[i]);
+        BUF = new Float32Array(IDX.length * 3); BUF2 = new Float32Array(IDX.length * 3);
         // camera: across the start-to-goal direction, a little from the front; fit everything that moves
         const ux = rec.goal[0] - rec.start[0], uy = rec.goal[1] - rec.start[1], n = Math.hypot(ux, uy);
         az0 = Math.atan2(-ux / n, uy / n) * 180 / Math.PI + 18;
         let R = 0, z1 = 0;
         const see = p => { R = Math.max(R, Math.hypot(p[0] - ux / 2, p[1] - uy / 2)); z1 = Math.max(z1, p[2]); };
         rec.path.forEach(see); rec.executed_obj.forEach(see); rec.barrier.forEach(see); see(rec.goal);
-        rec.S.obj.forEach(p => p.forEach(see)); rec.S.objLast.forEach(p => p.forEach(see));
+        rec.S.obj.forEach(p => p.forEach(see));
+        for (const P of [rec.plan, rec.exe]) for (let i = 0; i < P.length; i += 3 * 7) see([P[i], P[i + 1], P[i + 2]]);   // the gripper too
         v.az = az0; v.fit(Math.max(R, z1 / 2) * 1.08, 0, z1, ux / 2, uy / 2);
         d = rec; lay = null;
       });
@@ -2179,8 +2538,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         const W = api.w, H = api.h, mob = W < 900, pad = mob ? 16 : 40;
         const dw = mob ? W - 2 * pad - 44 : Math.min(700, W * 0.49), ts = Math.floor(Math.min(40, (dw - 30) / TILES - 5)), pitch = ts + 5;
         const wh = Math.max(20, Math.round(ts * 0.82)), wg = 9;
-        const toEq = mob ? 56 : 44, eqH = mob ? 40 : 84, ch = mob ? 50 : 60;          // the equation (and its note), then the chart
-        const stH = mob ? 58 : 60;                                                     // the six steps and their sentence
+        const toEq = mob ? 44 : 40, eqH = 30, ch = mob ? 50 : 60;          // the equation, then the chart
+        const stH = mob ? 58 : 60;                                         // the six steps and their sentence
         const dh = stH + 22 + ts + 16 + NWIN * (wh + wg) + 6 + ts + toEq + eqH + 22 + ch + 20;  // the left column's height
         const x0 = pad + 44, y0 = mob ? 40 : Math.max(40, Math.round((H - dh) / 2)), sy = y0;
         const rowA = y0 + stH + 22, win0 = rowA + ts + 16, rowB = win0 + NWIN * (wh + wg) + 6;
@@ -2194,66 +2553,89 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         lay = { mob, ts, pitch, x0, rowA, rowB, tx, wins, gx, view, chart };
         v.panel(...view);
         place(L.steps, x0 - 40, sy); place(L.stepNote, x0 - 40, sy + 20); L.stepNote.style.width = (TILES * pitch + 40) + 'px'; lastStep = -1;
-        place(L.noiseEye, x0, rowA - 22); place(L.genEye, x0, rowB + ts + 8);
+        place(L.noiseEye, x0, rowA - 22); place(L.genEye, x0, rowB + ts + 11);
         wins.forEach((r, w) => place(L['win' + w], r[0] + r[2] / 2, r[1] + r[3] / 2, 'cm'));
-        place(L.rLab, tx(TILES - 1) + ts / 2, rowB + ts / 2, 'cm'); place(L.rNote, tx(TILES - 1) + ts, rowB + ts + (mob ? 26 : 8), 'r');
+        place(L.rLab, tx(TILES - 1) + ts / 2, rowB + ts / 2, 'cm');
         place(L.grad, gx + 8, (rowA + rowB + ts) / 2, 'm');
         place(L.noisy, x0 - 35, rowA - 20, 'c'); place(L.clean, x0 - 35, rowB + ts + 5, 'c');
-        place(L.eq, x0, eqY); place(L.eqn, x0, eqY + 34); L.eqn.style.width = (TILES * pitch) + 'px';
+        place(L.eq, x0, eqY);
         place(L.lossEye, x0, cy - 24);
-        place(L.vEye, view[0], view[1] - 22); place(L.vNote, view[0], view[1] + view[3] + 8); L.vNote.style.width = view[2] + 'px';
-        L.eqn.hidden = mob;
+        place(L.vEye, view[0], view[1] - 22);
+        if (mob) place(L.key, view[0], view[1] + view[3] + 40); else place(L.key, view[0] + view[2], view[1] - 22, 'r');   // phones: under the note
+        place(L.vNote, view[0], view[1] + view[3] + 8); L.vNote.style.width = view[2] + 'px';
+        lastKey = null;
       }
 
       // ---- 3D helpers (mm)
-      function line3(ctx, pts, col, lw = 1, dash = null, upto = Infinity, a = 1) {
-        const B = v.basis();
-        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.globalAlpha = a; if (dash) ctx.setLineDash(dash);
+      function line3(ctx, pts, col, lw = 1, dash = null, upto = Infinity, a = 1) {   // a path up to frame 'upto' (fractional: the last segment partly)
+        const B = v.basis(), last = Math.min(pts.length - 1, Math.floor(upto));
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.globalAlpha = a; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; if (dash) ctx.setLineDash(dash);
         ctx.beginPath();
-        for (let k = 0; k < pts.length && k <= upto; k++) { const [x, y] = v.project(pts[k][0], pts[k][1], pts[k][2], B); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+        for (let k = 0; k <= last; k++) { const [x, y] = v.project(pts[k][0], pts[k][1], pts[k][2], B); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+        const w = upto - last;
+        if (w > 0 && last + 1 < pts.length) {
+          const p = pts[last], q = pts[last + 1], [x, y] = v.project(p[0] + (q[0] - p[0]) * w, p[1] + (q[1] - p[1]) * w, p[2] + (q[2] - p[2]) * w, B);
+          ctx.lineTo(x, y);
+        }
         ctx.stroke(); ctx.restore();
-      }
-      function dots3(ctx, pts, col, r) {
-        const B = v.basis(); ctx.fillStyle = col; ctx.beginPath();
-        for (const p of pts) { const [x, y] = v.project(p[0], p[1], p[2], B); ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, 7); }
-        ctx.fill();
       }
       const FACES = [[0, 1, 3, 2], [4, 5, 7, 6], [0, 1, 5, 4], [2, 3, 7, 6], [0, 2, 6, 4], [1, 3, 7, 5]];
       const EDGES = [[0, 1], [0, 2], [0, 4], [1, 3], [1, 5], [2, 3], [2, 6], [3, 7], [4, 5], [4, 6], [5, 7], [6, 7]];
-      function box3(ctx, Cn) {
+      function box3(ctx, Cn, hit, faint) {                              // the barrier: red while the imagined motion hits it
         const B = v.basis(), P = Cn.map(p => v.project(p[0], p[1], p[2], B));
         const c = [0, 1, 2].map(k => Cn.reduce((a, p) => a + p[k], 0) / 8);
         const vis = FACES.map(f => {
           const m = [0, 1, 2].map(k => f.reduce((a, i) => a + Cn[i][k], 0) / 4);
           return (m[0] - c[0]) * B.fx + (m[1] - c[1]) * B.fy + (m[2] - c[2]) * B.fz > 0;
         });
-        ctx.save();
+        const tone = hit ? 'bad' : 'ink', edge = hit ? C.bad : C.ink;
+        ctx.save(); ctx.globalAlpha = faint ? 0.45 : 1;
         FACES.forEach((f, k) => {
           if (!vis[k]) return;
-          ctx.fillStyle = k >= 4 ? PD.rgba('ink', 0.10) : PD.rgba('ink', 0.05);
+          ctx.fillStyle = k >= 4 ? PD.rgba(tone, hit ? 0.16 : 0.10) : PD.rgba(tone, hit ? 0.09 : 0.05);
           ctx.beginPath(); f.forEach((i, j) => j ? ctx.lineTo(P[i][0], P[i][1]) : ctx.moveTo(P[i][0], P[i][1])); ctx.closePath(); ctx.fill();
         });
         const front = e => FACES.some((f, k) => vis[k] && f.includes(e[0]) && f.includes(e[1]));
         for (const e of EDGES) {
-          ctx.strokeStyle = front(e) ? C.ink : C.g400; ctx.setLineDash(front(e) ? [] : [2, 3]); ctx.lineWidth = 1;
+          ctx.strokeStyle = front(e) ? edge : C.g400; ctx.setLineDash(front(e) ? [] : [2, 3]); ctx.lineWidth = hit && front(e) ? 1.5 : 1;
           ctx.beginPath(); ctx.moveTo(P[e[0]][0], P[e[0]][1]); ctx.lineTo(P[e[1]][0], P[e[1]][1]); ctx.stroke();
         }
         ctx.restore();
         const top = P.reduce((a, p) => (p[1] < a[1] ? p : a), P[0]);
         place(L.bar, top[0] - 22, top[1] - 20);
+        L.bar.classList.toggle('bad', !!hit);
       }
-      function goal3(ctx, g, hot) {
+      function goal3(ctx, g, hot) {                                     // the goal: a yellow disc, the reward's colour
         const [x, y] = v.project(g[0], g[1], g[2]);
-        ctx.save(); ctx.strokeStyle = hot ? C.accent : C.ink; ctx.lineWidth = hot ? 1.5 : 1; ctx.setLineDash([2, 2]);
-        ctx.beginPath(); ctx.arc(x, y, hot ? 11 : 9, 0, 7); ctx.stroke(); ctx.restore();
-        D.plus(ctx, x, y, 5, hot ? C.accent : C.ink);
         const [x0, y0] = v.project(g[0], g[1], 0);
-        D.line(ctx, x, y + 9, x0, y0, C.g400, 1, [1, 3]);
-        place(L.goal, x + 14, y - 19);
+        D.line(ctx, x, y + 8, x0, y0, C.g400, 1, [1, 3]);
+        ctx.save(); ctx.fillStyle = REWARD(); ctx.strokeStyle = C.ink; ctx.lineWidth = hot ? 1.5 : 1;
+        ctx.beginPath(); ctx.arc(x, y, hot ? 8 : 6.5, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore();
+        D.plus(ctx, x, y, 3, '#111');
+        place(L.goal, x + 12, y - 19);
       }
-      function scene3(ctx, P, k, cols, a = 1) {                       // every particle of frame k: object, gripper
-        const N = d.full.N;
-        v.points(ctx, P, N, i => d.body[i] ? 1 : 0, [{ col: cols[0], r: 1.7, a: [a, a * 0.5] }, { col: cols[1], r: 1.3, a: [a * 0.9, a * 0.4] }], k * N * 3);
+      function setPose(Q, off, out = BUF) {                             // every body moved by its pose: R (row-major) p + t, from frame 0
+        const P = d.plan, stride = 12;
+        for (let j = 0; j < IDX.length; j++) {
+          const q = off + BOD[j] * stride, i = IDX[j] * 3, x = P[i], y = P[i + 1], z = P[i + 2];
+          for (let c = 0; c < 3; c++) out[3 * j + c] = Q[q + 3 * c] * x + Q[q + 3 * c + 1] * y + Q[q + 3 * c + 2] * z + Q[q + 9 + c] * 1000;
+        }
+      }
+      function setFirst(f) {                                            // update 0 at a fractional frame
+        const T = d.full.T, a = Math.min(T - 1, Math.floor(f)), b = Math.min(T - 1, a + 1), w = f - a, n = d.S.nb * 12;
+        setPose(d.S.posesFirst, a * n); setPose(d.S.posesFirst, b * n, BUF2);
+        for (let j = 0; j < BUF.length; j++) BUF[j] += (BUF2[j] - BUF[j]) * w;
+      }
+      function setFrame(P, f) {                                         // the subsets of a full-resolution rollout at a fractional frame
+        const N = d.full.N, T = d.full.T, a = Math.min(T - 1, Math.floor(f)), b = Math.min(T - 1, a + 1), w = f - a;
+        let j = 0;
+        for (const i of IDX) for (let c = 0; c < 3; c++) { const p = P[(a * N + i) * 3 + c]; BUF[j++] = p + (P[(b * N + i) * 3 + c] - p) * w; }
+      }
+      function balls(ctx, alpha = 1, ghost = false) {                   // object and gripper as shaded balls, a soft shadow on the table;
+        const ro = PD.clamp(v.s * 2.6, 1.6, 3.6), rg = ro * 0.88;          // a ghost: the object alone, faint, no shadow
+        v.points(ctx, BUF, IDX.length, ghost ? i => (CLS[i] ? 255 : 0) : CLS,
+          [{ col: C.o2, r: ro, a: [alpha, alpha * 0.8] }, { col: C.robot, r: rg, a: [alpha * 0.8, alpha * 0.5] }], 0,
+          ghost ? {} : { shadow: { z: 0, alpha: 0.05, every: 2, r: 2.4 } });
       }
 
       // ---- the diagram
@@ -2285,27 +2667,29 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         });
         for (let i = 0; i < TILES; i++) {                                // row B: the generated frames, clean once committed
           const x = tx(i), c = i < committed;
-          if (i === T && c) D.box(ctx, x, rowB, ts, ts, { col: C.accent, fill: C.accent, lw: 1 });
+          if (i === T && c) D.box(ctx, x, rowB, ts, ts, { col: C.ink, fill: REWARD(), lw: 1 });
           else D.box(ctx, x, rowB, ts, ts, c ? { col: C.ink, fill: C.bg } : { col: C.g400, dash: [2, 2] });
         }
         L.rLab.hidden = committed < TILES;
-        if (ph === 'rew' || ph === 'grad' || loop) {                     // the reward: a ring on the last frame
+        if (ph === 'rew' || ph === 'grad' || loop) {                     // the reward: a ring on the last frame, a line under the way there
           const q = ph === 'rew' ? 0.5 + 0.5 * Math.sin(u * Math.PI * 3) : 1;
-          ctx.save(); ctx.strokeStyle = PD.rgba('accent', 0.35 + 0.5 * q); ctx.lineWidth = 1.5;
-          ctx.strokeRect(tx(T) - 4.5, rowB - 4.5, ts + 9, ts + 9); ctx.restore();
+          ctx.save(); ctx.strokeStyle = REWARD_EDGE(); ctx.globalAlpha = 0.45 + 0.55 * q; ctx.lineWidth = 1.5;
+          ctx.strokeRect(tx(T) - 4.5, rowB - 4.5, ts + 9, ts + 9);
+          ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(tx(0), rowB + ts + 5); ctx.lineTo(tx(T) - 4.5, rowB + ts + 5); ctx.stroke(); ctx.restore();
         }
         // the gradient: from the reward, up the right side, back into the starting noise (during the search, every update)
         const gOn = ph === 'grad' || loop, yB = rowB + ts / 2 + 0.5, yA = rowA + ts / 2 + 0.5;
         ctx.save(); ctx.strokeStyle = gOn ? C.accent : C.g400; ctx.lineWidth = gOn ? 1.75 : 1;
         if (gOn) { ctx.setLineDash([6, 4]); ctx.lineDashOffset = loop ? -time * 90 : -u * 60; }
-        ctx.beginPath(); ctx.moveTo(tx(T) + ts + 2, yB); ctx.lineTo(gx, yB); ctx.lineTo(gx, yA); ctx.lineTo(tx(T) + ts + 8, yA); ctx.stroke(); ctx.restore();
+        ctx.beginPath(); ctx.moveTo(tx(T) + ts + 5, yB); ctx.lineTo(gx, yB); ctx.lineTo(gx, yA); ctx.lineTo(tx(T) + ts + 8, yA); ctx.stroke(); ctx.restore();
         D.arrow(ctx, tx(T) + ts + 10, yA, tx(T) + ts + 3, yA, gOn ? C.accent : C.g400, 6);
         L.grad.classList.toggle('acc', gOn);
       }
 
-      // ---- the loss after each update: log scale; traced during the search, whole with the chosen update marked after it
-      function chart(ctx, ph, k) {
-        const [x, y, w, h] = lay.chart, S = d.S, n = S.n, done = !SEARCHING.has(ph);
+      // ---- the loss after each update: log scale; traced during the search (through the last recorded update), then
+      // completed, with the chosen update marked
+      function chart(ctx, ph, u, k) {
+        const [x, y, w, h] = lay.chart, S = d.S, n = S.n;
         const X = i => x + w * i / (n - 1), Y = l => y + h - h * (Math.log10(Math.max(l, 1e-3)) - LO) / -LO;
         const xb = Math.round(x) + 0.5, yb = Math.round(y + h) + 0.5;
         ctx.save(); ctx.strokeStyle = C.g400; ctx.lineWidth = 1; ctx.beginPath();
@@ -2320,13 +2704,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           for (let i = 0; i <= to; i++) { const px = X(i), py = Y(S.loss[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
           ctx.stroke(); ctx.restore();
         };
+        const rest = ph === 'best' ? Math.min(1, u / CURVE) : SEARCHING.has(ph) ? 0 : 1;   // after the search: the rest of the run
+        const done = hold < 0 && rest >= 1;
         if (hold >= 0) curve(n - 1, 1, 0.3);
-        curve(done ? n - 1 : k, 1.5, 1);
+        curve(hold >= 0 ? k : rest > 0 ? Math.round(S.exact + (n - 1 - S.exact) * rest) : k, 1.5, 1);
         L.chosen.hidden = !done;
-        if (!done) {                                                     // the update on show
+        if (!done && rest <= 0) {                                        // the update on show
           if (hold >= 0) D.line(ctx, Math.round(X(k)) + 0.5, y - 4, Math.round(X(k)) + 0.5, yb, C.g500, 1, [2, 2]);
           ctx.save(); ctx.fillStyle = C.accent; ctx.beginPath(); ctx.arc(X(k), Y(S.loss[k]), 3, 0, 7); ctx.fill(); ctx.restore();
-        } else {                                                         // the chosen update: the lowest loss
+        } else if (done) {                                               // the chosen update: the lowest loss
           const px = X(S.sel), py = Y(S.loss[S.sel]), ty = Y(0.1);
           D.line(ctx, Math.round(px) + 0.5, ty + 2, Math.round(px) + 0.5, py - 5, C.g500, 1);
           ctx.save(); ctx.strokeStyle = C.accent; ctx.fillStyle = C.bg; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(px, py, 4, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore();
@@ -2334,50 +2720,34 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         }
       }
 
-      // ---- the 3D view: the search, then the chosen plan imagined, then executed
+      // ---- the 3D view: update 0 generated, the search, then the chosen plan imagined, then executed
       function view3(ctx, ph, u, k) {
-        const [vx, vy, vw, vh] = lay.view, T = d.full.T, S = d.S, kf = Math.min(T - 1, Math.floor(ease(u) * T));
+        const [vx, vy, vw, vh] = lay.view, T = d.full.T, S = d.S;
         D.corners(ctx, vx, vy, vw, vh, 6, C.g400);
         ctx.save(); ctx.beginPath(); ctx.rect(vx, vy, vw, vh); ctx.clip();
         v.ground(ctx, 0, v.R * 0.95, 50);
-        box3(ctx, d.barrier);
-        goal3(ctx, d.goal, ph === 'rew');
+        const scored = ph !== 'fwd';                                     // the barrier and the goal enter with the reward
+        box3(ctx, d.barrier, SEARCHING.has(ph) && scored && S.clr[k] < 0, !scored);
         if (SEARCHING.has(ph)) {
-          const f = ph === 'fwd' ? kf : T - 1;
-          scene3(ctx, d.plan, 0, [C.ink, C.given], 0.16);                // the start, every particle, faint
-          if (k > 0) {
-            for (let e = 1; e < k; e += 3) line3(ctx, S.obj[e], C.accent, 1, null, Infinity, 0.12);   // earlier updates
-            line3(ctx, S.obj[0], C.g500, 1, [4, 3]);                                                    // update 0
-          }
-          line3(ctx, S.grip[k], C.accent2, 1, null, f);
-          line3(ctx, S.obj[k], C.accent, 1.6, null, f);
-          if (ph === 'fwd') { dots3(ctx, S.firstGrip[f], PD.rgba('accent2', 0.7), 1.2); dots3(ctx, S.firstObj[f], C.accent, 2); }
-          else {
-            dots3(ctx, S.objLast[k], C.accent, 2);                         // the object's last frame (the gripper: its path only)
-            line3(ctx, [S.obj[k][T - 1], d.goal], C.accent, 1, [2, 3]);  // what the reward measures: the last frame to the goal
-          }
+          const f = ph === 'fwd' ? ease(u) * (T - 1) : T - 1;
+          for (let e = 0; e < Math.min(k, S.exact + 1); e += 3) line3(ctx, S.obj[e], C.g500, 1, null, Infinity, 0.3);   // earlier updates
+          if (scored) line3(ctx, [S.obj[k][T - 1], d.goal], C.g500, 1, [2, 3]);   // what the reward measures: the last frame to the goal
+          line3(ctx, S.obj[k], C.o2, 2, null, f);
+          if (ph === 'fwd') setFirst(f); else setPose(S.posesLast, k * S.nb * 12);
+          balls(ctx);
         } else if (ph === 'best') {
-          line3(ctx, S.obj[0], C.g500, 1, [4, 3]);
-          line3(ctx, d.path, C.accent, 1.5, null, kf);
-          scene3(ctx, d.plan, kf, [C.accent, C.accent2]);
+          const f = ease(PD.clamp((u - CURVE) / (1 - CURVE), 0, 1)) * (T - 1);
+          line3(ctx, d.path, C.o2, 2, null, f);
+          setFrame(d.plan, f); balls(ctx);
         } else {
-          const ke = ph === 'exe' ? kf : T - 1;
-          line3(ctx, d.path, C.accent, 1, [2, 3]);
-          scene3(ctx, d.plan, T - 1, [C.accent, C.accent2], 0.22);   // the imagined outcome, faint, for comparison
-          line3(ctx, d.executed_obj, C.ink, 1.4, [1.5, 2.5], ke);
-          scene3(ctx, d.exe, ke, [C.ink, C.given]);
+          const f = ph === 'exe' ? ease(u) * (T - 1) : T - 1;
+          line3(ctx, d.path, C.o2, 1, [2, 3], Infinity, 0.55);           // the imagined plan, faint
+          setFrame(d.plan, T - 1); balls(ctx, 0.3, true);
+          line3(ctx, d.executed_obj, C.o2, 2, null, f);
+          setFrame(d.exe, f); balls(ctx);
         }
+        goal3(ctx, d.goal, ph === 'rew');                                // on top: the object ends on it
         ctx.restore();
-        const gp = S.grip[k], mid = gp[Math.floor(0.45 * (gp.length - 1))];   // the pointers: what is drawn now
-        let o = null, g = null, im = null, to = '', tg = '';
-        if (ph === 'fwd') { o = cenPts(S.firstObj[kf]); g = cenPts(S.firstGrip[kf]); to = 'the object · imagined'; tg = 'the gripper · imagined'; }
-        else if (SEARCHING.has(ph)) { o = cenPts(S.objLast[k]); g = v.project(mid[0], mid[1], mid[2]); to = 'the object at the last frame'; tg = 'the gripper\u2019s path'; }
-        else if (ph === 'best') { o = cenFrame(d.plan, kf, false); g = cenFrame(d.plan, kf, true); to = 'the object · imagined'; tg = 'the gripper · imagined'; }
-        else { o = cenFrame(d.exe, ph === 'exe' ? kf : T - 1, false); im = cenFrame(d.plan, T - 1, false); to = 'the object · executed'; }
-        if (L.pObj.textContent !== to) L.pObj.textContent = to;
-        if (L.pGrip.textContent !== tg) L.pGrip.textContent = tg;
-        const late = SEARCHING.has(ph) && ph !== 'fwd';                   // the searched object sits by the goal: its label below right
-        pointAt(ctx, 'pObj', o, late ? 40 : -200, late ? 72 : 46); pointAt(ctx, 'pGrip', g, -190, -40); pointAt(ctx, 'pImg', im, 60, -46);
       }
       function steps(ph) {                                              // the six steps, the one on show in ink
         const n = STEP_OF[ph];
@@ -2387,44 +2757,30 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           : STEPS.map((st, i) => `<span${i === n ? ' class="on"' : ''}><b>${i + 1}</b> ${st[0]}</span>`).join('<i>→</i>');
         L.stepNote.textContent = STEPS[n][1];
       }
-      // pointer labels in the 3D view: a label and a leader line to a point on screen (null hides it)
-      function pointAt(ctx, key, tgt, dx, dy) {
-        const el = L[key];
-        if (!tgt || lay.mob) { el.hidden = true; ptr[key] = null; return; }
-        const [vx, vy, vw, vh] = lay.view, w = el.offsetWidth || 120;
-        const want = [PD.clamp(tgt[0] + dx, vx + 4, vx + vw - w - 4), PD.clamp(tgt[1] + dy, vy + 4, vy + vh - 20)];
-        const q = ptr[key] = ptr[key] ? ptr[key].map((c, i) => c + (want[i] - c) * 0.15) : want;
-        el.hidden = false; place(el, q[0], q[1]);
-        D.line(ctx, q[0] + (q[0] + w / 2 < tgt[0] ? w + 3 : -3), q[1] + 7, tgt[0], tgt[1], C.g500);
-      }
-      const cenPts = pts => { let x = 0, y = 0, z = 0; for (const q of pts) { x += q[0]; y += q[1]; z += q[2]; } return v.project(x / pts.length, y / pts.length, z / pts.length); };
-      function cenFrame(P, k, grip) {                                   // the screen centre of the object's (or gripper's) particles at frame k
-        const N = d.full.N; let x = 0, y = 0, z = 0, n = 0;
-        for (let i = 0; i < N; i++) if (!d.body[i] === !grip) { const o = (k * N + i) * 3; x += P[o]; y += P[o + 1]; z += P[o + 2]; n++; }
-        return n ? v.project(x / n, y / n, z / n) : null;
-      }
       function readout(ph, k) {
         const m = lay.mob, S = d.S;
         const bar = (c, ok) => c < 0 ? '<span class="bad">hits the barrier</span>'
           : ok ? `clears the barrier by ${c.toFixed(1)} mm` : `too close to the barrier (${c.toFixed(1)} mm)`;
-        let eye, note = '';
-        if (ph === 'fwd') {
-          eye = m ? 'imagined by the model' : 'imagined by the model · gripper and object generated together';
-          note = 'update 0 · generated from the starting noise';
-        }
-        else if (SEARCHING.has(ph)) {
-          eye = m ? 'the search' : 'the search · the imagined motion after each update';
-          note = `update ${k} · ${S.goal[k].toFixed(1)} mm from the goal · ${bar(S.clr[k], S.ok[k])}` +
-            (m ? '' : '<br><span class="note-in">bold: this update · faint: earlier updates · dashed: update 0</span>');
+        let eye, note;
+        if (SEARCHING.has(ph)) {
+          eye = `${m ? 'imagined' : 'imagined by the model'} · update ${k}`;
+          note = ph === 'fwd' ? 'the model is not given the barrier; only the reward sees it'
+            : `${S.goal[k].toFixed(1)} mm from the goal · ${bar(S.clr[k], S.ok[k])}`;
         } else if (ph === 'best') {
-          eye = m ? 'the chosen plan' : 'the chosen plan · imagined by the model';
-          note = `chosen: update ${S.sel}, the lowest loss · <span class="acc">${d.imagined_goal_mm.toFixed(2)} mm</span> from the goal · clears the barrier by ${d.imagined_clear_mm.toFixed(1)} mm`;
+          eye = m ? 'the plan · imagined' : `the plan, imagined · update ${S.sel}`;
+          note = `the lowest loss · <span class="acc">${d.imagined_goal_mm.toFixed(2)} mm</span> from the goal · clears the barrier by ${d.imagined_clear_mm.toFixed(1)} mm`;
         } else {
-          eye = m ? 'executed in simulation' : 'executed in a physics simulator · the planned gripper motion';
-          note = `executed: <b style="font-weight:500">${d.executed_goal_mm.toFixed(1)} mm</b> from the goal${m ? '' : ' · faint blue: the imagined outcome'}`;
+          eye = m ? 'the plan · executed' : 'executed in a physics simulator';
+          note = `executed: <b style="font-weight:500">${d.executed_goal_mm.toFixed(1)} mm</b> from the goal`;
         }
         if (L.vEye.textContent !== eye) L.vEye.textContent = eye;
         if (note !== lastNote) { L.vNote.innerHTML = note; lastNote = note; }
+        const ghost = ph === 'exe' || ph === 'hold', key = ghost ? 'g' : 'p';   // the key: what the colours are
+        if (key !== lastKey) {
+          const sw = (col, a, s) => `<span class="sw" style="background:${col};opacity:${a}"></span>${s}`;
+          L.key.innerHTML = [sw(C.o2, 1, 'object'), sw(C.robot, 1, 'gripper'), ghost ? sw(C.o2, 0.3, 'imagined') : ''].filter(Boolean).join('');
+          lastKey = key;
+        }
       }
 
       function frame(time, dt) {
@@ -2434,22 +2790,23 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         t = player.advance(hold >= 0 ? 0 : dt);
         let ph = 'fwd', u = 0, acc = 0;
         for (const [id, dur] of PHASES) { if (t < acc + dur) { ph = id; u = (t - acc) / dur; break; } acc += dur; }
-        const last = d.S.n - 1;
-        let k = ph === 'search' ? Math.min(last, 1 + Math.floor(u * last)) : SEARCHING.has(ph) ? 0 : last;
+        let k = ph === 'search' ? Math.min(d.S.exact, 1 + Math.floor(u * d.S.exact)) : SEARCHING.has(ph) ? 0 : d.S.sel;
         if (hold >= 0) { ph = 'search'; u = 0; k = hold; }
         if (!v.drag && !v.userTurned && !PD.reduced) v.az = az0 + 10 * Math.sin(2 * Math.PI * time / 22);
         steps(ph);
         diagram(ctx, ph, u, k, time);
-        chart(ctx, ph, k);
+        chart(ctx, ph, u, k);
         view3(ctx, ph, u, k);
         readout(ph, k);
       }
+      // hovering the loss curve holds an update; only recorded updates are shown, so it snaps to the nearest one
+      const recorded = i => (i <= d.S.exact ? i : i - d.S.exact < d.S.sel - i ? d.S.exact : d.S.sel);
       function pointer(type, p, e) {
         if (!lay || !d) return;
         const [x, y, w, h] = lay.chart, n = d.S.n, touch = e && e.pointerType === 'touch';
         const inChart = p.x >= x - 10 && p.x <= x + w + 10 && p.y >= y - 14 && p.y <= y + h + 20;
         if (inChart && (type === 'move' || type === 'down')) {           // hover (or touch) the loss curve: hold that update
-          hold = PD.clamp(Math.round((p.x - x) / w * (n - 1)), 0, n - 1);
+          hold = recorded(PD.clamp(Math.round((p.x - x) / w * (n - 1)), 0, n - 1));
           api.stage.canvas.style.cursor = 'ew-resize';
           return;
         }
