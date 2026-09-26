@@ -78,7 +78,8 @@ a { color: inherit; }
 @media (min-width: 900px) { .hero h1 .brw { display: inline; } }
 .hero h1 b { font-weight: 500; }
 .hero .who { font-family: var(--mono); font-size: var(--fs-s); color: var(--sub); letter-spacing: .02em; margin: 0 0 18px; }
-.hero .links { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero .links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.hero .wrap { text-align: center; }                                                /* the title block, centred over the abstract */
 .chips { display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); margin-top: 22px; }
 .chips b { color: var(--ink); font-weight: 400; }
 
@@ -212,6 +213,11 @@ a { color: inherit; }
 /* the hero figure: three sizes only (11px notes and eyebrows, 12px box labels, 15px maths); the level notes sit in the bars */
 .scene--overview .pd-art .ovname { position: absolute; font-family: var(--serif); font-size: 28px; line-height: 32px; color: var(--ink); white-space: nowrap; }
 .scene--overview .pd-art .ovsub { text-align: center; }                          /* the model block's subtitle */
+.scene--overview .ov-worlds { position: absolute; display: flex; flex-wrap: wrap; gap: 4px 20px; }   /* the collections, which is on */
+.scene--overview .ov-worlds button { all: unset; cursor: pointer; font-family: var(--mono); font-size: var(--fs-s); line-height: 18px; letter-spacing: .02em; color: var(--g500); }
+.scene--overview .ov-worlds button:hover { color: var(--ink); }
+.scene--overview .ov-worlds button.on { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; }
+.scene--overview .ov-worlds button:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 .scene--hero .pd-art .lab b { font-weight: 500; }
 .scene--hero .pd-art .lab .d { display: block; font-size: var(--fs-xs); color: var(--sub); }
 .scene--hero .pd-art .compact .lab .d { display: none; }
@@ -247,13 +253,11 @@ a { color: inherit; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent-2: #a8b4ff; } }
 :root[data-theme="dark"] { --accent-2: #a8b4ff; }
 .bars { margin-top: 30px; max-width: 820px; }
-.abs-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 56px; align-items: start; }
-.abs-grid .abstract { font-size: 18px; line-height: 1.62; }
-.abs-results .bars { margin-top: 10px; }
+.wrap.abs-center { max-width: 880px; }                                             /* the abstract: one centred column */
+.abs-center .eyebrow-s { text-align: center; }
+.abs-center .abstract { max-width: none; }
 .res-h { font-family: var(--serif); font-weight: 400; font-size: 22px; letter-spacing: -0.01em; margin: 0; }
 .res-h span { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .02em; color: var(--sub); margin-left: 8px; }
-.abs-results .res-h + .bars + .res-h { margin-top: 34px; }
-@media (max-width: 1060px) { .abs-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; } .abs-grid .abstract { font-size: 19px; } }
 .bars-switch { display: flex; gap: 6px; margin-bottom: 10px; }
 .bars-sw { all: unset; cursor: pointer; font-family: var(--mono); font-size: var(--fs-s); line-height: 15px; letter-spacing: .02em;
   padding: 7px 16px; border-radius: 999px; border: 1px solid var(--g300); color: var(--sub); white-space: nowrap; }
@@ -348,6 +352,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <a href="#streaming">Streaming</a>
     <a href="#planning">Planning</a>
     <a href="#real-world">Real world</a>
+    <a href="#results">Results</a>
     <a href="#bibtex">BibTeX</a>
   </nav>
   <button class="pill" type="button" data-theme-toggle aria-label="Switch colour theme"><span data-theme-label>night mode</span></button>
@@ -364,19 +369,13 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   </section>
 
   <section class="sec" id="abstract">
-    <div class="wrap abs-grid">
-      <div class="abs-text">
-        <p class="eyebrow-s">Abstract</p>
+    <div class="wrap abs-center">
+      <p class="eyebrow-s">Abstract</p>
         <div class="abstract">
           <p>Learned simulators of 3D physics are mostly deterministic, operate over short horizons, or specialize to particular materials and interactions. We introduce GPWM, <b>a generative world model for physical prediction and planning in 3D particle space</b>. GPWM represents motion through particle displacements and rigid-body transformations, supporting rigid objects, deformable solids, cloth, and granular materials within a common architecture. We also introduce <b>ParticleWorlds, a dataset of 25.5 million simulated frames</b> spanning diverse geometries, materials, and robotic interactions, and evaluate both collection-specific models and a unified model trained across its six domains.</p>
           <p>An <b>object-aware, multi-resolution transformer</b> combines <b>flow matching with diffusion forcing</b> to generate physical trajectories, using independent noise levels across future frames to support streaming prediction beyond the training window. GPWM is <b>more accurate than existing learned simulators on all six test collections</b>, lowering the error of the strongest by <b>29% to 53%</b> on five of them, and it generalizes to unseen geometries, material parameters, and object counts. On cloth manipulation, a model trained with 16-frame prediction windows maintains coherent dynamics over <b>1,000-frame rollouts</b>.</p>
           <p>For planning, task-specific models jointly generate actuator and object trajectories, allowing <b>rewards on future object configurations to guide actuator motion</b> through the generative process. Executed open-loop in simulation, these motions improve pushing, picking, and granular manipulation over unguided generation and over planning with prior learned simulators, <b>without training goal-specific policies</b>. These results demonstrate the potential of generative particle world models as a common framework for physical prediction and planning.</p>
         </div>
-      </div>
-      <div class="abs-results" id="results">
-        <p class="eyebrow-s">Results</p>
-        <div class="bars" data-bars="prediction,planning"></div>
-      </div>
     </div>
   </section>
 
@@ -388,9 +387,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <p class="lede" data-view="architecture" hidden>Every particle in every frame becomes a token, and every rigid body a pose token. Coarser levels keep real particles, chosen inside each object. Follow one forward pass through the network, block by block, for each kind of scene.</p>
       <div class="bars-switch view-switch" data-views role="group" aria-label="How much of the method to show"><button type="button" class="bars-sw on" data-show="overview">Overview</button><button type="button" class="bars-sw" data-show="architecture">Architecture</button></div>
     </div>
-    <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps: the scene so far as particles, the GPWM network, and the sixteen future frames it generates."></div>
+    <div class="pd-stage mid" data-scene="overview" data-view="overview" role="img" aria-label="The method in three steps, for one scene of each collection in turn: the scene so far as particles, the GPWM network, and the future it generates."></div>
     <div class="pd-stage tall" data-scene="hero" data-view="architecture" hidden role="img" aria-label="Six kinds of scene flow through one architecture: the history of each scene on the left, the multi-resolution network and one of its DiT blocks in the middle, and the generated future of every particle on the right."></div>
-    <div class="wrap"><p class="note-s" data-view="overview">A seven-object drop: the Free Fall specialist generates the next 16 frames from 4 given ones. The given history is in <span class="tw" data-l="black" data-d="white"></span>, generated particles in one colour per object. Drag a view to turn the scene. Switch to Architecture to follow the network block by block, for every kind of scene.</p><p class="note-s" data-view="architecture" hidden>One example scene from each collection; the one in focus is drawn solid. Left, what the model is given: the history (<span class="tw" data-l="black" data-d="white"></span>) and any robot or tool motion (grey); in Dragging, the arrow is the given drag. Middle, the network. Every particle in every frame is a token (its noisy displacement <i>Δp<sub>τ</sub></i>, geometry <i>g</i>, physical parameters <i>E</i>, <i>ν</i>, <i>ρ</i> and any action <i>a</i>), and every rigid body adds a pose token (its noisy pose increment <i>Δq<sub>τ</sub></i>). The tokens pass through coarser point levels and back and leave as clean trajectories; sampling repeats this K times. One pass runs through the network block by block; the panel beside it follows the active block, showing that scene&rsquo;s particles at the block&rsquo;s resolution and what attention looks at for one marked particle (its own frames, then its object at L0 or anchors of every object above), over the DiT block itself. In the network, blue marks the two attention stages, the per-frame noise and the sampling loop. Right, what it generates, each object in its own colour. Hover a block to hold the pass there, a scene to follow it; drag a scene to turn it.</p></div>
+    <div class="wrap"><p class="note-s" data-view="overview">One scene from each collection in turn, each predicted by its collection&rsquo;s specialist (the scenes of the Architecture view). The given history is in <span class="tw" data-l="black" data-d="white"></span>, robots and tools in grey, generated particles in one colour per object. Drag a view to turn the scene. Switch to Architecture to follow the network block by block, for every kind of scene.</p><p class="note-s" data-view="architecture" hidden>One example scene from each collection; the one in focus is drawn solid. Left, what the model is given: the history (<span class="tw" data-l="black" data-d="white"></span>) and any robot or tool motion (grey); in Dragging, the arrow is the given drag. Middle, the network. Every particle in every frame is a token (its noisy displacement <i>Δp<sub>τ</sub></i>, geometry <i>g</i>, physical parameters <i>E</i>, <i>ν</i>, <i>ρ</i> and any action <i>a</i>), and every rigid body adds a pose token (its noisy pose increment <i>Δq<sub>τ</sub></i>). The tokens pass through coarser point levels and back and leave as clean trajectories; sampling repeats this K times. One pass runs through the network block by block; the panel beside it follows the active block, showing that scene&rsquo;s particles at the block&rsquo;s resolution and what attention looks at for one marked particle (its own frames, then its object at L0 or anchors of every object above), over the DiT block itself. In the network, blue marks the two attention stages, the per-frame noise and the sampling loop. Right, what it generates, each object in its own colour. Hover a block to hold the pass there, a scene to follow it; drag a scene to turn it.</p></div>
   </section>
 
   <section class="sec" id="dataset">
@@ -407,7 +406,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Comparison</p>
       <h2>Side by side with other learned simulators</h2>
-      <p class="lede">Test clips from every collection: the simulator&rsquo;s recording next to the predictions of GPWM and of the baselines compared at the top.</p>
+      <p class="lede">Test clips from every collection: the simulator&rsquo;s recording next to the predictions of GPWM and of the baselines compared in the results.</p>
     </div>
     <div class="pd-stage" data-scene="compare" role="img" aria-label="Side-by-side 3D views of test clips: the simulator's recording, GPWM's prediction and the baselines' predictions, one row of buttons per collection and clip."></div>
     <div class="wrap"><p class="note-s">The given frames are drawn in <span class="tw" data-l="black" data-d="white"></span>, robots and the dragged patch in grey, each object in its own colour. Drag a view to turn them all.</p></div>
@@ -428,7 +427,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow-s">Planning</p>
       <h2>Planning by steering the generation</h2>
-      <p class="lede">Task-specific models generate the robot&rsquo;s motion together with the scene&rsquo;s. A reward scores the imagined outcome; its gradient flows back through every model window to the starting noise, and the noise is updated until the imagined motion reaches the goal. The plan is then executed open-loop in a physics simulator. On all three tasks, guidance does better than unguided generation and than planning with other learned simulators (results at the top).</p>
+      <p class="lede">Task-specific models generate the robot&rsquo;s motion together with the scene&rsquo;s. A reward scores the imagined outcome; its gradient flows back through every model window to the starting noise, and the noise is updated until the imagined motion reaches the goal. The plan is then executed open-loop in a physics simulator. On all three tasks, guidance does better than unguided generation and than planning with other learned simulators (results at the end).</p>
     </div>
     <div class="pd-stage" data-scene="planning" aria-label="Guided generation on a pick-and-place task over a barrier: a block diagram of the reward's gradient flowing back to the starting noise, the loss falling over the updates of the noise, the imagined motion after each update, then the chosen plan and its execution in simulation"></div>
   </section>
@@ -441,6 +440,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     </div>
     <div class="pd-stage" data-scene="realworld" role="img" aria-label="An interactive 3D viewer of predictions from single images: a four-object tower in bullet time, a ball dropped where you click, a push that changes the future, a castle as dry and as damp sand, and a generated dorm desk."></div>
     <div class="wrap"><p class="note-s">Every clip shown passes every check: no elastic or plasticine object ends deep under the table, resting objects stay still until something reaches them, objects pass into each other by no more than one grid cell of the simulator the model learned from, and nothing enters an object that exists only in the photo. The model is given 4 frames of free fall, built from the release pose, and predicts the rest (the Free Fall specialist, 25 sampling steps). Each object is drawn as its reconstruction&rsquo;s surface points, carried by the model&rsquo;s particles; sand is drawn as the particles themselves, and sand below the table is drawn resting on it. &ldquo;Particles&rdquo; shows the model&rsquo;s own particles for every object. The backdrop is the photo laid on its estimated depth, with the moving objects removed from it: exact from the photo&rsquo;s viewpoint, a shell from other angles. Drag the view to turn it.</p></div>
+  </section>
+
+  <section class="sec" id="results">
+    <div class="wrap">
+      <p class="eyebrow-s">Results</p>
+      <h2>Prediction and planning, in numbers</h2>
+      <div class="bars" data-bars="prediction,planning"></div>
+    </div>
   </section>
 
   <section class="sec" id="bibtex">
@@ -459,7 +466,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <footer><div class="wrap"><span>GPWM &middot; anonymous ICLR 2027 submission</span><span>Page design inspired by paradigm.xyz</span></div></footer>
 
-<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","overview":"9d8a572d68","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rw_desk":"8593fcc54d","rw_tower":"1cd9cd9b6b","rw_drop":"6c143dc5b9","rw_nudge":"f830b22304","rw_beach":"22d98eb9d0","rw_materials":"0cefaf12e0","rw_dorm":"20345ed63d","rw_world":"b39755477f","rw_farm":"2a03dd4b80","rw_living":"dc41d1a68c","rw_candy":"97287bf7c1","rw_mars":"320445b586","rw_letgo":"b145ce95fa","rw_1970s":"e102de1563","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
+<script>window.PD = { DATA_V: {"freefall":"3c8d3ed8ea","dragging":"c7ddd8e5b9","folding":"b781cb9c06","pushing":"9b10998890","pickplace":"2850261622","dexterous":"b3438e744b","longfold":"2c30717604","guided":"2c281774a2","dataset":"74d120d0e9","rw_desk":"8593fcc54d","rw_tower":"1cd9cd9b6b","rw_drop":"6c143dc5b9","rw_nudge":"f830b22304","rw_beach":"22d98eb9d0","rw_materials":"0cefaf12e0","rw_dorm":"20345ed63d","rw_world":"b39755477f","rw_farm":"2a03dd4b80","rw_living":"dc41d1a68c","rw_candy":"97287bf7c1","rw_mars":"320445b586","rw_letgo":"b145ce95fa","rw_1970s":"e102de1563","compare":"d9462cc7de","cmp_ff1":"3440fcbbe4","cmp_ff2":"6bb4f30e4d","cmp_ff3":"3e4afdbe5e","cmp_ff4":"480b7b9d33","cmp_ff5":"6973addc15","cmp_drag1":"bc8702b76f","cmp_drag2":"e0104be2e0","cmp_drag3":"13981dcabc","cmp_fold1":"5c4102499c","cmp_fold2":"ff547d059d","cmp_fold3":"36daf8a9df","cmp_fold4":"455eea7afe","cmp_push1":"987767f812","cmp_push2":"599d4c4e46","cmp_push3":"e55601b4e8","cmp_push4":"a77b35e24c","cmp_pick1":"6ca775bcf1","cmp_pick2":"d586ecf8dd","cmp_pick3":"8a76ac1998","cmp_dex1":"8c24905cc5"} };</script>
 <script>
 /* GPWM paper site: core. The page is a scroll of sections; each interactive figure is a "stage" (its own canvas, overlay
    and controls) that runs only while it is on screen. Two kinds of stage:
@@ -2274,63 +2281,91 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
 </script>
 <script>
 /* The method at a glance, for readers who want the idea before the architecture: the scene so far goes through GPWM and
-   comes out as its future. Left, the history (the 4 given frames, in ink, played); middle, the model as one block (its
-   point levels, fine to coarse and back, light up in turn as the scene passes through); right, the 16 generated frames,
-   played, one tone per object. The Free Fall specialist's prediction for one 16-frame window of a seven-object drop, every
-   particle (pack_overview.py). The switch above the stage (PD.mountViews) swaps this for the block-by-block architecture. */
+   comes out as its future, for one scene of each collection in turn (the Architecture view's six scenes and camera
+   angles, each predicted by its collection's specialist; pack_data.py). Left, the history (the given frames played; the
+   passive particles in ink, robots and tools grey); middle, the model as one block (its point levels, fine to coarse and
+   back, light up in turn as the scene passes through); right, the generated future, played (sped up or slowed to 2.5-5 s),
+   one tone per object. A row of the six collections on top says which is on and jumps to one. The switch above the stage
+   (PD.mountViews) swaps this for the block-by-block architecture. */
 (function () {
   'use strict';
   const PD = window.PD, C = PD.colors, D = PD.draw;
-  const PHASES = [['hist', 2.6], ['model', 1.8], ['fut', 4.2]];   // the history plays; it goes through GPWM; the future plays
-  const TOTAL = PHASES.reduce((s, p) => s + p[1], 0);
-  const HIST_FPS = 3, FUT_FPS = 6, AZ = -64, EL = 17, SWAY = 4, SWAY_T = 30;
+  const WORLDS = [                                                // the Architecture view's scenes and angles (hero.js)
+    { id: 'freefall', label: 'Free Fall', az: -55, el: 16 }, { id: 'dragging', label: 'Dragging', az: -60, el: 24 },
+    { id: 'folding', label: 'Garment Folding', az: -120, el: 42 }, { id: 'pushing', label: 'Pushing', az: 150, el: 26 },
+    { id: 'pickplace', label: 'Pick and Place', az: 170, el: 22 }, { id: 'dexterous', label: 'Dexterous Hands', az: -60, el: 20 }];
+  const HIST = 2.4, MODEL = 1.6, HOLD = 0.9, FUT = [2.5, 5.0];    // per scene: history, through GPWM, the future, a hold
+  const HIST_FPS = 3, SWAY = 4, SWAY_T = 30;
   const LEVELS = [7, 5, 3, 5, 7];                                 // the block's glyph: point levels, fine to coarse and back
 
   PD.scene('overview', {
     create(api) {
-      const v = new PD.View3D({ az: AZ, el: EL, spin: 0 });
-      let d = null, lay = null, t = 0, E = null;
-      const player = PD.player(api, TOTAL);
-      if (PD.reduced) player.seek(TOTAL - 0.01);
+      const v = new PD.View3D({ az: WORLDS[0].az, el: WORLDS[0].el, spin: 0 });
+      let clips = null, segs = null, lay = null, t = 0, cur = -1, E = null, buf = null, histCls = null, futCls = null;
+      const player = PD.player(api, 60);
       const L = {};
       const mk = (k, cls, html) => { L[k] = PD.el('div', cls, api.el); if (html != null) L[k].innerHTML = html; return L[k]; };
       ['1 · the scene so far', '2 · the model', '3 · its future'].forEach((s, i) => mk('t' + i, 'eyebrow', s));
       [
         'Every particle, with its material (E, ν, ρ). A robot’s motion, when there is one, is given too.',
-        'One network generates all 16 future frames at once.',
-        'The next 16 frames of every particle.',
+        'The same network for every kind of scene.',
+        'The future of every particle, generated.',
       ].forEach((s, i) => mk('c' + i, 'note wrap', s));
       mk('name', 'ovname', 'GPWM'); mk('sub', 'note ovsub', 'multi-resolution transformer<br>over particle tokens');
       mk('hc', 'note', ''); mk('fc', 'note', '');
+      const row = PD.el('div', 'ov-worlds', api.stage.ui);           // which collection is on; a click jumps to it
+      const btns = WORLDS.map((w, k) => { const b = PD.el('button', '', row, w.label); b.type = 'button'; b.onclick = () => segs && player.seek(segs[k].t0 + 0.01); return b; });
 
-      PD.data('overview').then(async rec => {
-        rec.K = await PD.traj(rec.clean, rec.F, rec.n, rec.unit);              // [F, n, 3]: the generated window
-        rec.H = await PD.traj(rec.ctx, rec.C, rec.n, rec.unit);                // [C, n, 3]: the history
-        rec.cls = new Uint8Array(await PD.inflate(rec.cls));
-        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity;
-        const see = (A, off, n) => { for (let i = 0; i < n; i++) { const o = off + 3 * i; x0 = Math.min(x0, A[o]); x1 = Math.max(x1, A[o]); y0 = Math.min(y0, A[o + 1]); y1 = Math.max(y1, A[o + 1]); z0 = Math.min(z0, A[o + 2]); z1 = Math.max(z1, A[o + 2]); } };
-        see(rec.H, 0, rec.C * rec.n); see(rec.K, 0, rec.F * rec.n);           // frame the history and the generated window
-        E = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, z0, z1, r: Math.max(x1 - x0, y1 - y0, (z1 - z0) * 1.2) / 2, hxy: Math.hypot(x1 - x0, y1 - y0) / 2 };
-        d = rec; lay = null;
+      Promise.all(WORLDS.map(w => PD.data(w.id))).then(recs => {
+        clips = recs;
+        let t0 = 0;
+        segs = recs.map((c, k) => {                                   // the timeline: one segment per scene
+          const real = c.tsec[c.T - 1] - c.tsec[c.hist - 1], fut = PD.clamp(real, FUT[0], FUT[1]);
+          const s = { k, t0, fut, dur: HIST + MODEL + fut + HOLD };
+          t0 += s.dur; return s;
+        });
+        player.total = t0;
+        if (PD.reduced) player.seek(segs[0].t0 + segs[0].dur - 0.01);
+        lay = null;
       });
+
+      function use(k) {                                               // switch to scene k: its camera, colours and framing
+        cur = k;
+        const c = clips[k], w = WORLDS[k], N = c.N;
+        v.az = w.az; v.el = w.el; v.userTurned = false;
+        const objs = [...new Set([...c.obj].filter((_, j) => !c.role[j]))];
+        futCls = Uint8Array.from(c.mat, (m, j) => (c.role[j] ? 4 : m === 5 ? 3 : PD.objectClass(objs.indexOf(c.obj[j]))));
+        histCls = Uint8Array.from(c.role, r => (r ? 1 : 0));
+        buf = new Float32Array(N * 3);
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+        const P = c.P, step = 3 * Math.max(1, Math.floor(N / 400));
+        for (let f = 0; f < c.T; f += Math.max(1, Math.floor(c.T / 30))) for (let i = 0; i < N * 3; i += step) {
+          const o = f * N * 3 + i;
+          x0 = Math.min(x0, P[o]); x1 = Math.max(x1, P[o]); y0 = Math.min(y0, P[o + 1]); y1 = Math.max(y1, P[o + 1]); z0 = Math.min(z0, P[o + 2]); z1 = Math.max(z1, P[o + 2]);
+        }
+        E = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, z0, z1, r: Math.max(x1 - x0, y1 - y0, (z1 - z0) * 1.2) / 2, hxy: Math.hypot(x1 - x0, y1 - y0) / 2 };
+        btns.forEach((b, j) => b.classList.toggle('on', j === k));
+      }
 
       function place(e, x, y, al = '') {
         e.style.left = Math.round(x) + 'px'; e.style.top = Math.round(y) + 'px';
         e.style.transform = `translate(${al.includes('c') ? '-50%' : al.includes('r') ? '-100%' : '0'}, ${al.includes('m') ? '-50%' : al.includes('b') ? '-100%' : '0'})`;
       }
-      function layout() {                                             // views left and right, the model block between them
+      function layout() {                                             // the collections on top; views left and right, the model between
         const W = api.w, H = api.h, mob = W < 760, pad = mob ? 16 : 40;
+        Object.assign(row.style, { left: pad + 'px', top: '10px', width: (W - 2 * pad) + 'px' });
+        const top = 10 + (row.offsetHeight || 18) + 42;
         let P, B, capY;
         if (!mob) {
           const bw = Math.round(PD.clamp(W * 0.15, 170, 230)), gap = 64, pw = Math.floor((W - 2 * pad - bw - 2 * gap) / 2);
-          const vh = Math.min(Math.round(pw * 0.8), H - 180), top = 62;
+          const vh = Math.min(Math.round(pw * 0.78), H - top - 120);
           P = [[pad, top, pw, vh], [pad + pw + 2 * gap + bw, top, pw, vh]];
           B = [pad + pw + gap, top + vh / 2 - 90, bw, 180];
           capY = top + vh + 18;
         } else {                                                      // phones: a column, each caption under its block
           const w = W - 2 * pad, vh = 200, bh = 116;
-          P = [[pad, 52, w, vh]];
-          const a0 = 52 + vh + 6 + 34, b0 = a0 + 26 + 26;               // the history's caption, an arrow, the model's label
+          P = [[pad, top, w, vh]];
+          const a0 = top + vh + 6 + 34, b0 = a0 + 26 + 26;               // the history's caption, an arrow, the model's label
           B = [pad + w / 2 - 100, b0, 200, bh];
           const p1 = b0 + bh + 8 + 20 + 26 + 26;                         // its caption, an arrow, the future's label
           P.push([pad, p1, w, vh]);
@@ -2351,17 +2386,22 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         L.sub.hidden = mob;
         place(L.hc, P[0][0] + 10, P[0][1] + 8); place(L.fc, P[1][0] + 10, P[1][1] + 8);
       }
-      function drawPts(r, P, off, given) {                            // given: ink; else one tone per object
-        const n = d.n;
+      function frameInto(c, f) {                                      // a fractional frame of the clip into the buffer
+        const N3 = c.N * 3, a = Math.min(c.T - 1, Math.floor(f)), b = Math.min(c.T - 1, a + 1), w = f - a, A = a * N3, B = b * N3, P = c.P;
+        for (let i = 0; i < N3; i++) buf[i] = P[A + i] + (P[B + i] - P[A + i]) * w;
+      }
+      function drawPts(r, given) {                                    // given: ink, robots grey; else one tone per object
+        const n = clips[cur].N;
         v.panel(r[0], r[1], r[2], r[3]);
         const e = v.el * Math.PI / 180, hv = (E.z1 - E.z0) / 2 * Math.cos(e) + E.hxy * Math.sin(e);
         v.fill = Math.min(0.88 * r[2] / 2 / E.hxy, 0.8 * r[3] / 2 / hv) * E.r / Math.min(r[2], r[3]);
         v.fit(E.r, E.z0, E.z1, E.cx, E.cy);
         const ctx = api.ctx;
         ctx.save(); ctx.beginPath(); ctx.rect(r[0], r[1], r[2], r[3]); ctx.clip();
-        const rp = lay.mob ? 1.0 : 1.35;
-        const pal = given ? [{ col: C.ink, r: rp, a: [1, 0.6] }] : PD.PARTICLE_KEYS.map(k => ({ col: C[k], r: rp, a: [1, 0.72] }));
-        v.points(ctx, P, n, given ? () => 0 : d.cls, pal, off, { shadow: { z: 0, alpha: 0.05, every: 2, r: 2.4 } });
+        const rp = lay.mob ? 1.1 : 1.6;
+        const pal = given ? [{ col: C.ink, r: rp, a: [1, 0.6] }, { col: C.robot, r: rp * 0.85, a: [0.9, 0.55] }]
+          : PD.PARTICLE_KEYS.map(k => ({ col: C[k], r: k === 'robot' ? rp * 0.85 : rp, a: k === 'robot' ? [0.9, 0.55] : [1, 0.72] }));
+        v.points(ctx, buf, n, given ? histCls : futCls, pal, 0, { shadow: { z: 0, alpha: 0.05, every: 2, r: 2.4 } });
         ctx.restore();
       }
       function flow(ctx, x0, y0, x1, y1, on, time) {                  // an arrow; while the scene passes along it, moving dashes
@@ -2376,7 +2416,7 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
         ctx.save(); ctx.fillStyle = C.card; ctx.beginPath(); ctx.roundRect(x, y, w, h, 12); ctx.fill(); ctx.restore();
         D.box(ctx, x, y, w, h, { col: on ? C.ink : C.g400, lw: on ? 1.75 : 1 });
         const gy = y + h / 2 + (lay.mob ? 10 : 4), gw = Math.min(w - 40, 120), step = gw / (LEVELS.length - 1);
-        const lit = on ? u * (LEVELS.length + 1) - 0.5 : ph === 'fut' ? LEVELS.length : -1;
+        const lit = on ? u * (LEVELS.length + 1) - 0.5 : ph === 'fut' || ph === 'hold' ? LEVELS.length : -1;
         LEVELS.forEach((k, j) => {
           const cx = x + w / 2 - gw / 2 + j * step, a = PD.clamp(lit - j, 0, 1), sp = lay.mob ? 7 : 8;
           for (let i = 0; i < k; i++) {
@@ -2389,47 +2429,53 @@ void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r2 = dot(p, p); if (r2 >
 
       function frame(time, dt) {
         const ctx = api.ctx;
-        if (!d) return;
+        if (!clips) return;
         if (!lay) layout();
         t = player.advance(dt);
-        let ph = 'hist', u = 0, acc = 0;
-        for (const [id, dur] of PHASES) { if (t < acc + dur) { ph = id; u = (t - acc) / dur; break; } acc += dur; }
-        if (!v.drag && !v.userTurned && !PD.reduced) v.az = AZ + SWAY * Math.sin(2 * Math.PI * time / SWAY_T);
-        const { P, B, mob } = lay, n = d.n, F = d.F;
+        const s = segs.find(x => t < x.t0 + x.dur) || segs[segs.length - 1];
+        if (s.k !== cur) use(s.k);
+        const c = clips[cur], tau = t - s.t0;
+        let ph, u;
+        if (tau < HIST) { ph = 'hist'; u = tau / HIST; } else if (tau < HIST + MODEL) { ph = 'model'; u = (tau - HIST) / MODEL; }
+        else if (tau < HIST + MODEL + s.fut) { ph = 'fut'; u = (tau - HIST - MODEL) / s.fut; } else { ph = 'hold'; u = 1; }
+        if (!v.drag && !v.userTurned && !PD.reduced) v.az = WORLDS[cur].az + SWAY * Math.sin(2 * Math.PI * time / SWAY_T);
+        const { P, B, mob } = lay, hn = c.hist;
         // 1: the history, played while it is the active step, else its last given frame
-        const h = ph === 'hist' ? Math.min(d.C - 1, Math.floor(u * PHASES[0][1] * HIST_FPS) % (d.C + 1)) : d.C - 1;
-        drawPts(P[0], d.H, h * n * 3, true);
-        L.hc.textContent = `given frame ${h + 1} of ${d.C}`;
+        const h = ph === 'hist' ? Math.floor(u * HIST * HIST_FPS) % hn : hn - 1;
+        frameInto(c, h); drawPts(P[0], true);
+        L.hc.textContent = `given frame ${h + 1} of ${hn}`;
         // 2: the model
         block(ctx, ph, u);
-        // 3: the future, played once it is generated (then its last frame, held)
-        if (ph === 'fut') {
-          const f = Math.min(F - 1, Math.floor(u * PHASES[2][1] * FUT_FPS));
-          drawPts(P[1], d.K, f * n * 3, false);
-          L.fc.textContent = `frame ${f + 1} of ${F}`;
+        // 3: the future, played once it is generated, then held
+        if (ph === 'fut' || ph === 'hold') {
+          const f = hn - 1 + u * (c.T - hn);
+          frameInto(c, f); drawPts(P[1], false);
+          const a = Math.floor(f), w = f - a, ts = c.tsec[a] + ((c.tsec[Math.min(c.T - 1, a + 1)] || c.tsec[a]) - c.tsec[a]) * w;
+          L.fc.textContent = `predicted · ${(ts - c.tsec[hn - 1]).toFixed(1)} s`;
         } else {
           D.box(ctx, P[1][0], P[1][1], P[1][2], P[1][3], { col: C.g400, dash: [2, 3] });
           L.fc.textContent = '';
         }
         [P[0], null, P[1]].forEach((r, i) => {
-          const active = (i === 0 && ph === 'hist') || (i === 1 && ph === 'model') || (i === 2 && ph === 'fut');
+          const active = (i === 0 && ph === 'hist') || (i === 1 && ph === 'model') || (i === 2 && (ph === 'fut' || ph === 'hold'));
           if (r && active) D.box(ctx, r[0] - 6, r[1] - 6, r[2] + 12, r[3] + 12, { col: C.ink, lw: 1.5 });
-          else if (r && (i === 0 || ph === 'fut')) D.corners(ctx, r[0], r[1], r[2], r[3], 6, C.g400);
+          else if (r && (i === 0 || ph === 'fut' || ph === 'hold')) D.corners(ctx, r[0], r[1], r[2], r[3], 6, C.g400);
           L['t' + i].style.color = active ? 'var(--ink)' : '';
         });
         // the way through: into the model, out of it
+        const into = ph === 'model' && u < 0.6, out = (ph === 'model' && u >= 0.45) || (ph === 'fut' && u < 0.15);
         if (!mob) {
           const ym = P[0][1] + P[0][3] / 2;
-          flow(ctx, P[0][0] + P[0][2] + 14, ym, B[0] - 10, ym, ph === 'model' && u < 0.6, time);
-          flow(ctx, B[0] + B[2] + 10, ym, P[1][0] - 14, ym, (ph === 'model' && u >= 0.45) || (ph === 'fut' && u < 0.15), time);
+          flow(ctx, P[0][0] + P[0][2] + 14, ym, B[0] - 10, ym, into, time);
+          flow(ctx, B[0] + B[2] + 10, ym, P[1][0] - 14, ym, out, time);
         } else {
           const xm = B[0] + B[2] / 2, [a, b] = lay.arrows;
-          flow(ctx, xm, a[0], xm, a[1], ph === 'model' && u < 0.6, time);
-          flow(ctx, xm, b[0], xm, b[1], (ph === 'model' && u >= 0.45) || (ph === 'fut' && u < 0.15), time);
+          flow(ctx, xm, a[0], xm, a[1], into, time);
+          flow(ctx, xm, b[0], xm, b[1], out, time);
         }
       }
       function pointer(type, p) {
-        if (!lay || !d) return;
+        if (!lay || !clips) return;
         for (const r of lay.P) if (type === 'down' && p.x >= r[0] && p.x <= r[0] + r[2] && p.y >= r[1] && p.y <= r[1] + r[3]) { v.panel(...r); v.drag = { x: p.x, y: p.y, az: v.az, el: v.el, moved: false }; }
         if (v.drag && (type === 'move' || type === 'up')) v.pointer(type, p);
       }
