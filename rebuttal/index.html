@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GPWM author response</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Additional results for the review of GPWM, a generative particle world model.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+<style>
+/* The project site's look: hairlines, one blue accent, Newsreader text, Geist Mono labels. Renders sit on a light plate
+   in both themes. */
+:root {
+  --bg: #ffffff; --ink: #0c0d10; --sub: #45474d; --faint: #666870;
+  --g100: #f6f6f7; --g200: #eeeef0; --g300: #dddee1; --g400: #c6c8cc; --g500: #999ca3;
+  --plate: #ffffff; --accent: #1432F5; --accent-soft: rgba(20,50,245,.07);
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --fs-xs: 12px; --fs-s: 13px; --bar-h: 52px; --wrap: 1180px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0f11; --ink: #eceef1; --sub: #a9acb3; --faint: #8f939b;
+    --g100: #16171a; --g200: #1f2125; --g300: #2c2f35; --g400: #3c3f46; --g500: #6d717a;
+    --plate: #f4f4f2; --accent: #7f95ff; --accent-soft: rgba(127,149,255,.13);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0f11; --ink: #eceef1; --sub: #a9acb3; --faint: #8f939b;
+  --g100: #16171a; --g200: #1f2125; --g300: #2c2f35; --g400: #3c3f46; --g500: #6d717a;
+  --plate: #f4f4f2; --accent: #7f95ff; --accent-soft: rgba(127,149,255,.13);
+  color-scheme: dark;
+}
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--bar-h) + 16px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--serif); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+a { color: inherit; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+@media (max-width: 600px) { .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); } }
+
+/* top bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; height: var(--bar-h); background: var(--bg); border-bottom: 1px solid var(--g300); }
+.bar .wrap { height: 100%; display: flex; align-items: center; gap: 24px; }
+.bar .mark { font-family: var(--serif); font-size: 22px; letter-spacing: -0.02em; text-decoration: none; flex: none; }
+.bar nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.bar nav::-webkit-scrollbar { display: none; }
+.bar nav a { font-family: var(--mono); font-size: var(--fs-s); letter-spacing: .02em; text-decoration: none; color: var(--sub); white-space: nowrap; padding-block: 6px; border-bottom: 1px solid transparent; }
+.bar nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.bar nav a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.pill { all: unset; cursor: pointer; flex: none; font-family: var(--mono); font-size: var(--fs-s); line-height: 15px; letter-spacing: .02em; padding: 6px 12px; border-radius: 14px; background: var(--g200); color: var(--ink); white-space: nowrap; }
+.pill:hover { background: var(--g300); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* opening + reviewer index */
+.hero { padding-block: 48px 4px; }
+.eyebrow { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+h1 { font-weight: 400; font-size: clamp(32px, 4.4vw, 50px); line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 14px; text-wrap: balance; }
+.lede { font-size: 19px; line-height: 1.5; color: var(--sub); margin: 0; max-width: 60ch; text-wrap: pretty; }
+.rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 30px; border-top: 1px solid var(--ink); }
+@media (max-width: 900px) { .rv-grid { grid-template-columns: 1fr; } }
+.rv { padding: 16px 20px 18px 0; min-width: 0; }
+.rv + .rv { border-left: 1px solid var(--g300); padding-left: 20px; }
+@media (max-width: 900px) { .rv + .rv { border-left: 0; padding-left: 0; border-top: 1px solid var(--g300); } }
+.rv h2 { font-family: var(--mono); font-weight: 500; font-size: var(--fs-s); letter-spacing: .04em; margin: 0 0 10px; }
+.rv ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.rv a { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 2px 8px; align-items: baseline; text-decoration: none; padding: 9px 12px 9px 10px;
+  border: 1px solid var(--g300); border-radius: 8px; background: var(--bg); font-size: 16.5px; line-height: 1.35; cursor: pointer;
+  transition: border-color .15s, background-color .15s; }
+.rv a:hover { border-color: var(--accent); background: var(--accent-soft); }
+.rv .q { text-decoration: underline; text-decoration-color: var(--g400); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.rv a:hover .q { text-decoration-color: var(--accent); }
+.rv .n { font-family: var(--mono); font-size: var(--fs-xs); color: var(--accent); }
+.rv .go { grid-column: 2; font-family: var(--mono); font-size: var(--fs-xs); color: var(--accent); }
+.lede b { font-weight: 500; color: var(--ink); }
+
+/* sections */
+.sec { padding-block: 56px 16px; border-top: 1px solid var(--g300); margin-top: 44px; }
+.sec + .sec { margin-top: 0; }
+.sec-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 12px; }
+.sec-top .eyebrow { margin: 0; }
+.who { display: inline-flex; gap: 6px; }
+.who span { font-family: var(--mono); font-size: var(--fs-xs); padding: 2px 8px; border-radius: 10px; background: var(--g200); color: var(--sub); }
+.sec h2 { font-weight: 400; font-size: clamp(28px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 16px; text-wrap: balance; }
+.sec h3 { font-weight: 400; font-size: 22px; letter-spacing: -0.01em; margin: 40px 0 10px; text-wrap: balance; }
+.asks { display: grid; gap: 8px; margin: 0 0 20px; max-width: 92ch; }
+.ask { margin: 0; font-style: italic; font-size: 16.5px; line-height: 1.45; color: var(--sub); border-left: 2px solid var(--accent); padding: 1px 0 1px 14px; }
+.ask cite { font-family: var(--mono); font-style: normal; font-size: var(--fs-xs); color: var(--ink); margin-right: 8px; }
+.prose { font-size: 18px; line-height: 1.55; max-width: 68ch; }
+.prose p { margin: 0 0 .8em; text-wrap: pretty; }
+.prose b { font-weight: 500; }
+.note { font-family: var(--mono); font-size: var(--fs-xs); line-height: 18px; color: var(--sub); margin: 10px 0 0; max-width: 104ch; }
+.top-link { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); text-decoration: none; }
+.top-link:hover { color: var(--ink); text-decoration: underline; }
+.morelinks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 18px 0 0; font-family: var(--mono); font-size: var(--fs-s); color: var(--sub); }
+.morelinks a { text-decoration: none; padding: 7px 14px; border: 1px solid var(--accent); border-radius: 16px; color: var(--accent); background: var(--bg); transition: background-color .15s; }
+.morelinks a:hover { background: var(--accent-soft); }
+
+/* tables */
+.tbl { overflow-x: auto; margin: 20px 0 6px; max-width: 100%; }
+table { border-collapse: collapse; font-size: 17px; }
+table.full { width: 100%; max-width: 1040px; }
+thead th { font-family: var(--mono); font-weight: 400; font-size: var(--fs-xs); letter-spacing: .05em; text-transform: uppercase; color: var(--sub);
+  text-align: right; padding: 0 0 10px 26px; border-bottom: 1px solid var(--ink); white-space: nowrap; vertical-align: bottom; }
+thead th:first-child, tbody td:first-child { text-align: left; padding-left: 0; }
+tbody td { padding: 9px 0 9px 26px; border-bottom: 1px solid var(--g300); text-align: right; font-variant-numeric: tabular-nums; vertical-align: baseline; white-space: nowrap; }
+tbody td:first-child { white-space: normal; min-width: 14ch; }
+tbody td .n { font-family: var(--mono); font-size: var(--fs-xs); color: var(--faint); margin-left: 6px; }
+tbody td .d { font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); margin-left: 6px; }
+tbody tr.ours td { background: var(--accent-soft); }
+tbody tr.ours td:first-child { box-shadow: inset 2px 0 0 var(--accent); padding-left: 10px; }
+tbody tr.ours td:last-child { padding-right: 10px; }
+tbody tr.grp td { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .05em; text-transform: uppercase; color: var(--faint); padding-top: 18px; border-bottom: 0; }
+td.best { color: var(--accent); font-weight: 600; }
+
+tbody tr.sep td { border-top: 1px solid var(--g500); }
+.tables2 { display: flex; flex-wrap: wrap; gap: 0 56px; align-items: flex-start; }
+.tables2 .tbl { min-width: 0; }
+details.more { margin-top: 18px; }
+details.more > summary { cursor: pointer; display: inline-block; font-family: var(--mono); font-size: var(--fs-s); color: var(--accent); padding: 4px 0; }
+details.more > summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* stat strip */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--g300); border-bottom: 1px solid var(--g300); margin: 22px 0 0; max-width: 900px; }
+.stats div { padding: 14px 16px 14px 0; min-width: 0; }
+.stats div + div { border-left: 1px solid var(--g300); padding-left: 16px; }
+.stats b { display: block; font-weight: 400; font-size: 30px; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.stats span { font-family: var(--mono); font-size: var(--fs-xs); line-height: 16px; color: var(--sub); }
+.stats .ours b { color: var(--accent); }
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } .stats div:nth-child(3) { border-left: 0; padding-left: 0; } .stats div:nth-child(n+3) { border-top: 1px solid var(--g300); } }
+
+/* videos: every clip of a result at once, playing while on screen */
+figure { margin: 24px 0 0; max-width: min(100%, var(--w, 100%)); }
+.plate { background: var(--plate); border-radius: 6px; overflow: hidden; outline: 1px solid var(--g300); outline-offset: -1px; position: relative; }
+.plate > video, .plate > img { display: block; width: 100%; height: auto; }
+.plate > video { cursor: pointer; }
+.vgrid { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .vgrid:not(.keep) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.vgrid > div { min-width: 0; }
+.cap { font-family: var(--mono); font-size: var(--fs-xs); line-height: 16px; color: var(--sub); margin-top: 6px; }
+.cap b { font-weight: 500; color: var(--ink); }
+figcaption { font-family: var(--mono); font-size: var(--fs-xs); line-height: 18px; color: var(--sub); margin-top: 10px; max-width: 104ch; }
+.scroll-x { overflow-x: auto; }
+.colhead { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); text-align: center; padding-bottom: 8px; }
+.colhead span:first-child { color: var(--ink); }
+.colhead.same span { color: var(--sub); }
+.rows { display: grid; gap: 8px; }
+.tag { position: absolute; left: 10px; top: 8px; font-family: var(--mono); font-size: var(--fs-xs); color: #34373d; background: rgba(255,255,255,.85); padding: 1px 7px; border-radius: 8px; pointer-events: none; }
+
+/* synced 3D grids */
+.g3 { --w: 100%; }
+.g3-inner { min-width: var(--minw, 560px); }
+.g3-head { display: grid; gap: 4px; font-family: var(--mono); font-size: 15px; font-weight: 600; line-height: 20px; color: var(--ink); text-align: center; padding-bottom: 10px; }
+.g3-head i, .g3-key i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 7px; vertical-align: -1px; background: #e07b24; }
+.g3-head span.gt i, .g3-key i.k-gt { background: #1f6fb2; }
+.g3-key { display: flex; flex-wrap: wrap; gap: 6px 22px; font-family: var(--mono); font-size: 14px; line-height: 20px; color: var(--ink); margin: 0 0 12px; }
+.g3-key i.k-act { background: #7d848c; }
+.g3-key i.k-ghost { background: #c3c9d1; }
+.g3-hint { font-family: var(--mono); font-size: var(--fs-s); color: var(--sub); margin: 0 0 8px; }
+.g3-box { position: relative; background: var(--plate); border-radius: 6px; outline: 1px solid var(--g300); outline-offset: -1px; overflow: hidden; cursor: grab; touch-action: pan-y; min-height: 120px; }
+.g3-box:active { cursor: grabbing; }
+.g3-canvas { display: block; width: 100%; }
+.g3-msg { padding: 48px 16px; text-align: center; font-family: var(--mono); font-size: var(--fs-xs); color: #5b5f66; }
+
+/* horizontal bars: values printed, bars from zero */
+.hb-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 26px 40px; margin: 24px 0 0; max-width: 1100px; }
+@media (max-width: 820px) { .hb-grid { grid-template-columns: 1fr; } }
+.hb-stack { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.hb { min-width: 0; }
+.hb .t { font-size: 17px; margin: 0 0 2px; }
+.hb .s { font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); margin: 0 0 10px; }
+.hb .r { display: grid; grid-template-columns: minmax(104px, 38%) minmax(0, 1fr) 7.2em; gap: 10px; align-items: center; padding: 5px 0; }
+.hb .l { font-size: 15.5px; line-height: 1.25; min-width: 0; }
+.hb .l small { display: block; font-family: var(--mono); font-size: var(--fs-xs); color: var(--faint); }
+.hb .k { position: relative; height: 22px; }
+.hb .b { position: absolute; left: 0; top: 3px; height: 16px; border-radius: 0 4px 4px 0; background: var(--g400); }
+.hb .r.ours .b { background: var(--accent); }
+.hb .r.ours .l { font-weight: 500; }
+.hb .v { font-family: var(--mono); font-size: 12.5px; line-height: 18px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hb .v i { font-style: normal; color: var(--sub); margin-left: 6px; }
+
+/* planning chart */
+.pc-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-bottom: 12px; }
+.pc-toggle { display: inline-flex; flex-wrap: wrap; background: var(--g200); border-radius: 16px; padding: 3px; gap: 2px; }
+.pc-toggle button { all: unset; cursor: pointer; font-family: var(--mono); font-size: var(--fs-s); padding: 6px 14px; border-radius: 13px; color: var(--sub); }
+.pc-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.pc-toggle button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pc-plate { position: relative; padding: 14px 10px 6px; }
+.pc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 760px) { .pc-grid { grid-template-columns: 1fr; } }
+.pc-grid svg { width: 100%; height: auto; display: block; overflow: visible; font-family: 'Geist Mono', ui-monospace, monospace; }
+.pc-tip { position: absolute; pointer-events: none; background: #1c2321; color: #ffffff; font-family: var(--mono); font-size: 12px; line-height: 16px;
+  padding: 6px 9px; border-radius: 5px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); z-index: 3; }
+.pc-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 12px; font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); }
+.pc-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.pc-legend i { display: inline-block; width: 20px; height: 0; border-top: 2px solid; }
+.pc-legend i.dash { border-top-style: dashed; }
+
+footer { border-top: 1px solid var(--g300); margin-top: 64px; padding-block: 22px 40px; font-family: var(--mono); font-size: var(--fs-xs); color: var(--sub); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="../">GPWM</a>
+    <nav aria-label="Sections">
+      <a href="#planning">Planning</a><a href="#dexterous">Dexterous, cloth</a><a href="#generative">Generative</a><a href="#ablations">Ablations</a><a href="#physiformer">PhysiFormer</a><a href="#unified">Unified</a><a href="#gripper-swap">Gripper swap</a><a href="#observations">Observations</a>
+    </nav>
+    <button class="pill" type="button" id="theme">Dark mode</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="top">
+    <div class="wrap">
+      <p class="eyebrow">GPWM · Author response</p>
+      <h1>Additional results</h1>
+      <p class="lede">New experiments for the questions in the reviews, grouped by reviewer.</p>
+      <div class="rv-grid">
+        <div class="rv">
+          <h2>Reviewer xb8Q</h2>
+          <ol>
+            <li><a href="#planning"><span class="n">01</span><span class="q">Can GPWM plan better than a classical simulator?</span><span class="go">Go to 01 · Planning →</span></a></li>
+            <li><a href="#dexterous"><span class="n">02</span><span class="q">Can it plan dexterous manipulation and cloth folding?</span><span class="go">Go to 02 · Dexterous hand and cloth →</span></a></li>
+            <li><a href="#generative"><span class="n">03</span><span class="q">What is the advantage of being generative?</span><span class="go">Go to 03 · Generative →</span></a></li>
+            <li><a href="#ablations"><span class="n">04</span><span class="q">Do the combined components each matter?</span><span class="go">Go to 04 · Ablations →</span></a></li>
+            <li><a href="#gripper-swap"><span class="n">07</span><span class="q">What does one model for many domains add?</span><span class="go">Go to 07 · Gripper swap →</span></a></li>
+          </ol>
+        </div>
+        <div class="rv">
+          <h2>Reviewer wZV8</h2>
+          <ol>
+            <li><a href="#physiformer"><span class="n">05</span><span class="q">How does GPWM compare with PhysiFormer?</span><span class="go">Go to 05 · PhysiFormer →</span></a></li>
+            <li><a href="#unified"><span class="n">06</span><span class="q">Is the larger Unified model less accurate?</span><span class="go">Go to 06 · Unified model →</span></a></li>
+            <li><a href="#observations"><span class="n">08</span><span class="q">How does it handle imperfect observations?</span><span class="go">Go to 08 · Observations →</span></a></li>
+            <li><a href="#ablations"><span class="n">04</span><span class="q">Is the combination of ingredients more than incremental?</span><span class="go">Go to 04 · Ablations →</span></a></li>
+          </ol>
+        </div>
+        <div class="rv">
+          <h2>Reviewer 1hZx</h2>
+          <ol>
+            <li><a href="#ablations"><span class="n">04</span><span class="q">Ablations of the hierarchy, the factorized attention and the pose tokens</span><span class="go">Go to 04 · Ablations →</span></a></li>
+            <li><a href="#samples"><span class="n">03</span><span class="q">Best-of-N error or a distribution-level metric</span><span class="go">Go to 03 · Generative →</span></a></li>
+            <li><a href="#planning"><span class="n">01</span><span class="q">Planning at matched compute, against simulator search and a trained policy</span><span class="go">Go to 01 · Planning →</span></a></li>
+            <li><a href="#unified"><span class="n">06</span><span class="q">The Unified model's specialization gap</span><span class="go">Go to 06 · Unified model →</span></a></li>
+            <li><a href="#observations"><span class="n">08</span><span class="q">Noisy or incomplete particle tracking</span><span class="go">Go to 08 · Observations →</span></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 planning -->
+  <section class="sec" id="planning">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">01 · Planning</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
+      <h2>Planning at one compute budget</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>1hZx</cite>“how do results change when baselines get a compute-matched budget, and how does GPWM compare with MPPI or CEM using the true simulator, or with a trained policy?”</blockquote>
+        <blockquote class="ask"><cite>xb8Q</cite>“it's not clear whether the model can surpass a classical simulator (maybe crafted with an agentic system) in planning.”</blockquote>
+      </div>
+      <div class="prose"><p>Every planner gets the same time on one L40S GPU, and every plan runs open loop in simulation. Task progress is the share of the start distance to the target that the plan closes.</p></div>
+      <div class="tbl">
+        <table class="full">
+          <thead><tr><th>Task progress, higher is better</th><th>Pushing</th><th>Pile Manipulation</th><th>Picking</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>GPWM, latent noise optimization</td><td class="best">0.57<span class="n">~260</span></td><td class="best">0.23<span class="n">~60</span></td><td class="best">0.56<span class="n">~100</span></td></tr>
+            <tr class="ours"><td>GPWM, noise-space CEM</td><td>0.48<span class="n">~570</span></td><td>0.21<span class="n">~120</span></td><td>0.40<span class="n">~250</span></td></tr>
+            <tr class="sep"><td>GPWM, action-space CEM</td><td>0.00<span class="n">~570</span></td><td>0.01<span class="n">~130</span></td><td>−0.03<span class="n">~250</span></td></tr>
+            <tr><td>PointWorld, action-space CEM</td><td>0.01<span class="n">~3k</span></td><td>0.19<span class="n">~1k</span></td><td>0.00<span class="n">~800</span></td></tr>
+            <tr><td>CEM with the true simulator</td><td>0.18<span class="n">~320k</span></td><td>0.08<span class="n">~430</span></td><td>0.30<span class="n">~720k</span></td></tr>
+            <tr><td>GNS</td><td>0.03<span class="n">256</span></td><td>0.02<span class="n">64</span></td><td>0.00<span class="n">128</span></td></tr>
+            <tr><td>DP3 policy, closed loop</td><td>0.76</td><td>0.16</td><td>0.18</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">100 s per plan for Pushing, 200 s for the other two. Grey numbers count the trajectories each planner evaluated.</p>
+
+      <figure class="pc" id="plan-chart">
+        <div class="pc-top">
+          <div class="pc-toggle" role="group" aria-label="Horizontal axis">
+            <button type="button" data-mode="time" aria-pressed="true">Planning time</button>
+            <button type="button" data-mode="traj" aria-pressed="false">Trajectories evaluated</button>
+          </div>
+        </div>
+        <div class="plate pc-plate"><div class="pc-grid"></div><div class="pc-tip" role="status" hidden></div></div>
+        <div class="pc-legend"></div>
+        <figcaption>Task progress as the budget grows. The large dot is the value in the table. Hover a point for its setting.</figcaption>
+      </figure>
+      <h3>What the plans look like</h3>
+      <figure>
+        <div class="scroll-x"><div style="min-width: 680px">
+          <div class="colhead" style="--cols: 4"><span>GPWM, latent noise optimization</span><span>GPWM, noise-space CEM</span><span>GPWM, action-space CEM</span><span>PointWorld, action-space CEM</span></div>
+          <div class="vgrid keep" style="--cols: 4; gap: 8px"><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_lno.jpg" data-src="media/plan_push_ep14_lno.mp4" aria-label="Pushing goal 1, GPWM, latent noise optimization."></video><span class="tag">Pushing</span></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_noisecem.jpg" data-src="media/plan_push_ep14_noisecem.mp4" aria-label="Pushing goal 1, GPWM, noise-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_actgpwm.jpg" data-src="media/plan_push_ep14_actgpwm.mp4" aria-label="Pushing goal 1, GPWM, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_actpw.jpg" data-src="media/plan_push_ep14_actpw.mp4" aria-label="Pushing goal 1, PointWorld, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep38_lno.jpg" data-src="media/plan_push_ep38_lno.mp4" aria-label="Pushing goal 2, GPWM, latent noise optimization."></video><span class="tag">Pushing</span></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep38_noisecem.jpg" data-src="media/plan_push_ep38_noisecem.mp4" aria-label="Pushing goal 2, GPWM, noise-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep38_actgpwm.jpg" data-src="media/plan_push_ep38_actgpwm.mp4" aria-label="Pushing goal 2, GPWM, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep38_actpw.jpg" data-src="media/plan_push_ep38_actpw.mp4" aria-label="Pushing goal 2, PointWorld, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep44_lno.jpg" data-src="media/plan_push_ep44_lno.mp4" aria-label="Pushing goal 3, GPWM, latent noise optimization."></video><span class="tag">Pushing</span></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep44_noisecem.jpg" data-src="media/plan_push_ep44_noisecem.mp4" aria-label="Pushing goal 3, GPWM, noise-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep44_actgpwm.jpg" data-src="media/plan_push_ep44_actgpwm.mp4" aria-label="Pushing goal 3, GPWM, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep44_actpw.jpg" data-src="media/plan_push_ep44_actpw.mp4" aria-label="Pushing goal 3, PointWorld, action-space CEM."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_lno.jpg" data-src="media/plan_pileout_ep025_lno.mp4" aria-label="Pile Manipulation goal 1, GPWM, latent noise optimization, simulated outcome."></video><span class="tag">Pile Manipulation</span></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_noisecem.jpg" data-src="media/plan_pileout_ep025_noisecem.mp4" aria-label="Pile Manipulation goal 1, GPWM, noise-space CEM, simulated outcome."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_actgpwm.jpg" data-src="media/plan_pileout_ep025_actgpwm.mp4" aria-label="Pile Manipulation goal 1, GPWM, action-space CEM, simulated outcome."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_actpw.jpg" data-src="media/plan_pileout_ep025_actpw.mp4" aria-label="Pile Manipulation goal 1, PointWorld, action-space CEM, simulated outcome."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep033_lno.jpg" data-src="media/plan_pileout_ep033_lno.mp4" aria-label="Pile Manipulation goal 2, GPWM, latent noise optimization, simulated outcome."></video><span class="tag">Pile Manipulation</span></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep033_noisecem.jpg" data-src="media/plan_pileout_ep033_noisecem.mp4" aria-label="Pile Manipulation goal 2, GPWM, noise-space CEM, simulated outcome."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep033_actgpwm.jpg" data-src="media/plan_pileout_ep033_actgpwm.mp4" aria-label="Pile Manipulation goal 2, GPWM, action-space CEM, simulated outcome."></video></div><div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep033_actpw.jpg" data-src="media/plan_pileout_ep033_actpw.mp4" aria-label="Pile Manipulation goal 2, PointWorld, action-space CEM, simulated outcome."></video></div><div class="plate"><img src="media/plan_pick_pasta_lno.jpg" width="720" height="540" loading="lazy" alt="Picking, pasta box: where the plan by GPWM, latent noise optimization leaves the object."><span class="tag">Picking, end state</span></div><div class="plate"><img src="media/plan_pick_pasta_noisecem.jpg" width="720" height="540" loading="lazy" alt="Picking, pasta box: where the plan by GPWM, noise-space CEM leaves the object."></div><div class="plate"><img src="media/plan_pick_pasta_acgpwm.jpg" width="720" height="540" loading="lazy" alt="Picking, pasta box: where the plan by GPWM, action-space CEM leaves the object."></div><div class="plate"><img src="media/plan_pick_pasta_acpw.jpg" width="720" height="540" loading="lazy" alt="Picking, pasta box: where the plan by PointWorld, action-space CEM leaves the object."></div><div class="plate"><img src="media/plan_pick_soda_lno.jpg" width="720" height="540" loading="lazy" alt="Picking, soda can: where the plan by GPWM, latent noise optimization leaves the object."><span class="tag">Picking, end state</span></div><div class="plate"><img src="media/plan_pick_soda_noisecem.jpg" width="720" height="540" loading="lazy" alt="Picking, soda can: where the plan by GPWM, noise-space CEM leaves the object."></div><div class="plate"><img src="media/plan_pick_soda_acgpwm.jpg" width="720" height="540" loading="lazy" alt="Picking, soda can: where the plan by GPWM, action-space CEM leaves the object."></div><div class="plate"><img src="media/plan_pick_soda_acpw.jpg" width="720" height="540" loading="lazy" alt="Picking, soda can: where the plan by PointWorld, action-space CEM leaves the object."></div></div>
+        </div></div>
+        <figcaption>Each row is one goal (green), the plan executed in simulation.</figcaption>
+      </figure>
+
+      <h3>Search in the true simulator exploits it</h3>
+      <div class="prose"><p>Two of the best Picking plans that CEM finds with the true simulator. Neither grasps the object.</p></div>
+      <figure style="--w: 760px">
+        <div class="vgrid" style="--cols: 2">
+          <div class="plate"><video muted loop playsinline preload="none" width="432" height="266" poster="media/plan_sim_jar.jpg" data-src="media/plan_sim_jar.mp4" aria-label="A simulator plan leaves a jar on the table, then flips it up toward the target."></video></div>
+          <div class="plate"><video muted loop playsinline preload="none" width="432" height="266" poster="media/plan_sim_bottle.jpg" data-src="media/plan_sim_bottle.mp4" aria-label="A simulator plan knocks a bottle over, then flings it toward the target."></video></div>
+        </div>
+      </figure>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 02 Dexterous -->
+  <section class="sec" id="dexterous">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">02 · Dexterous hand and cloth</p><span class="who"><span>xb8Q</span></span></div>
+      <h2>Planning dexterous and cloth manipulation</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>xb8Q</cite>“Can this model be used in more complicated planning tasks, like “garment folding”, “dragging a deformable”, or “dexterous manipulation”?”</blockquote>
+      </div>
+      <h3 style="margin-top: 8px">Dexterous hand</h3>
+      <div class="prose"><p>Latent noise optimization plans the hand and the object together in a GPWM model of a dexterous hand. The simulated robot then executes the planned hand (blue) open loop. The model and the plan include only the hand and the object. The rest of the robot is rendered for visualization, and its collisions are not modeled yet, so an object can pass through it.</p></div>
+      <figure>
+        <div class="vgrid" style="--cols: 4">
+          <div><div class="plate"><video muted loop playsinline preload="none" width="720" height="520" poster="media/dex1_r0.jpg" data-src="media/dex1_r0.mp4" aria-label="Knife lifted toward a target point."></video></div><p class="cap"><b>Knife</b> · target point</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="720" height="520" poster="media/dex1_r2.jpg" data-src="media/dex1_r2.mp4" aria-label="A second knife lifted toward a target point."></video></div><p class="cap"><b>Knife</b> · target point</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="720" height="520" poster="media/dex1_r3.jpg" data-src="media/dex1_r3.mp4" aria-label="Kettle lifted toward a target point."></video></div><p class="cap"><b>Kettle</b> · target point</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="720" height="520" poster="media/dex1_r4.jpg" data-src="media/dex1_r4.mp4" aria-label="A second kettle lifted toward a target point."></video></div><p class="cap"><b>Kettle</b> · target point</p></div>
+        </div>
+      </figure>
+      <figure>
+        <div class="vgrid" style="--cols: 3">
+          <div><div class="plate"><video muted loop playsinline preload="none" width="960" height="544" poster="media/dex1_r7_wide.jpg" data-src="media/dex1_r7_wide.mp4" aria-label="Kettle lifted into a goal pose."></video></div><p class="cap"><b>Kettle</b> · goal pose</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="960" height="544" poster="media/obst_ignored.jpg" data-src="media/obst_ignored.mp4" aria-label="A knife carried to a target point, planned without the obstacle: it passes through the red sphere."></video></div><p class="cap"><b>Knife</b> · planned without the obstacle</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="960" height="544" poster="media/obst_avoided.jpg" data-src="media/obst_avoided.mp4" aria-label="The same knife and target, planned around the obstacle: it stays outside the red sphere."></video></div><p class="cap"><b>Knife</b> · planned around the obstacle</p></div>
+        </div>
+      </figure>
+      <p class="note">Green marks the target. The red sphere is the obstacle and turns solid while the knife is inside it. Every plan shown lifts the object and still holds it 15 to 23 cm above the table at the end.</p>
+      <h3 id="cloth">Cloth</h3>
+      <div class="prose"><p>The same search in the model's noise plans two grippers and a cloth together. The plans are executed in the cloth simulator.</p></div>
+      <figure>
+        <div class="vgrid" style="--cols: 4">
+          <div><div class="plate"><video muted loop playsinline preload="none" width="560" height="340" poster="media/plan_cloth_fold_two.jpg" data-src="media/plan_cloth_fold_two.mp4" aria-label="Two grippers fold a cloth onto the target fold."></video></div><p class="cap"><b>Fold</b> with two grippers</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="560" height="340" poster="media/plan_cloth_lift.jpg" data-src="media/plan_cloth_lift.mp4" aria-label="Two grippers lift a cloth to the target height."></video></div><p class="cap"><b>Lift</b> by 10 cm</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="560" height="340" poster="media/plan_cloth_drag_right.jpg" data-src="media/plan_cloth_drag_right.mp4" aria-label="Two grippers drag a cloth to the right onto the target."></video></div><p class="cap"><b>Drag</b> right</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="560" height="340" poster="media/plan_cloth_drag_left.jpg" data-src="media/plan_cloth_drag_left.mp4" aria-label="Two grippers drag a cloth to the left onto the target."></video></div><p class="cap"><b>Drag</b> left</p></div>
+        </div>
+        <figcaption>Red marks the target.</figcaption>
+      </figure>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 03 generative -->
+  <section class="sec" id="generative">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">03 · Generative</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
+      <h2>What being generative allows GPWM to do</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>xb8Q</cite>“Although claiming the model to be “generative”, it doesn't show the advantage of being “generative”.”</blockquote>
+        <blockquote class="ask"><cite>1hZx</cite>“could you report best-of-N error or a distribution-level metric, rather than a single sample against one recorded future?”</blockquote>
+      </div>
+      <h3 style="margin-top: 8px">Plan by searching its noise</h3>
+      <div class="prose"><p>GPWM generates the actuator together with the scene, so a planner can search the model's noise instead of raw actions. With the same checkpoint, the same CEM optimizer and the same budget, only the noise search makes progress.</p></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Task progress, higher is better</th><th>Pushing</th><th>Pile Manipulation</th><th>Picking</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>Search the latent noise</td><td class="best">0.48</td><td class="best">0.21</td><td class="best">0.40</td></tr>
+            <tr><td>Search raw actions</td><td>0.00</td><td>0.01</td><td>−0.03</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure style="--w: 900px">
+        <div class="scroll-x"><div style="min-width: 560px">
+          <div class="colhead same" style="--cols: 3"><span>Pushing</span><span>Pile Manipulation</span><span>Picking, end state</span></div>
+          <div class="vgrid keep" style="--cols: 3; gap: 8px">
+            <div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_noisecem.jpg" data-src="media/plan_push_ep14_noisecem.mp4" aria-label="Pushing, search in the latent noise: the block is pushed to the goal."></video><span class="tag">Search the latent noise</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_noisecem.jpg" data-src="media/plan_pileout_ep025_noisecem.mp4" aria-label="Pile Manipulation, search in the latent noise: the pile moves toward the goal."></video></div>
+            <div class="plate"><img src="media/plan_pick_pasta_noisecem.jpg" width="720" height="540" loading="lazy" alt="Picking, search in the latent noise: the box is lifted to the target."></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="960" height="720" poster="media/plan_push_ep14_actgpwm.jpg" data-src="media/plan_push_ep14_actgpwm.mp4" aria-label="Pushing, search over raw actions: the block does not move."></video><span class="tag">Search raw actions</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="640" height="480" poster="media/plan_pileout_ep025_actgpwm.jpg" data-src="media/plan_pileout_ep025_actgpwm.mp4" aria-label="Pile Manipulation, search over raw actions: the pile does not move."></video></div>
+            <div class="plate"><img src="media/plan_pick_pasta_acgpwm.jpg" width="720" height="540" loading="lazy" alt="Picking, search over raw actions: the box stays on the table."></div>
+          </div>
+        </div></div>
+        <figcaption>One goal per task (green), each plan executed in simulation.</figcaption>
+      </figure>
+      <p class="morelinks"><span>More planning results</span><a href="#planning">01 · Every planner and budget →</a><a href="#dexterous">02 · Dexterous hand and cloth →</a></p>
+
+      <h3 id="samples">Sample several plausible futures</h3>
+      <div class="prose"><p>10 samples per episode from the same observed frames, on all 400 held-out Free Fall episodes. A deterministic rollout of the same network beats one sample on error but shrinks and flattens objects.</p></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>400 episodes</th><th>Error (mm)</th><th>Object size</th></tr></thead>
+          <tbody>
+            <tr><td>One sample</td><td>38.0</td><td>93%</td></tr>
+            <tr><td>Best of 2 samples</td><td>34.8<span class="d">−8%</span></td><td>–</td></tr>
+            <tr><td>Best of 5 samples</td><td>31.7<span class="d">−16%</span></td><td>–</td></tr>
+            <tr class="ours"><td>Best of 10 samples</td><td class="best">29.9<span class="d">−21%</span></td><td>–</td></tr>
+            <tr class="sep"><td>Deterministic rollout</td><td>36.1</td><td>90%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="g3" data-src="data3d/mm5.json" data-aspect="0.8" data-group="Episode" style="--minw: 760px">
+        <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-ghost"></i>True shape, under each aligned object</span></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <figcaption>Five held-out episodes, with each prediction's error. Under each episode, the object whose shape is predicted worst, rigidly aligned onto its true shape (grey), with its size at the last frame. Drag to turn all views, click to pause.</figcaption>
+      </figure>
+      <p class="note">The deterministic rollout predicts each window in one step from pure noise, which gives the network's mean prediction. Object size is the radius of gyration at the last frame, relative to the truth. The samples shown are the three of the 10 that best keep object size, at least 20 mm apart.</p>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 04 ablations -->
+  <section class="sec" id="ablations">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">04 · Ablations</p><span class="who"><span>1hZx</span><span>wZV8</span><span>xb8Q</span></span></div>
+      <h2>Which design choices matter</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>1hZx</cite>“Could you add ablations for the multi-resolution hierarchy, the factorized attention, and the rigid-body pose tokens”</blockquote>
+      </div>
+      <div class="prose"><p>Each architecture variant trains from scratch for 24 L40S GPU-hours. We also ablate diffusion forcing with the retrained Garment Folding specialist.</p></div>
+      <div class="tables2">
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Free Fall, 24 GPU-hours</th><th>Error (mm)</th><th>Steps</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>GPWM</td><td class="best">51.9</td><td>55k</td></tr>
+            <tr><td>No hierarchy</td><td>62.6<span class="d">+21%</span></td><td>10k</td></tr>
+            <tr><td>Absolute coordinates, no 3D RoPE</td><td>56.8<span class="d">+9%</span></td><td>54k</td></tr>
+            <tr><td>Joint space-time attention</td><td>56.8<span class="d">+9%</span></td><td>35k</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Garment Folding, 898 frames</th><th>Error (mm)</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>GPWM</td><td class="best">8.9</td></tr>
+            <tr><td>Without diffusion forcing</td><td>12.2<span class="d">+37%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+      <p class="note">Free Fall on 400 held-out episodes. Garment Folding is the Chamfer distance on the 20 held-out folds with the most motion.</p>
+
+      <h3>Rigid-body pose tokens</h3>
+      <div class="prose"><p>On Pick and Place, plain particles bend the held object. Pose tokens keep it exactly rigid.</p></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Pick and Place, 200 episodes</th><th>Pose tokens</th><th>Plain particles</th></tr></thead>
+          <tbody>
+            <tr><td>Object error (mm)</td><td>12.5</td><td>13.3</td></tr>
+            <tr><td>Rigidity error, mean (mm)</td><td class="best">0.0</td><td>4.0</td></tr>
+            <tr><td>Rigidity error, final frame (mm)</td><td class="best">0.0</td><td>6.9</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="g3" data-src="data3d/pose_pp.json" data-aspect="0.7" data-group="Episode" style="--minw: 640px">
+        <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-act"></i>Gripper, motion given</span><span><i class="k-ghost"></i>Starting shape, under each aligned object</span></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <figcaption>Two held-out episodes, showing the gripper (grey) and the object it carries, with that object's error. Under each episode, the same object rigidly aligned onto its starting shape (grey), with its mean distance from rigid. Drag to turn all views, click to pause.</figcaption>
+      </figure>
+      <p class="note">Both models trained for 160k steps. Object error leaves out the gripper, whose motion is given. Rigidity error is the distance of the held object from the best rigid copy of its starting shape, averaged over the rollout or at the last frame. In the two episodes shown, plain particles deform the held object by 5.2 and 3.0 mm on average, against 4.0 mm over all 200.</p>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 05 PhysiFormer -->
+  <section class="sec" id="physiformer">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">05 · PhysiFormer</p><span class="who"><span>wZV8</span></span></div>
+      <h2>PhysiFormer on Free Fall</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>wZV8</cite>“Comparison with the closely related PhysiFormer, which is discussed but not evaluated, would clarify the advance.”</blockquote>
+      </div>
+      <div class="prose"><p>PhysiFormer is trained from the authors' code at about 100M parameters on the same Free Fall data, and scored with the protocol of Table 1.</p></div>
+      <div class="hb-grid"><div class="hb" data-chart="pf"></div></div>
+      <div class="prose" style="margin-top: 22px"><p>PhysiFormer denoises absolute positions, so the motion is a small part of what it generates. GPWM and PhysCtrl predict motion relative to the observed frames.</p></div>
+      <figure class="g3" data-src="data3d/pf.json" data-aspect="0.7" data-group="Clip" style="--minw: 560px">
+        <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <figcaption>Three typical held-out clips, picked by a fixed rule. Drag to turn, click to pause.</figcaption>
+      </figure>
+      <p class="note">100 held-out clips, 4 observed frames and 45 predicted, one sample. GPWM is the Free Fall specialist of Table 1. PhysiFormer and PhysCtrl at 80k training steps.</p>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 06 unified -->
+  <section class="sec" id="unified">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">06 · Unified model</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
+      <h2>The retrained Unified model</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>wZV8</cite>“The Unified model is substantially larger than the specialists yet is less accurate on five of six domains”</blockquote>
+        <blockquote class="ask"><cite>1hZx</cite>“what causes its specialization gap: capacity, data balance, or interference between domains?”</blockquote>
+      </div>
+      <div class="prose"><p>One set of weights for all six domains. Retrained, it beats every baseline on five domains and our own specialists on two.</p></div>
+      <div class="tbl">
+        <table class="full">
+          <thead><tr><th>Error (mm), lower is better</th><th>Free Fall</th><th>Dragging</th><th>Garment Folding</th><th>Pushing</th><th>Pick and Place</th><th>Dexterous Hands</th></tr></thead>
+          <tbody>
+            <tr><td>Graph- or grid-based</td><td>97.2</td><td>30.4</td><td>20.5</td><td>23.9</td><td>68.2</td><td>26.7</td></tr>
+            <tr><td>PointWorld</td><td>–</td><td>–</td><td>10.6</td><td>28.7</td><td>39.8</td><td>27.4</td></tr>
+            <tr><td>PhysCtrl</td><td>53.0</td><td>7.8</td><td>10.7</td><td>24.5</td><td>34.1</td><td>24.8</td></tr>
+            <tr class="ours sep"><td>GPWM, specialists</td><td class="best">40.0</td><td>6.5</td><td class="best">8.9</td><td class="best">13.3</td><td>12.6</td><td class="best">18.7</td></tr>
+            <tr class="ours"><td>GPWM, Unified</td><td>41.5</td><td class="best">6.1</td><td>10.8</td><td>18.0</td><td class="best">11.1</td><td>22.6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Revised Table 1, best per domain in blue. Garment Folding is the Chamfer distance over 898 frames on the 20 held-out folds with the most motion. The Garment Folding specialist uses the diffusion forcing rollout of section 04.</p>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 07 gripper-swap -->
+  <section class="sec" id="gripper-swap">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">07 · Gripper swap</p><span class="who"><span>xb8Q</span></span></div>
+      <h2>Folding with a gripper the folding data never had</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>xb8Q</cite>“Having a unified design of particle simulator for diverse phenomena is also not new”</blockquote>
+      </div>
+      <div class="prose"><p>A Panda gripper replaces the folding robot's gripper on the same path. The Unified model saw the Panda only in pick-and-place data.</p></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Cloth error (mm)</th><th>Unified model</th><th>Folding specialist</th></tr></thead>
+          <tbody>
+            <tr><td>The folding robot's gripper</td><td>10.1</td><td>9.9</td></tr>
+            <tr class="ours"><td>A Panda gripper</td><td class="best">10.9</td><td>12.2</td></tr>
+            <tr class="sep"><td>Reference, cloth that does not move</td><td>18.2</td><td>18.2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Distance of each cloth point from its recorded position over the grasp, carry and release (frames 259 to 606), restarted from the recording at frame 255, on 10 held-out folds. Table 1 scores whole folds by Chamfer distance.</p>
+      <figure>
+        <div class="scroll-x"><div style="min-width: 680px">
+          <div class="colhead" style="--cols: 4"><span>Recording</span><span>Unified, folding gripper</span><span>Specialist, Panda gripper</span><span>Unified, Panda gripper</span></div>
+          <div class="rows">
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c29.jpg" data-src="media/swap_c29.mp4" aria-label="T-shirt: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">T-shirt</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c14.jpg" data-src="media/swap_c14.mp4" aria-label="Sleeveless top: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Sleeveless top</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c15.jpg" data-src="media/swap_c15.mp4" aria-label="Jacket: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Jacket</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c21.jpg" data-src="media/swap_c21.mp4" aria-label="Hooded jacket: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Hooded jacket</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c0.jpg" data-src="media/swap_c0.mp4" aria-label="Dress: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Dress</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c23.jpg" data-src="media/swap_c23.mp4" aria-label="Jumpsuit: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Jumpsuit</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c3.jpg" data-src="media/swap_c3.mp4" aria-label="Pants: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Pants</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c27.jpg" data-src="media/swap_c27.mp4" aria-label="Two-panel skirt: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Two-panel skirt</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c22.jpg" data-src="media/swap_c22.mp4" aria-label="Four-panel skirt: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Four-panel skirt</span></div>
+            <div class="plate"><video muted loop playsinline preload="none" width="1280" height="236" poster="media/swap_c6.jpg" data-src="media/swap_c6.mp4" aria-label="Eight-panel skirt: the recording, the Unified model with the folding gripper, the folding specialist and the Unified model with a Panda gripper."></video><span class="tag">Eight-panel skirt</span></div>
+          </div>
+        </div></div>
+        <figcaption>All 10 held-out folds. The gripper is dark, the held part of the cloth orange.</figcaption>
+      </figure>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
+  <!-- 08 observations -->
+  <section class="sec" id="observations">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">08 · Observations</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
+      <h2>Noisy and mis-tracked observations</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>1hZx</cite>“How sensitive is the model to noisy or incomplete particle tracking, which a real deployment would face?”</blockquote>
+      </div>
+      <div class="prose"><p>We corrupt the 4 observed frames and score the prediction against the clean truth, on 400 held-out Free Fall episodes. A swapped track gives two neighbouring particles of one object each other's history.</p></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Corrupted observed frames</th><th>Error (mm)</th></tr></thead>
+          <tbody>
+            <tr class="ours"><td>None</td><td>38.0</td></tr>
+            <tr class="sep"><td>Position noise, σ = 2 mm</td><td>40.2<span class="d">+6%</span></td></tr>
+            <tr><td>Position noise, σ = 5 mm</td><td>48.7<span class="d">+28%</span></td></tr>
+            <tr class="sep"><td>5% of tracks swapped</td><td>38.5<span class="d">+1%</span></td></tr>
+            <tr><td>10% of tracks swapped</td><td>39.3<span class="d">+3%</span></td></tr>
+            <tr><td>25% of tracks swapped</td><td>40.9<span class="d">+8%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure style="--w: 720px">
+        <div class="plate"><img src="media/noise_input_ep81.png" width="720" height="252" alt="One object's first observed frame, clean, with 2 mm noise and with 5 mm noise: at 5 mm the thin object's surface breaks up." loading="lazy"></div>
+        <p class="cap"><b>Position noise</b> on one observed object, close up</p>
+      </figure>
+      <figure>
+        <div class="plate"><video muted loop playsinline preload="none" width="1240" height="284" poster="media/track_world.jpg" data-src="media/track_world.mp4" aria-label="An object's 4 observed frames from the side, with 20 particle tracks: first the true tracks, then the tracker's identity swaps bend them (one pair, then 5%, 10% and 25% of tracks, in red)."></video></div>
+        <p class="cap"><b>Swapped tracks</b> in the 4 observed frames, seen from the side. The last frame stays correct, only the history is wrong.</p>
+      </figure>
+      <figure class="g3" data-src="data3d/noise5.json" data-aspect="0.72" data-group="Episode" style="--minw: 900px">
+        <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Input as the model receives it, then its prediction</span></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <figcaption>Five held-out episodes with 2 to 4 objects, chosen for typical error and a low spread across samples. The 4 observed frames show each input as the model receives it, then the 45 predicted frames, with each prediction's error. Drag to turn all views, click to pause.</figcaption>
+      </figure>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>GPWM · anonymous submission</span><a href="../">Project page</a></div></footer>
+
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme');
+  function current() { var t = root.getAttribute('data-theme'); return t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+  function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+  btn.addEventListener('click', function () { root.setAttribute('data-theme', current() === 'dark' ? 'light' : 'dark'); label(); });
+  label();
+
+  // videos load when they come near the screen, play while visible, pause off screen; a click pauses or resumes
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting) {
+        if (!v.getAttribute('src')) v.src = v.dataset.src;
+        if (!reduce && !v.dataset.held) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      } else if (!v.paused) v.pause();
+    });
+  }, { rootMargin: '250px 0px' }) : null;
+  document.querySelectorAll('video[data-src]').forEach(function (v) {
+    v.muted = true;
+    if (reduce) v.controls = true;
+    else v.addEventListener('click', function () { if (v.paused) { delete v.dataset.held; v.play(); } else { v.dataset.held = '1'; v.pause(); } });
+    if (io) io.observe(v); else v.src = v.dataset.src;
+  });
+
+  // the nav marks the section in view
+  var links = {}; document.querySelectorAll('.bar nav a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var a = links[e.target.id]; if (!a || !e.isIntersecting) return;
+        Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+        a.setAttribute('aria-current', 'true');
+        if (a.parentElement.scrollWidth > a.parentElement.clientWidth) a.parentElement.scrollLeft = a.offsetLeft - 24;
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('main .sec').forEach(function (s) { spy.observe(s); });
+  }
+})();
+</script>
+
+<script>
+(function () {
+  // horizontal bars, drawn to scale from zero; values printed beside each bar
+  var C = {
+    arch: { t: 'Architecture', s: 'Free Fall · 24 GPU-hours each · error in mm', max: 70, rows: [
+      ['GPWM', '55k steps', 51.9, 1], ['No hierarchy', '10k steps', 62.6], ['Absolute coordinates, no 3D RoPE', '54k steps', 56.8], ['Joint space-time attention', '35k steps', 56.8] ] },
+    pf: { t: 'Free Fall error', s: 'Table 1 protocol · mm', max: 100, rows: [
+      ['GPWM specialist', '', 40.0, 1], ['PhysCtrl', '', 53.0], ['PhysiFormer', '', 86.0] ] }
+  };
+  function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  document.querySelectorAll('.hb[data-chart]').forEach(function (box) {
+    var c = C[box.dataset.chart]; if (!c) return;
+    if (c.t) box.appendChild(h('p', 't', c.t)); box.appendChild(h('p', 's', c.s));
+    var ref = c.rows.filter(function (r) { return r[3]; })[0];
+    c.rows.forEach(function (r) {
+      var row = h('div', 'r' + (r[3] ? ' ours' : '')), pct = 100 * r[2] / c.max;
+      row.appendChild(h('div', 'l', r[0] + (r[1] ? '<small>' + r[1] + '</small>' : '')));
+      var k = h('div', 'k'), b = h('div', 'b'); b.style.width = pct + '%';
+      var d = (!r[3] && ref) ? Math.round(100 * (r[2] - ref[2]) / ref[2]) : null;
+      var v = h('div', 'v', r[2].toFixed(1) + (d != null ? '<i>' + (d > 0 ? '+' : d < 0 ? '−' : '') + Math.abs(d) + '%</i>' : ''));
+      k.appendChild(b); row.appendChild(k); row.appendChild(v); box.appendChild(row);
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  // planning chart: the labmate's sweep data (plan_curves.json), three tasks, three horizontal axes
+  var D = {"push":{"title":"Pushing","cap":100,"series":[{"key":"dno","name":"LNO (GPWM)","pts":[{"s":0.75,"n":4.0,"y":0.149,"lab":"dno_pool4_I0","f":116.0},{"s":1.08,"n":8.0,"y":0.248,"lab":"dno_pool8_I0","f":232.0},{"s":1.95,"n":16.0,"y":0.34,"lab":"dno_pool16_I0","f":464.0},{"s":3.83,"n":32.0,"y":0.424,"lab":"dno_pool32_I0","f":928.0},{"s":7.13,"n":33.0,"y":0.202,"lab":"dno_pool32_I1_P1","f":957.0},{"s":9.71,"n":34.0,"y":0.233,"lab":"dno_pool32_I2_P1","f":986.0},{"s":12.33,"n":35.0,"y":0.168,"lab":"dno_pool32_I3_P1","f":1015.0},{"s":17.63,"n":37.0,"y":0.224,"lab":"dno_pool32_I5_P1","f":1073.0},{"s":18.09,"n":42.0,"y":0.358,"lab":"dno_pool32_I5_P2","f":1218.0},{"s":20.36,"n":52.0,"y":0.523,"lab":"dno_pool32_I5_P4","f":1508.0},{"s":21.39,"n":62.0,"y":0.545,"lab":"dno_pool32_I5_P6","f":1798.0},{"s":21.89,"n":47.0,"y":0.523,"lab":"dno_pool32_I5_P3","f":1363.0},{"s":25.25,"n":72.0,"y":0.494,"lab":"dno_pool32_I5_P8","f":2088.0},{"s":33.84,"n":92.0,"y":0.559,"lab":"dno_pool32_I5_P12","f":2668.0},{"s":42.18,"n":112.0,"y":0.562,"lab":"dno_pool32_I5_P16","f":3248.0},{"s":56.5,"n":152.0,"y":0.546,"lab":"dno_pool32_I5_P24","f":4408.0},{"s":73.66,"n":192.0,"y":0.551,"lab":"dno_pool32_I5_P32","f":5568.0},{"s":90.99,"n":232.0,"y":0.516,"lab":"dno_pool32_I5_P40","f":6728.0},{"s":100.0,"n":252.21312394840157,"y":0.567038137969714,"lab":"at budget (interpolated)","end":true,"f":7314.180594503646}]},{"key":"cem_noise","name":"Noise CEM (GPWM)","pts":[{"s":1.41,"n":4.0,"y":0.183,"lab":"cem_noise_K4_R1","f":116.0},{"s":2.08,"n":8.0,"y":0.258,"lab":"cem_noise_K8_R1","f":232.0},{"s":3.44,"n":16.0,"y":0.315,"lab":"cem_noise_K16_R1","f":464.0},{"s":6.15,"n":32.0,"y":0.429,"lab":"cem_noise_K32_R1","f":928.0},{"s":11.54,"n":64.0,"y":0.504,"lab":"cem_noise_K32_R2","f":1856.0},{"s":17.01,"n":96.0,"y":0.556,"lab":"cem_noise_K32_R3","f":2784.0},{"s":24.95,"n":144.0,"y":0.495,"lab":"cem_noise_K48_R3","f":4176.0},{"s":32.88,"n":192.0,"y":0.537,"lab":"cem_noise_K64_R3","f":5568.0},{"s":48.89,"n":288.0,"y":0.472,"lab":"cem_noise_K96_R3","f":8352.0},{"s":67.46,"n":384.0,"y":0.577,"lab":"cem_noise_K128_R3","f":11136.0},{"s":100.0,"n":570.4979104477612,"y":0.4818083582089552,"lab":"at budget (interpolated)","end":true,"f":16544.439402985074}]},{"key":"cem_act","name":"Action CEM (GPWM)","pts":[{"s":1.39,"n":4.0,"y":-0.0,"lab":"cem_act_K4_R1","f":116.0},{"s":2.07,"n":8.0,"y":-0.0,"lab":"cem_act_K8_R1","f":232.0},{"s":3.39,"n":16.0,"y":-0.0,"lab":"cem_act_K16_R1","f":464.0},{"s":6.03,"n":32.0,"y":-0.0,"lab":"cem_act_K32_R1","f":928.0},{"s":11.36,"n":64.0,"y":-0.0,"lab":"cem_act_K32_R2","f":1856.0},{"s":16.69,"n":96.0,"y":-0.0,"lab":"cem_act_K32_R3","f":2784.0},{"s":24.67,"n":144.0,"y":0.0,"lab":"cem_act_K48_R3","f":4176.0},{"s":32.74,"n":192.0,"y":-0.0,"lab":"cem_act_K64_R3","f":5568.0},{"s":48.66,"n":288.0,"y":-0.002,"lab":"cem_act_K96_R3","f":8352.0},{"s":67.17,"n":384.0,"y":0.0,"lab":"cem_act_K128_R3","f":11136.0},{"s":100.0,"n":571.9355992844365,"y":-0.0009788312462731068,"lab":"at budget (interpolated)","end":true,"f":16586.13237924866}]},{"key":"pw","name":"Action CEM (PointWorld)","pts":[{"s":6.32,"n":192.0,"y":-0.023,"lab":"64 x 3","f":768.0},{"s":12.46,"n":384.0,"y":-0.022,"lab":"64 x 6","f":1536.0},{"s":24.99,"n":768.0,"y":-0.013,"lab":"64 x 12","f":3072.0},{"s":37.89,"n":1152.0,"y":-0.005,"lab":"64 x 18","f":4608.0},{"s":50.16,"n":1536.0,"y":0.006,"lab":"64 x 24","f":6144.0},{"s":75.15,"n":2304.0,"y":0.01,"lab":"64 x 36","f":9216.0},{"s":100.0,"n":3041.1494785631517,"y":0.011919660100424874,"lab":"at budget (interpolated)","end":true,"f":12164.597914252607}]},{"key":"sim","name":"Simulator CEM (oracle dynamics)","pts":[{"s":4.6,"n":2304.0,"y":0.0224,"lab":"256, 5 s cap","f":null},{"s":9.8,"n":4864.0,"y":0.0572,"lab":"256, 10 s cap","f":null},{"s":19.7,"n":9728.0,"y":0.1134,"lab":"256, 20 s cap","f":null},{"s":49.1,"n":115200.0,"y":0.1743,"lab":"2,304 x 50","f":null},{"s":91.7,"n":307200.0,"y":0.1803,"lab":"6,144 x 50","f":null},{"s":100.0,"n":319103.64145658264,"y":0.1781610644257703,"lab":"at budget (interpolated)","end":true,"f":null}]}],"dp3":0.7592,"gns":0.028,"calls":29,"pw_calls":4},"pile":{"title":"Pile Manipulation","cap":200,"series":[{"key":"dno","name":"LNO (GPWM)","pts":[{"s":5.83,"n":4.0,"y":0.063,"lab":"dno_pool4_I0","f":248.0},{"s":10.99,"n":8.0,"y":0.095,"lab":"dno_pool8_I0","f":496.0},{"s":22.34,"n":16.0,"y":0.128,"lab":"dno_pool16_I0","f":992.0},{"s":41.09,"n":32.0,"y":0.141,"lab":"dno_pool32_I0","f":1984.0},{"s":50.06,"n":33.0,"y":0.098,"lab":"dno_pool32_I1_P1","f":2046.0},{"s":57.84,"n":34.0,"y":0.115,"lab":"dno_pool32_I2_P1","f":2108.0},{"s":65.25,"n":35.0,"y":0.114,"lab":"dno_pool32_I3_P1","f":2170.0},{"s":80.34,"n":37.0,"y":0.157,"lab":"dno_pool32_I5_P1","f":2294.0},{"s":106.14,"n":42.0,"y":0.174,"lab":"dno_pool32_I5_P2","f":2604.0},{"s":138.83,"n":47.0,"y":0.225,"lab":"dno_pool32_I5_P3","f":2914.0},{"s":165.98,"n":52.0,"y":0.214,"lab":"dno_pool32_I5_P4","f":3224.0},{"s":200.0,"n":58.36840134780981,"y":0.22673680269561963,"lab":"at budget (interpolated)","end":true,"f":3618.840883564208}]},{"key":"cem_noise","name":"Noise CEM (GPWM)","pts":[{"s":11.36,"n":4.0,"y":0.093,"lab":"cem_noise_K4_R1","f":248.0},{"s":16.8,"n":8.0,"y":0.113,"lab":"cem_noise_K8_R1","f":496.0},{"s":27.63,"n":16.0,"y":0.099,"lab":"cem_noise_K16_R1","f":992.0},{"s":50.47,"n":32.0,"y":0.158,"lab":"cem_noise_K32_R1","f":1984.0},{"s":93.32,"n":64.0,"y":0.194,"lab":"cem_noise_K32_R2","f":3968.0},{"s":136.68,"n":96.0,"y":0.203,"lab":"cem_noise_K32_R3","f":5952.0},{"s":200.0,"n":124.2520914668154,"y":0.21006302286670386,"lab":"at budget (interpolated)","end":true,"f":7703.629670942554}]},{"key":"cem_act","name":"Action CEM (GPWM)","pts":[{"s":11.24,"n":4.0,"y":0.0,"lab":"cem_act_K4_R1","f":248.0},{"s":16.7,"n":8.0,"y":0.002,"lab":"cem_act_K8_R1","f":496.0},{"s":27.54,"n":16.0,"y":0.012,"lab":"cem_act_K16_R1","f":992.0},{"s":49.04,"n":32.0,"y":0.01,"lab":"cem_act_K32_R1","f":1984.0},{"s":92.05,"n":64.0,"y":0.008,"lab":"cem_act_K32_R2","f":3968.0},{"s":136.03,"n":96.0,"y":0.006,"lab":"cem_act_K32_R3","f":5952.0},{"s":200.0,"n":129.90636042402826,"y":0.007412765017667845,"lab":"at budget (interpolated)","end":true,"f":8054.1943462897525}]},{"key":"pw","name":"Action CEM (PointWorld)","pts":[{"s":36.36,"n":192.0,"y":0.047,"lab":"64 x 3","f":1920.0},{"s":73.5,"n":384.0,"y":0.095,"lab":"64 x 6","f":3840.0},{"s":149.66,"n":768.0,"y":0.167,"lab":"64 x 12","f":7680.0},{"s":200.0,"n":1025.0553191489362,"y":0.19377659574468084,"lab":"at budget (interpolated)","end":true,"f":10250.553191489362}]},{"key":"sim","name":"Simulator CEM (oracle dynamics)","pts":[{"s":57.4,"n":128.0,"y":0.0322,"lab":"128 x 1 round","f":null},{"s":117.3,"n":256.0,"y":0.0503,"lab":"128 x 2 rounds","f":null},{"s":178.7,"n":384.0,"y":0.0704,"lab":"128 x 3 rounds","f":null},{"s":200.0,"n":427.34499205087445,"y":0.07883195548489666,"lab":"at budget (interpolated)","end":true,"f":null}]}],"dp3":0.1583,"gns":0.019,"calls":62,"pw_calls":10},"pick":{"title":"Picking","cap":200,"series":[{"key":"dno","name":"LNO (GPWM)","pts":[{"s":3.8,"n":4.0,"y":0.1,"lab":"dno_pool4_I0","f":188.0},{"s":6.43,"n":8.0,"y":0.209,"lab":"dno_pool8_I0","f":376.0},{"s":11.66,"n":16.0,"y":0.143,"lab":"dno_pool16_I0","f":752.0},{"s":22.53,"n":32.0,"y":0.222,"lab":"dno_pool32_I0","f":1504.0},{"s":31.49,"n":33.0,"y":0.337,"lab":"dno_pool32_I1_P1","f":1551.0},{"s":38.24,"n":34.0,"y":0.324,"lab":"dno_pool32_I2_P1","f":1598.0},{"s":45.27,"n":35.0,"y":0.56,"lab":"dno_pool32_I3_P1","f":1645.0},{"s":58.88,"n":37.0,"y":0.445,"lab":"dno_pool32_I5_P1","f":1739.0},{"s":69.84,"n":42.0,"y":0.641,"lab":"dno_pool32_I5_P2","f":1974.0},{"s":91.89,"n":47.0,"y":0.563,"lab":"dno_pool32_I5_P3","f":2209.0},{"s":102.69,"n":52.0,"y":0.521,"lab":"dno_pool32_I5_P4","f":2444.0},{"s":130.24,"n":62.0,"y":0.537,"lab":"dno_pool32_I5_P6","f":2914.0},{"s":157.62,"n":72.0,"y":0.519,"lab":"dno_pool32_I5_P8","f":3384.0},{"s":200.0,"n":85.82933594387339,"y":0.5591050742372328,"lab":"at budget (interpolated)","end":true,"f":4033.978789362049}]},{"key":"cem_noise","name":"Noise CEM (GPWM)","pts":[{"s":7.07,"n":4.0,"y":0.062,"lab":"cem_noise_K4_R1","f":188.0},{"s":10.39,"n":8.0,"y":0.11,"lab":"cem_noise_K8_R1","f":376.0},{"s":17.3,"n":16.0,"y":0.122,"lab":"cem_noise_K16_R1","f":752.0},{"s":30.7,"n":32.0,"y":0.282,"lab":"cem_noise_K32_R1","f":1504.0},{"s":58.04,"n":64.0,"y":0.387,"lab":"cem_noise_K32_R2","f":3008.0},{"s":85.52,"n":96.0,"y":0.536,"lab":"cem_noise_K32_R3","f":4512.0},{"s":127.74,"n":144.0,"y":0.406,"lab":"cem_noise_K48_R3","f":6768.0},{"s":166.17,"n":192.0,"y":0.418,"lab":"cem_noise_K64_R3","f":9024.0},{"s":187.16,"n":240.0,"y":0.349,"lab":"cem_noise_K80_R3","f":11280.0},{"s":200.0,"n":250.07223402516752,"y":0.403348096094133,"lab":"at budget (interpolated)","end":true,"f":11753.394999182874}]},{"key":"cem_act","name":"Action CEM (GPWM)","pts":[{"s":7.05,"n":4.0,"y":-0.001,"lab":"cem_act_K4_R1","f":188.0},{"s":10.39,"n":8.0,"y":-0.0,"lab":"cem_act_K8_R1","f":376.0},{"s":17.36,"n":16.0,"y":-0.001,"lab":"cem_act_K16_R1","f":752.0},{"s":30.94,"n":32.0,"y":-0.026,"lab":"cem_act_K32_R1","f":1504.0},{"s":57.98,"n":64.0,"y":-0.021,"lab":"cem_act_K32_R2","f":3008.0},{"s":85.62,"n":96.0,"y":-0.023,"lab":"cem_act_K32_R3","f":4512.0},{"s":126.04,"n":144.0,"y":-0.058,"lab":"cem_act_K48_R3","f":6768.0},{"s":165.25,"n":192.0,"y":-0.04,"lab":"cem_act_K64_R3","f":9024.0},{"s":188.51,"n":240.0,"y":-0.025,"lab":"cem_act_K80_R3","f":11280.0},{"s":200.0,"n":249.4942330865898,"y":-0.03132948872439319,"lab":"at budget (interpolated)","end":true,"f":11726.22895506972}]},{"key":"pw","name":"Action CEM (PointWorld)","pts":[{"s":42.99,"n":192.0,"y":-0.001,"lab":"64 x 3","f":768.0},{"s":95.65,"n":384.0,"y":-0.001,"lab":"64 x 6","f":1536.0},{"s":139.35,"n":576.0,"y":-0.001,"lab":"64 x 9","f":2304.0},{"s":193.1,"n":768.0,"y":-0.001,"lab":"64 x 12","f":3072.0},{"s":200.0,"n":796.002536461636,"y":-0.001,"lab":"at budget (interpolated)","end":true,"f":3184.010145846544}]},{"key":"sim","name":"Simulator CEM (oracle dynamics)","pts":[{"s":9.0,"n":1792.0,"y":0.0782,"lab":"256, 10 s cap","f":null},{"s":24.0,"n":4608.0,"y":0.1313,"lab":"256, 25 s cap","f":null},{"s":65.2,"n":25600.0,"y":0.2997,"lab":"512 x 50","f":null},{"s":112.8,"n":256000.0,"y":0.2873,"lab":"5,120 x 50","f":null},{"s":139.3,"n":409600.0,"y":0.213,"lab":"8,192 x 50","f":null},{"s":189.5,"n":716800.0,"y":0.2964,"lab":"14,336 x 50","end":true,"f":null}]}],"dp3":0.1766,"gns":-0.001,"calls":47,"pw_calls":4}};
+  var COL = { dno: "#2a78d6", cem_noise: "#eb6834", cem_act: "#1baf7a", pw: "#5f6670", sim: "#1c2321" };
+  var DP3C = "#8a4fc7", GNSC = "#b07d2a", INK = "#1c2321", MUTED = "#4f5a56", ZERO = "#b9bfc4";
+  var ORDER = ["push", "pile", "pick"], YMAX = { push: 0.85, pile: 0.25, pick: 0.7 }, YMIN = { push: -0.04, pile: -0.04, pick: -0.08 };
+  var MODES = ["time", "traj", "nfe"];
+  var W = 320, H = 254, L = 40, R = 46, T = 26, B = 42, PW = W - L - R, PH = H - T - B;
+  var NLO = Math.log10(3), NHI = Math.log10(1.2e6), FLO = Math.log10(60), FHI = Math.log10(4e4);
+  var NS = "http://www.w3.org/2000/svg", root = document.getElementById("plan-chart");
+  var grid = root.querySelector(".pc-grid"), tip = root.querySelector(".pc-tip"), plate = root.querySelector(".pc-plate");
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function fmtN(n) { return n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e4 ? Math.round(n / 1e3) + "k" : n >= 1e3 ? (n / 1e3).toFixed(1) + "k" : String(Math.round(n)); }
+  var panels = [], mode = "time", w = { time: 1, traj: 0, nfe: 0 };
+  ORDER.forEach(function (key) {
+    var P = D[key], svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": P.title + ": task progress by planning budget" }, grid);
+    var y = function (v) { return T + PH * (YMAX[key] - v) / (YMAX[key] - YMIN[key]); };
+    var X = {
+      time: function (p) { return L + PW * p.s / P.cap; },
+      traj: function (p) { return L + PW * (Math.log10(Math.max(p.n, 3)) - NLO) / (NHI - NLO); },
+      nfe: function (p) { return p.f == null ? null : L + PW * (Math.log10(Math.max(p.f, 60)) - FLO) / (FHI - FLO); }
+    };
+    el("rect", { x: L, y: T, width: PW, height: PH, fill: "#f3f4f6" }, svg);
+    var step = key === "pile" ? 0.1 : 0.2;
+    for (var v = 0; v <= YMAX[key] + 1e-9; v += step) {
+      el("line", { x1: L, x2: L + PW, y1: y(v), y2: y(v), stroke: v === 0 ? ZERO : "#ffffff", "stroke-width": v === 0 ? 1 : 1.2 }, svg);
+      var tx = el("text", { x: L - 6, y: y(v) + 3.8, "text-anchor": "end", "font-size": 11, fill: MUTED }, svg); tx.textContent = v.toFixed(1);
+    }
+    var tt = el("text", { x: L + PW / 2, y: 15, "text-anchor": "middle", "font-size": 13.5, "font-weight": 600, fill: INK, "font-family": "Newsreader, Georgia, serif" }, svg); tt.textContent = P.title;
+    var ticks = {}, tickVals = {
+      time: [0, 1, 2, 3, 4].map(function (i) { return [L + PW * i / 4, String(P.cap * i / 4)]; }),
+      traj: [10, 100, 1e3, 1e4, 1e5, 1e6].map(function (n) { return [L + PW * (Math.log10(n) - NLO) / (NHI - NLO), fmtN(n)]; }),
+      nfe: [100, 1e3, 1e4].map(function (n) { return [L + PW * (Math.log10(n) - FLO) / (FHI - FLO), fmtN(n)]; })
+    }, xlab = { time: "Planning budget (s)", traj: "Trajectories evaluated (log)", nfe: "Network forward passes (log)" };
+    MODES.forEach(function (m) {
+      var g = el("g", { opacity: m === "time" ? 1 : 0 }, svg); ticks[m] = g;
+      tickVals[m].forEach(function (tv) { var a = el("text", { x: tv[0], y: T + PH + 15, "text-anchor": "middle", "font-size": 11, fill: MUTED }, g); a.textContent = tv[1]; });
+      var xl = el("text", { x: L + PW / 2, y: H - 6, "text-anchor": "middle", "font-size": 11.5, fill: INK }, g); xl.textContent = xlab[m];
+    });
+    if (key === "push") { var yl = el("text", { x: 10, y: T + PH / 2, "text-anchor": "middle", "font-size": 11.5, fill: INK, transform: "rotate(-90 10 " + (T + PH / 2) + ")" }, svg); yl.textContent = "Task progress"; }
+    var refs = el("g", {}, svg);
+    [[P.dp3, DP3C], [P.gns, GNSC]].forEach(function (r) {
+      el("line", { x1: L, x2: L + PW, y1: y(r[0]), y2: y(r[0]), stroke: r[1], "stroke-width": 1.6, "stroke-dasharray": "5 3.5" }, refs);
+    });
+    var dl = el("text", { x: L + PW + 6, y: y(P.dp3) + 3.8, "font-size": 11, fill: INK, "font-weight": 600 }, refs); dl.textContent = P.dp3.toFixed(2);
+    var series = P.series.map(function (S) {
+      var g = el("g", {}, svg);
+      var path = el("path", { fill: "none", stroke: COL[S.key], "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, g);
+      var dots = S.pts.map(function (p) {
+        var c = el("circle", { r: p.end ? 4 : 2.4, fill: COL[S.key], stroke: p.end ? "#f3f4f6" : "none", "stroke-width": 1.5 }, g);
+        var hit = el("circle", { r: 9, fill: "transparent" }, g);
+        hit.addEventListener("mouseenter", function () { show(S, p, c); }); hit.addEventListener("mouseleave", hide);
+        return { p: p, c: c, hit: hit };
+      });
+      return { S: S, g: g, path: path, dots: dots, end: S.pts[S.pts.length - 1], hasF: S.pts[0].f != null };
+    });
+    var labels = series.filter(function (q) { return Math.abs(q.end.y) >= 0.05; }).map(function (q) {
+      var tx = el("text", { "font-size": 11, fill: INK, "font-weight": 600 }, svg); tx.textContent = q.end.y.toFixed(2);
+      return { q: q, tx: tx };
+    });
+    panels.push({ y: y, X: X, series: series, labels: labels, ticks: ticks, refs: refs });
+  });
+  function px(pn, p) {
+    var x = 0, tw = 0;
+    MODES.forEach(function (m) { var v = pn.X[m](p); if (v == null) v = pn.X.traj(p); x += w[m] * v; tw += w[m]; });
+    return x / tw;
+  }
+  function place(pn) {
+    pn.series.forEach(function (q) {
+      var d = ""; q.dots.forEach(function (o, i) { var x = px(pn, o.p), yy = pn.y(o.p.y); d += (i ? "L" : "M") + x.toFixed(1) + "," + yy.toFixed(1);
+        o.c.setAttribute("cx", x); o.c.setAttribute("cy", yy); o.hit.setAttribute("cx", x); o.hit.setAttribute("cy", yy); });
+      q.path.setAttribute("d", d);
+      q.g.setAttribute("opacity", q.hasF ? 1 : (1 - 0.88 * w.nfe).toFixed(3));
+    });
+    var items = pn.labels.map(function (lb) { return { lb: lb, x: px(pn, lb.q.end) + 7, y: pn.y(lb.q.end.y) + 3.8, o: lb.q.hasF ? 1 : 1 - w.nfe }; }).sort(function (a, b) { return a.y - b.y; });
+    for (var i = 1; i < items.length; i++) if (Math.abs(items[i].x - items[i - 1].x) < 34 && items[i].y - items[i - 1].y < 12) items[i].y = items[i - 1].y + 12;
+    items.forEach(function (it) { it.lb.tx.setAttribute("x", it.x.toFixed(1)); it.lb.tx.setAttribute("y", it.y.toFixed(1)); it.lb.tx.setAttribute("opacity", it.o.toFixed(3)); });
+    MODES.forEach(function (m) { pn.ticks[m].setAttribute("opacity", w[m].toFixed(3)); });
+  }
+  function draw() { panels.forEach(place); }
+  function show(S, p, c) {
+    var pb = plate.getBoundingClientRect(), cb = c.getBoundingClientRect();
+    tip.innerHTML = "<b>" + S.name + "</b><br>" + (p.end ? "at the budget (interpolated)" : p.lab) + "<br>" + p.s.toFixed(1) + " s · " + fmtN(p.n) + " trajectories" +
+      " · progress " + p.y.toFixed(2);
+    tip.style.left = (cb.left + cb.width / 2 - pb.left) + "px"; tip.style.top = (cb.top - pb.top) + "px"; tip.hidden = false;
+  }
+  function hide() { tip.hidden = true; }
+  var raf = null;
+  function go(m) {
+    if (m === mode) return; mode = m;
+    root.querySelectorAll(".pc-toggle button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === m ? "true" : "false"); });
+    var from = { time: w.time, traj: w.traj, nfe: w.nfe }, t0 = performance.now(), dur = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 900;
+    if (raf) cancelAnimationFrame(raf);
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      MODES.forEach(function (mm) { w[mm] = from[mm] + ((mm === m ? 1 : 0) - from[mm]) * e; });
+      draw(); if (k < 1) raf = requestAnimationFrame(step);
+    })(t0);
+  }
+  root.querySelectorAll(".pc-toggle button").forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.mode); }); });
+  draw();
+  var lg = root.querySelector(".pc-legend");
+  [["dno", "Latent noise optimization (GPWM)"], ["cem_noise", "Noise-space CEM (GPWM)"], ["cem_act", "Action-space CEM (GPWM)"], ["pw", "Action-space CEM (PointWorld)"], ["sim", "CEM with the true simulator"]].forEach(function (r) {
+    lg.insertAdjacentHTML("beforeend", '<span><i style="border-color:' + COL[r[0]] + '"></i>' + r[1] + "</span>"); });
+  lg.insertAdjacentHTML("beforeend", '<span><i class="dash" style="border-color:' + DP3C + '"></i>Goal-conditioned DP3, closed loop</span><span><i class="dash" style="border-color:' + GNSC + '"></i>GNS</span>');
+})();
+</script>
+<script>
+/* Rebuttal page: synced 3D point-cloud grids. Each <figure class="g3" data-src="data3d/<name>.json"> becomes one canvas
+   cut into one panel per column (a method) and one row per clip, all with one camera (drag any panel to turn them all)
+   and one clock (plays while on screen, a click pauses). Points are matte shaded balls on the 2D canvas, far to near,
+   with a soft ground shadow, as in the project site's viewer (points3d.js). Data: pack3d.py (int16 steps over time,
+   gzip, base64). z is up, metres. A row may set its own height (aspect), print its own tags instead of errors, and draw
+   one of its tracks as a faint ghost under the other panels (kind "shape": an object aligned onto its true shape, no
+   floor), and draw its first ng points (an actuator whose motion is given) in grey. Only the rows on screen are drawn,
+   and only when their frame or the view has changed.
+   v18 (11-17, readability): rows are grouped, one group per clip (its scene row and the "shape" row under it). Each
+   group opens with a band naming it ("Episode 1 of 5", the figure's data-group noun) and the frame being shown, and
+   groups are set apart by a gap and a divider; a shape row opens with a strip carrying its label. Every scene panel
+   names its column in the panel itself, with its error on the line below, so a panel reads on its own when the column
+   titles have scrolled away; a hint appears when the figure is wider than the screen. */
+(function () {
+  'use strict';
+  const D2R = Math.PI / 180, TAU = Math.PI * 2, BUCKETS = 24;
+  const GT_COL = '#1f6fb2', PRED_COL = '#e07b24', GHOST_COL = '#c3c9d1', ACT_COL = '#7d848c', SUB = '#45474d', LINE = '#e3e4e7', LINE_SOFT = '#eef0f2';
+  const INK = '#16181c', OBS = '#b4232c', BAND_BG = '#f3f4f6', DIV = '#b9bcc2', PRED_TXT = '#b8570f';
+  const FONT = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
+  const BAND_H = 32, SUB_H = 28, GAP = 18;                     // group band, shape-row strip, space between groups
+  const CTX_S = 0.2, FPS = 12, HOLD_S = 1.4;                 // observed frames shown slowly, then 12 fps, then a hold
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function rgb(hex) { const v = parseInt(hex.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
+  const mix = (c, t, f) => `rgb(${c.map((x, i) => Math.round(x + (t[i] - x) * f)).join(',')})`;
+  const SPRITES = new Map();
+  function sprite(col, r, dpr) {                              // a shaded ball: light from the upper left, a darker rim
+    const q = Math.round(r * 8) / 8, key = `${col}|${q}|${dpr}`;
+    let c = SPRITES.get(key);
+    if (c) return c;
+    const R = q * dpr, S = Math.ceil(2 * R) + 2, base = rgb(col);
+    c = document.createElement('canvas'); c.width = c.height = S;
+    const g = c.getContext('2d'), gr = g.createRadialGradient(S / 2 - 0.3 * R, S / 2 - 0.36 * R, 0.05 * R, S / 2, S / 2, R);
+    gr.addColorStop(0, mix(base, [255, 255, 255], 0.42)); gr.addColorStop(0.5, mix(base, base, 0)); gr.addColorStop(1, mix(base, [0, 0, 0], 0.3));
+    g.fillStyle = gr; g.beginPath(); g.arc(S / 2, S / 2, R, 0, TAU); g.fill();
+    c.css = S / dpr; SPRITES.set(key, c);
+    return c;
+  }
+  let BLOT = null;
+  function blot() {
+    if (BLOT) return BLOT;
+    const S = 32, c = document.createElement('canvas'), g = c.getContext('2d'); c.width = c.height = S;
+    const gr = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+    gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, S, S);
+    return (BLOT = c);
+  }
+  // a label over the points: a white halo under the text, shrunk (down to 11 px) to fit maxW
+  function label(ctx, s, x, y, maxW, size, weight, col, align) {
+    let px = size;
+    ctx.font = `${weight} ${px}px ${FONT}`;
+    while (px > 11 && ctx.measureText(s).width > maxW) { px -= 0.5; ctx.font = `${weight} ${px}px ${FONT}`; }
+    ctx.textAlign = align || 'left'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+    ctx.strokeText(s, x, y); ctx.fillStyle = col; ctx.fillText(s, x, y);
+  }
+
+  async function ints(b64) {                                 // base64 -> gunzip -> Int16Array
+    const bin = Uint8Array.from(atob(b64), ch => ch.charCodeAt(0));
+    const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new Int16Array(await new Response(stream).arrayBuffer());
+  }
+  async function track(row, b64) {                            // integrate the steps: Float32Array [T*n*3]
+    const N = row.n * 3, d = await ints(b64), P = new Float32Array(d.length), acc = new Int32Array(N);
+    for (let t = 0, o = 0; t < row.T; t++) for (let k = 0; k < N; k++, o++) { acc[k] += d[o]; P[o] = acc[k] * row.unit; }
+    return P;
+  }
+  async function decode(row) {
+    row.P = await Promise.all(row.tracks.map(b => track(row, b)));
+    // the view frames where the objects land and settle (the later 70% of the predicted frames, every method); the
+    // fall enters from the top of the panel. The floor is the lowest point of the whole clip.
+    const N = row.n * 3;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity, fl = Infinity;
+    const t0 = row.fit_all ? 0 : Math.min(row.T - 1, row.C + Math.floor(0.3 * (row.T - row.C)));   // fit_all: the whole clip
+    for (const P of row.P) {
+      for (let i = 2; i < P.length; i += 9) fl = Math.min(fl, P[i]);
+      for (let i = t0 * N; i < P.length; i += 6) {
+        const j = i - (i % 3);
+        x0 = Math.min(x0, P[j]); x1 = Math.max(x1, P[j]); y0 = Math.min(y0, P[j + 1]); y1 = Math.max(y1, P[j + 1]);
+        z0 = Math.min(z0, P[j + 2]); z1 = Math.max(z1, P[j + 2]);
+      }
+    }
+    row.fit = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, cz: (z0 + z1) / 2, floor: fl,
+                R: 0.42 * Math.max(Math.hypot(x1 - x0, y1 - y0), (z1 - z0) * 1.5) };
+    row.dur = row.C * CTX_S + (row.T - row.C) / FPS + HOLD_S;
+    delete row.tracks;
+  }
+  function frameAt(row, t) {                                  // the clip's frame at time t (seconds, looping)
+    let s = t % row.dur;
+    if (s < row.C * CTX_S) return Math.floor(s / CTX_S);
+    s -= row.C * CTX_S;
+    return Math.min(row.T - 1, row.C + Math.floor(s * FPS));
+  }
+
+  class Grid {
+    constructor(fig) {
+      this.fig = fig; this.az = +(fig.dataset.az || -52); this.el = +(fig.dataset.el || 28); this.persp = 0.18;
+      this.noun = fig.dataset.group || 'Episode';
+      this.box = fig.querySelector('.g3-box'); this.head = fig.querySelector('.g3-head');
+      this.canvas = document.createElement('canvas'); this.canvas.className = 'g3-canvas'; this.box.appendChild(this.canvas);
+      this.ctx = this.canvas.getContext('2d'); this.t = 0; this.last = null; this.visible = false; this.held = false;
+      this.data = null; this.raf = null; this.drag = null; fig.g3grid = this;     // the handle lets a page check see what drew
+      this.msg = document.createElement('div'); this.msg.className = 'g3-msg'; this.msg.textContent = 'Loading…'; this.box.appendChild(this.msg);
+      this.sc = this.box.closest('.scroll-x');                // the sideways scroller on narrow screens
+      this.hint = document.createElement('p'); this.hint.className = 'g3-hint'; this.hint.hidden = true;
+      if (this.sc) this.sc.parentNode.insertBefore(this.hint, this.sc);
+      this.canvas.addEventListener('pointerdown', e => this.down(e));
+      window.addEventListener('pointermove', e => this.move(e));
+      window.addEventListener('pointerup', e => this.up(e));
+      window.addEventListener('scroll', () => { if (this.visible) this.draw(); }, { passive: true });   // rows scrolled into view
+      window.addEventListener('resize', () => this.updateHint());
+      new ResizeObserver(() => this.layout()).observe(this.box);
+    }
+    async load() {
+      if (this.loading) return this.loading;
+      this.loading = (async () => {
+        try {
+          const d = await (await fetch(this.fig.dataset.src)).json();
+          await Promise.all(d.rows.map(decode));
+          this.data = d; this.cols = d.cols.length;
+          this.head.style.gridTemplateColumns = `repeat(${this.cols}, minmax(0, 1fr))`;
+          this.head.innerHTML = d.cols.map((c, i) => `<span class="${i ? 'pr' : 'gt'}"><i></i>${c}</span>`).join('');
+          this.hint.textContent = `Scroll sideways to see all ${this.cols} columns →`;
+          this.msg.remove(); this.layout();
+        } catch (e) { this.msg.textContent = 'This 3D view could not load (' + (e && e.message ? e.message : e) + ').'; }
+      })();
+      return this.loading;
+    }
+    layout() {
+      if (!this.data) return;
+      const w = this.box.clientWidth, pw = w / this.cols, a = +this.fig.dataset.aspect || 0.82;
+      let y = 0, gi = -1;
+      for (const row of this.data.rows) {                    // a scene row opens a group; a shape row joins the one above
+        row.first = row.kind !== 'shape';
+        if (row.first) { gi++; if (gi) y += GAP; }
+        row.gi = gi; row.hb = row.first ? BAND_H : SUB_H;
+        row.y = y; row.h = pw * (row.aspect || a); row.stamp = null; y += row.hb + row.h;
+      }
+      this.groups = gi + 1;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      this.pw = pw; this.dpr = dpr;
+      this.canvas.style.height = y + 'px';
+      this.canvas.width = Math.round(w * dpr); this.canvas.height = Math.round(y * dpr);
+      this.updateHint();
+      this.draw();
+    }
+    updateHint() { if (this.sc && this.data) this.hint.hidden = !(this.sc.scrollWidth > this.sc.clientWidth + 2); }
+    basis() {
+      const a = this.az * D2R, e = this.el * D2R, ca = Math.cos(a), sa = Math.sin(a), ce = Math.cos(e), se = Math.sin(e);
+      return { rx: -sa, ry: ca, ux: -se * ca, uy: -se * sa, uz: ce, fx: ce * ca, fy: ce * sa, fz: se };
+    }
+    buffers(n) {
+      if (this.sx && this.sx.length >= n) return;
+      const m = Math.max(n, 8192);
+      this.sx = new Float32Array(m); this.sy = new Float32Array(m); this.sd = new Float32Array(m);
+      this.bk = new Int32Array(m); this.order = new Int32Array(m);
+    }
+    panel(ctx, row, P, f, x, y, ph, col, B, ghost) {          // one method's points at frame f in the panel at (x, y)
+      const pw = this.pw, fit = row.fit, n = row.n, s = 0.92 * Math.min(pw, ph) / (2 * fit.R), off = f * n * 3;
+      const shape = row.kind === 'shape', cxp = x + pw / 2, cyp = y + ph / 2 + (shape ? 0.04 * ph : 0.07 * ph);
+      const persp = this.persp, R3 = 3 * fit.R;
+      this.buffers(n);
+      const { sx, sy, sd, bk, order } = this;
+      const r = Math.max(1.0, Math.min(3.2, 0.0032 * s * Math.sqrt(2000 / n)));      // about half the particle spacing on screen
+      if (!shape) {                                           // soft shadow on the floor, every 3rd point
+        const sh = blot(), rad = 2.6, sq = Math.max(0.25, Math.sin(this.el * D2R));
+        ctx.globalAlpha = 0.045;
+        for (let i = 0; i < n; i += 3) {
+          const o = off + 3 * i, X = P[o] - fit.cx, Y = P[o + 1] - fit.cy, Z = fit.floor - fit.cz, d = X * B.fx + Y * B.fy + Z * B.fz;
+          const k = 1 / (1 - persp * d / R3);
+          const u = cxp + (X * B.rx + Y * B.ry) * s * k, v = cyp - (X * B.ux + Y * B.uy + Z * B.uz) * s * k;
+          ctx.drawImage(sh, u - rad, v - rad * sq, 2 * rad, 2 * rad * sq);
+        }
+        ctx.globalAlpha = 1;
+      }
+      const cloud = (Q, c, ng) => {                           // project, sort far to near in depth buckets, draw
+        let dmin = Infinity, dmax = -Infinity;
+        for (let i = 0; i < n; i++) {
+          const o = off + 3 * i, X = Q[o] - fit.cx, Y = Q[o + 1] - fit.cy, Z = Q[o + 2] - fit.cz, d = X * B.fx + Y * B.fy + Z * B.fz;
+          const k = 1 / (1 - persp * d / R3);
+          sx[i] = cxp + (X * B.rx + Y * B.ry) * s * k; sy[i] = cyp - (X * B.ux + Y * B.uy + Z * B.uz) * s * k; sd[i] = d;
+          if (d < dmin) dmin = d; if (d > dmax) dmax = d;
+        }
+        const span = Math.max(1e-6, dmax - dmin), counts = new Int32Array(BUCKETS + 1);
+        for (let i = 0; i < n; i++) { const b = Math.min(BUCKETS - 1, Math.floor((sd[i] - dmin) / span * BUCKETS)); bk[i] = b; counts[b + 1]++; }
+        for (let b = 0; b < BUCKETS; b++) counts[b + 1] += counts[b];
+        const pos = counts.slice(0, BUCKETS);
+        for (let i = 0; i < n; i++) order[pos[bk[i]]++] = i;
+        for (let b = 0; b < BUCKETS; b++) {
+          const f01 = b / (BUCKETS - 1), rb = r * (0.88 + 0.24 * f01), spr = sprite(c, rb, this.dpr), h = spr.css / 2;
+          const spa = ng ? sprite(ACT_COL, rb, this.dpr) : spr;                  // the given actuator, in grey
+          for (let j = counts[b]; j < counts[b + 1]; j++) { const i = order[j]; ctx.drawImage(i < ng ? spa : spr, sx[i] - h, sy[i] - h, spr.css, spr.css); }
+        }
+      };
+      if (ghost) cloud(ghost, GHOST_COL, 0);                  // the true shape underneath: what is missing shows grey
+      cloud(P, col, row.ng || 0);
+    }
+    draw() {
+      if (!this.data) return;
+      const ctx = this.ctx, pw = this.pw, B = this.basis(), W = this.canvas.width / this.dpr;
+      const box = this.canvas.getBoundingClientRect(), top = -box.top - 80, bot = innerHeight - box.top + 80;
+      const cam = this.az.toFixed(2) + '|' + this.el.toFixed(2);
+      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      this.data.rows.forEach(row => {
+        const y = row.y, H = row.hb + row.h, yp = y + row.hb;
+        if (y + H < top || y > bot) return;                  // off screen: drawn when it scrolls in
+        const f = frameAt(row, this.t), stamp = f + '|' + cam;
+        if (row.stamp === stamp) return;                     // nothing changed since this row was drawn
+        row.stamp = stamp;
+        ctx.clearRect(0, y, W, H);
+        ctx.textAlign = 'left';
+        if (row.first) {                                     // the group's band: its name and the frame shown
+          if (row.gi) { ctx.fillStyle = DIV; ctx.fillRect(0, y - GAP / 2 - 1, W, 2); }
+          ctx.fillStyle = BAND_BG; ctx.fillRect(0, y, W, row.hb);
+          const title = `${this.noun} ${row.gi + 1} of ${this.groups}`;
+          ctx.font = `600 14px ${FONT}`; ctx.fillStyle = INK; ctx.fillText(title, 10, y + 21);
+          const tw = ctx.measureText(title).width;
+          ctx.font = `500 13px ${FONT}`; ctx.fillStyle = f < row.C ? OBS : SUB;
+          ctx.fillText(f < row.C ? `observed frame ${f + 1} of ${row.C}` : `predicted frame ${f - row.C + 1} of ${row.T - row.C}`, 10 + tw + 18, y + 21);
+        } else {                                             // a shape row's strip: what it shows
+          ctx.font = `500 13px ${FONT}`; ctx.fillStyle = SUB; ctx.fillText(row.label, 10, y + 19);
+        }
+        const ghost = row.ghost != null ? row.P[row.ghost] : null;
+        row.P.forEach((P, ci) => {
+          const x = ci * pw;
+          ctx.save(); ctx.beginPath(); ctx.rect(x, yp, pw, row.h); ctx.clip();
+          this.panel(ctx, row, P, f, x, yp, row.h, ci ? PRED_COL : GT_COL, B, ci && ci !== row.ghost ? ghost : null);
+          ctx.restore();
+          const tag = row.tags ? row.tags[ci] : (row.err[ci] != null ? row.err[ci].toFixed(1) + ' mm error' : null);
+          if (row.first) {                                   // the column's name in the panel, its error below it
+            label(ctx, this.data.cols[ci], x + 10, yp + 22, pw - 20, 14, 600, ci ? PRED_TXT : GT_COL);
+            if (tag) label(ctx, tag, x + 10, yp + 41, pw - 20, 13, 500, INK);
+          } else if (tag) label(ctx, tag, x + 10, yp + 22, pw - 20, 13, 500, INK);
+        });
+        ctx.fillStyle = row.first ? LINE : LINE_SOFT; ctx.fillRect(0, yp, W, 1);
+        ctx.fillStyle = LINE;
+        for (let ci = 1; ci < this.cols; ci++) ctx.fillRect(ci * pw, yp, 1, row.h);
+      });
+    }
+    tick(now) {
+      this.raf = null;
+      if (!this.visible || !this.data) return;
+      if (this.last != null && !this.held && !this.drag && !reduce) this.t += Math.min(0.1, (now - this.last) / 1000);
+      this.last = now; this.draw();
+      if (!reduce || this.drag) this.raf = requestAnimationFrame(t => this.tick(t));
+    }
+    show(on) {
+      this.visible = on; this.last = null;
+      if (on) { this.load().then(() => { if (!this.raf && this.visible) this.raf = requestAnimationFrame(t => this.tick(t)); }); }
+    }
+    down(e) { this.drag = { x: e.clientX, y: e.clientY, az: this.az, el: this.el, moved: false }; this.canvas.setPointerCapture(e.pointerId); }
+    move(e) {
+      if (!this.drag) return;
+      const dx = e.clientX - this.drag.x, dy = e.clientY - this.drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) this.drag.moved = true;
+      this.az = this.drag.az - dx * 0.4; this.el = Math.max(2, Math.min(88, this.drag.el + dy * 0.3));
+      if (reduce || this.held) this.draw();
+    }
+    up() {
+      if (!this.drag) return;
+      if (!this.drag.moved) { this.held = !this.held; this.last = null; }
+      this.drag = null;
+    }
+  }
+
+  const grids = Array.from(document.querySelectorAll('figure.g3')).map(f => new Grid(f));
+  if (!('DecompressionStream' in window)) grids.forEach(g => { g.msg.textContent = 'This browser cannot show the 3D view.'; });
+  else if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { const g = grids.find(x => x.fig === e.target); if (g) g.show(e.isIntersecting); }),
+                                        { rootMargin: '300px 0px' });
+    grids.forEach(g => io.observe(g.fig));
+  } else grids.forEach(g => g.show(true));
+})();
+
+</script>
+</body>
+</html>
