@@ -163,7 +163,7 @@ figcaption { font-family: var(--mono); font-size: var(--fs-xs); line-height: 18p
 .g3-box { position: relative; background: var(--plate); border-radius: 6px; outline: 1px solid var(--g300); outline-offset: -1px; overflow: hidden; cursor: grab; touch-action: pan-y; min-height: 120px; }
 .g3-box:active { cursor: grabbing; }
 .g3-canvas { display: block; width: 100%; }
-.g3-msg { padding: 48px 16px; text-align: center; font-family: var(--mono); font-size: var(--fs-xs); color: #5b5f66; }
+.g3-msg { position: absolute; top: 0; left: 0; right: 0; padding: 48px 16px; text-align: center; font-family: var(--mono); font-size: var(--fs-xs); color: #5b5f66; }
 
 /* horizontal bars: values printed, bars from zero */
 .hb-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 26px 40px; margin: 24px 0 0; max-width: 1100px; }
@@ -403,9 +403,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <figure class="g3" data-src="data3d/mm5.json" data-aspect="0.8" data-group="Episode" style="--minw: 760px">
+      <figure class="g3" data-src="data3d/mm5.json" data-aspect="0.8" data-group="Episode" style="--minw: 760px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-ghost"></i>True shape, under each aligned object</span></div>
-        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(5, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Sample 1</span><span class="pr"><i></i>Sample 2</span><span class="pr"><i></i>Sample 3</span><span class="pr"><i></i>Deterministic rollout</span></div><div class="g3-box"></div></div></div>
         <figcaption>Five held-out episodes, with each prediction's error. Under each episode, the object whose shape is predicted worst, rigidly aligned onto its true shape (grey), with its size at the last frame. Drag to turn all views, click to pause.</figcaption>
       </figure>
       <p class="note">The deterministic rollout predicts each window in one step from pure noise, which gives the network's mean prediction. Object size is the radius of gyration at the last frame, relative to the truth. The samples shown are the three of the 10 that best keep object size, at least 20 mm apart.</p>
@@ -458,9 +458,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <figure class="g3" data-src="data3d/pose_pp.json" data-aspect="0.7" data-group="Episode" style="--minw: 640px">
+      <figure class="g3" data-src="data3d/pose_pp.json" data-aspect="0.7" data-group="Episode" style="--minw: 640px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-act"></i>Gripper, motion given</span><span><i class="k-ghost"></i>Starting shape, under each aligned object</span></div>
-        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Pose tokens (ours)</span><span class="pr"><i></i>Plain particles</span></div><div class="g3-box"></div></div></div>
         <figcaption>Two held-out episodes, showing the gripper (grey) and the object it carries, with that object's error. Under each episode, the same object rigidly aligned onto its starting shape (grey), with its mean distance from rigid. Drag to turn all views, click to pause.</figcaption>
       </figure>
       <p class="note">Both models trained for 160k steps. Object error leaves out the gripper, whose motion is given. Rigidity error is the distance of the held object from the best rigid copy of its starting shape, averaged over the rollout or at the last frame. In the two episodes shown, plain particles deform the held object by 5.2 and 3.0 mm on average, against 4.0 mm over all 200.</p>
@@ -479,9 +479,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="prose"><p>PhysiFormer is trained from the authors' code at about 100M parameters on the same Free Fall data, and scored with the protocol of Table 1.</p></div>
       <div class="hb-grid"><div class="hb" data-chart="pf"></div></div>
       <div class="prose" style="margin-top: 22px"><p>PhysiFormer denoises absolute positions, so the motion is a small part of what it generates. GPWM and PhysCtrl predict motion relative to the observed frames.</p></div>
-      <figure class="g3" data-src="data3d/pf.json" data-aspect="0.7" data-group="Clip" style="--minw: 560px">
+      <figure class="g3" data-src="data3d/pf.json" data-aspect="0.7" data-group="Clip" style="--minw: 560px" data-rows='[{},{},{}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span></div>
-        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>GPWM (ours)</span><span class="pr"><i></i>PhysCtrl</span><span class="pr"><i></i>PhysiFormer</span></div><div class="g3-box"></div></div></div>
         <figcaption>Three typical held-out clips, picked by a fixed rule. Drag to turn, click to pause.</figcaption>
       </figure>
       <p class="note">100 held-out clips, 4 observed frames and 45 predicted, one sample. GPWM is the Free Fall specialist of Table 1. PhysiFormer and PhysCtrl at 80k training steps.</p>
@@ -506,7 +506,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
             <tr><td>Graph- or grid-based</td><td>97.2</td><td>30.4</td><td>20.5</td><td>23.9</td><td>68.2</td><td>26.7</td></tr>
             <tr><td>PointWorld</td><td>–</td><td>–</td><td>10.6</td><td>28.7</td><td>39.8</td><td>27.4</td></tr>
             <tr><td>PhysCtrl</td><td>53.0</td><td>7.8</td><td>10.7</td><td>24.5</td><td>34.1</td><td>24.8</td></tr>
-            <tr class="ours sep"><td>GPWM, specialists</td><td class="best">40.0</td><td>6.5</td><td class="best">8.9</td><td class="best">13.3</td><td>12.6</td><td class="best">18.7</td></tr>
+            <tr class="ours sep"><td>GPWM, specialists</td><td class="best">40.0</td><td>6.5</td><td class="best">8.9</td><td class="best">13.3</td><td>12.5</td><td class="best">18.7</td></tr>
             <tr class="ours"><td>GPWM, Unified</td><td>41.5</td><td class="best">6.1</td><td>10.8</td><td>18.0</td><td class="best">11.1</td><td>22.6</td></tr>
           </tbody>
         </table>
@@ -588,9 +588,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <div class="plate"><video muted loop playsinline preload="none" width="1240" height="284" poster="media/track_world.jpg" data-src="media/track_world.mp4" aria-label="An object's 4 observed frames from the side, with 20 particle tracks: first the true tracks, then the tracker's identity swaps bend them (one pair, then 5%, 10% and 25% of tracks, in red)."></video></div>
         <p class="cap"><b>Swapped tracks</b> in the 4 observed frames, seen from the side. The last frame stays correct, only the history is wrong.</p>
       </figure>
-      <figure class="g3" data-src="data3d/noise5.json" data-aspect="0.72" data-group="Episode" style="--minw: 900px">
+      <figure class="g3" data-src="data3d/noise5.json" data-aspect="0.72" data-group="Episode" style="--minw: 900px" data-rows='[{},{},{},{},{}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Input as the model receives it, then its prediction</span></div>
-        <div class="scroll-x"><div class="g3-inner"><div class="g3-head"></div><div class="g3-box"></div></div></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(6, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Clean input</span><span class="pr"><i></i>Noise σ = 2 mm</span><span class="pr"><i></i>Noise σ = 5 mm</span><span class="pr"><i></i>10% of tracks swapped</span><span class="pr"><i></i>25% of tracks swapped</span></div><div class="g3-box"></div></div></div>
         <figcaption>Five held-out episodes with 2 to 4 objects, chosen for typical error and a low spread across samples. The 4 observed frames show each input as the model receives it, then the 45 predicted frames, with each prediction's error. Drag to turn all views, click to pause.</figcaption>
       </figure>
       <a class="top-link" href="#top">↑ Questions</a>
@@ -639,6 +639,27 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     }, { rootMargin: '-45% 0px -50% 0px' });
     document.querySelectorAll('main .sec').forEach(function (s) { spy.observe(s); });
   }
+
+  // a #section link keeps its section at the top while content above it settles (fonts, a figure that loads as the
+  // jump passes it), until the reader scrolls, clicks or types, and for at most 8 s
+  var aim = null, aimUntil = 0;
+  function aimAt(id) { aim = id ? document.getElementById(id) : null; aimUntil = Date.now() + 8000; }
+  function realign() {
+    if (!aim || Date.now() > aimUntil) { aim = null; return; }
+    var dy = aim.getBoundingClientRect().top - (parseFloat(getComputedStyle(root).scrollPaddingTop) || 0);
+    if (Math.abs(dy) < 2) return;
+    var s = root.style.scrollBehavior; root.style.scrollBehavior = 'auto';
+    window.scrollBy(0, dy);
+    root.style.scrollBehavior = s;
+  }
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { addEventListener(ev, function () { aim = null; }, { passive: true }); });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) setTimeout(function () { aimAt(decodeURIComponent(a.getAttribute('href').slice(1))); }, 0);
+  });
+  if (location.hash) aimAt(decodeURIComponent(location.hash.slice(1)));
+  if ('ResizeObserver' in window) new ResizeObserver(realign).observe(document.body);
+  addEventListener('load', realign);
 })();
 </script>
 
@@ -870,6 +891,17 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     return Math.min(row.T - 1, row.C + Math.floor(s * FPS));
   }
 
+  function stack(rows, pw, a) {                               // rows top to bottom: a scene row opens a group (band, and a
+    let y = 0, gi = -1;                                       // gap before it), a shape row joins the group above.
+    for (const row of rows) {                                 // Used with the data and, before it arrives, with the row
+      row.first = row.kind !== 'shape';                       // list the build wrote into the page: same height both times
+      if (row.first) { gi++; if (gi) y += GAP; }
+      row.gi = gi; row.hb = row.first ? BAND_H : SUB_H;
+      row.y = y; row.h = pw * (row.aspect || a); row.stamp = null; y += row.hb + row.h;
+    }
+    return [y, gi + 1];
+  }
+
   class Grid {
     constructor(fig) {
       this.fig = fig; this.az = +(fig.dataset.az || -52); this.el = +(fig.dataset.el || 28); this.persp = 0.18;
@@ -882,6 +914,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       this.sc = this.box.closest('.scroll-x');                // the sideways scroller on narrow screens
       this.hint = document.createElement('p'); this.hint.className = 'g3-hint'; this.hint.hidden = true;
       if (this.sc) this.sc.parentNode.insertBefore(this.hint, this.sc);
+      this.cols0 = this.head ? this.head.children.length : 0;   // the column titles the build wrote into the page
+      if (this.cols0) this.hint.textContent = `Scroll sideways to see all ${this.cols0} columns →`;
+      this.reserve(); this.updateHint();                       // final height and hint now, so nothing moves when data loads
       this.canvas.addEventListener('pointerdown', e => this.down(e));
       window.addEventListener('pointermove', e => this.move(e));
       window.addEventListener('pointerup', e => this.up(e));
@@ -905,16 +940,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       return this.loading;
     }
     layout() {
-      if (!this.data) return;
+      if (!this.data) return this.reserve();
       const w = this.box.clientWidth, pw = w / this.cols, a = +this.fig.dataset.aspect || 0.82;
-      let y = 0, gi = -1;
-      for (const row of this.data.rows) {                    // a scene row opens a group; a shape row joins the one above
-        row.first = row.kind !== 'shape';
-        if (row.first) { gi++; if (gi) y += GAP; }
-        row.gi = gi; row.hb = row.first ? BAND_H : SUB_H;
-        row.y = y; row.h = pw * (row.aspect || a); row.stamp = null; y += row.hb + row.h;
-      }
-      this.groups = gi + 1;
+      const [y, groups] = stack(this.data.rows, pw, a);
+      this.groups = groups;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       this.pw = pw; this.dpr = dpr;
       this.canvas.style.height = y + 'px';
@@ -922,7 +951,13 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       this.updateHint();
       this.draw();
     }
-    updateHint() { if (this.sc && this.data) this.hint.hidden = !(this.sc.scrollWidth > this.sc.clientWidth + 2); }
+    reserve() {                                               // before the data: its height, from the row list in the page
+      let rows = null;
+      try { rows = JSON.parse(this.fig.dataset.rows || 'null'); } catch (e) { rows = null; }
+      if (!rows || !this.cols0) return;
+      this.canvas.style.height = stack(rows, this.box.clientWidth / this.cols0, +this.fig.dataset.aspect || 0.82)[0] + 'px';
+    }
+    updateHint() { if (this.sc && (this.data || this.cols0)) this.hint.hidden = !(this.sc.scrollWidth > this.sc.clientWidth + 2); }
     basis() {
       const a = this.az * D2R, e = this.el * D2R, ca = Math.cos(a), sa = Math.sin(a), ce = Math.cos(e), se = Math.sin(e);
       return { rx: -sa, ry: ca, ux: -se * ca, uy: -se * sa, uz: ce, fx: ce * ca, fy: ce * sa, fz: se };
