@@ -434,7 +434,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <figure class="g3" data-src="data3d/mm5.json" data-aspect="0.8" data-group="Episode" style="--minw: 760px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
+      <figure class="g3" data-src="data3d/mm5.json?v=b4f526b0c9" data-aspect="0.8" data-group="Episode" style="--minw: 760px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-ghost"></i>True shape, under each aligned object</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(5, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Sample 1</span><span class="pr"><i></i>Sample 2</span><span class="pr"><i></i>Sample 3</span><span class="pr"><i></i>Deterministic rollout</span></div><div class="g3-box"></div></div></div>
         <figcaption>Five held-out episodes, with each prediction's error. Under each episode, the object whose shape is predicted worst, rigidly aligned onto its true shape (grey), with its size at the last frame. Drag to turn all views, click to pause.</figcaption>
@@ -489,7 +489,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <figure class="g3" data-src="data3d/pose_pp.json" data-aspect="0.7" data-group="Episode" style="--minw: 640px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
+      <figure class="g3" data-src="data3d/pose_pp.json?v=4866cef3c9" data-aspect="0.7" data-group="Episode" style="--minw: 640px" data-rows='[{},{"kind":"shape","aspect":0.6},{},{"kind":"shape","aspect":0.6}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span><span><i class="k-act"></i>Gripper, motion given</span><span><i class="k-ghost"></i>Starting shape, under each aligned object</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Pose tokens (ours)</span><span class="pr"><i></i>Plain particles</span></div><div class="g3-box"></div></div></div>
         <figcaption>Two held-out episodes, showing the gripper (grey) and the object it carries, with that object's error. Under each episode, the same object rigidly aligned onto its starting shape (grey), with its mean distance from rigid. Drag to turn all views, click to pause.</figcaption>
@@ -510,7 +510,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="prose"><p>PhysiFormer is trained from the authors' code at about 100M parameters on the same Free Fall data, and scored with the protocol of Table 1.</p></div>
       <div class="hb-grid"><div class="hb" data-chart="pf"></div></div>
       <div class="prose" style="margin-top: 22px"><p>PhysiFormer denoises absolute positions, so the motion is a small part of what it generates. GPWM and PhysCtrl predict motion relative to the observed frames.</p></div>
-      <figure class="g3" data-src="data3d/pf.json" data-aspect="0.7" data-group="Clip" style="--minw: 560px" data-rows='[{},{},{}]'>
+      <figure class="g3" data-src="data3d/pf.json?v=ab63bbdfb0" data-aspect="0.7" data-group="Clip" style="--minw: 560px" data-rows='[{},{},{}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Prediction</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>GPWM (ours)</span><span class="pr"><i></i>PhysCtrl</span><span class="pr"><i></i>PhysiFormer</span></div><div class="g3-box"></div></div></div>
         <figcaption>Three typical held-out clips, picked by a fixed rule. Drag to turn, click to pause.</figcaption>
@@ -619,7 +619,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <div class="plate"><video muted loop playsinline preload="none" width="1240" height="284" poster="media/track_world.jpg" data-src="media/track_world.mp4" aria-label="An object's 4 observed frames from the side, with 20 particle tracks: first the true tracks, then the tracker's identity swaps bend them (one pair, then 5%, 10% and 25% of tracks, in red)."></video></div>
         <p class="cap"><b>Swapped tracks</b> in the 4 observed frames, seen from the side. The last frame stays correct, only the history is wrong.</p>
       </figure>
-      <figure class="g3" data-src="data3d/noise5.json" data-aspect="0.72" data-group="Episode" style="--minw: 900px" data-rows='[{},{},{},{},{}]'>
+      <figure class="g3" data-src="data3d/noise5.json?v=a20e7fb723" data-aspect="0.72" data-group="Episode" style="--minw: 900px" data-rows='[{},{},{},{},{}]'>
         <div class="g3-key"><span><i class="k-gt"></i>Ground truth</span><span><i></i>Input as the model receives it, then its prediction</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(6, minmax(0, 1fr))"><span class="gt"><i></i>Ground truth</span><span class="pr"><i></i>Clean input</span><span class="pr"><i></i>Noise σ = 2 mm</span><span class="pr"><i></i>Noise σ = 5 mm</span><span class="pr"><i></i>10% of tracks swapped</span><span class="pr"><i></i>25% of tracks swapped</span></div><div class="g3-box"></div></div></div>
         <figcaption>Five held-out episodes with 2 to 4 objects, chosen for typical error and a low spread across samples. The 4 observed frames show each input as the model receives it, then the 45 predicted frames, with each prediction's error. Drag to turn all views, click to pause.</figcaption>
@@ -657,7 +657,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
       <h3>What the plans look like</h3>
       <div class="prose"><p>Latent noise optimization on three Pushing, three Pile Manipulation and three Picking problems.</p></div>
-      <figure class="g3" data-src="data3d/unified_plan.json" data-aspect="0.62" data-group="Problem" style="--minw: 800px" data-rows='[{"aspect":0.85},{"aspect":0.85},{"aspect":0.85},{"aspect":0.62},{"aspect":0.62},{"aspect":0.62},{"aspect":0.95},{"aspect":0.95},{"aspect":0.95}]'>
+      <figure class="g3" data-src="data3d/unified_plan.json?v=ee8c61b01c" data-aspect="0.62" data-group="Problem" style="--minw: 800px" data-rows='[{"aspect":0.85},{"aspect":0.85},{"aspect":0.85},{"aspect":0.62},{"aspect":0.62},{"aspect":0.62},{"aspect":0.95},{"aspect":0.95},{"aspect":0.95}]'>
         <div class="g3-key"><span><i></i>Plan, imagined by the model</span><span><i class="k-gt"></i>Simulator, running the plan's actions</span><span><i class="k-act"></i>Gripper, pusher or paddle</span><span><i style="background: #2f9e44; box-shadow: inset 0 0 0 1px #16181c"></i>Target</span><span style="color: var(--sub)">Drag to turn all views, click to pause</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><span class="pr"><i></i>Specialist, plan</span><span class="gt"><i></i>Specialist, simulator</span><span class="pr"><i></i>Unified, plan</span><span class="gt"><i></i>Unified, simulator</span></div><div class="g3-box"></div></div></div>
       </figure>
