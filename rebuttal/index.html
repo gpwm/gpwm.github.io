@@ -208,7 +208,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap">
     <a class="mark" href="../">GPWM</a>
     <nav aria-label="Sections">
-      <a href="#planning">Planning</a><a href="#dexterous">Dexterous, cloth</a><a href="#generative">Generative</a><a href="#ablations">Ablations</a><a href="#physiformer">PhysiFormer</a><a href="#unified">Unified</a><a href="#gripper-swap">Gripper swap</a><a href="#observations">Observations</a><a href="#real-world">Real world</a>
+      <a href="#real-world">Real world</a><a href="#planning">Planning</a><a href="#dexterous">Dexterous, cloth</a><a href="#generative">Generative</a><a href="#ablations">Ablations</a><a href="#physiformer">PhysiFormer</a><a href="#unified">Unified</a><a href="#gripper-swap">Gripper swap</a><a href="#observations">Observations</a>
     </nav>
     <button class="pill" type="button" id="theme">Dark mode</button>
   </div>
@@ -224,41 +224,71 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <div class="rv">
           <h2>Reviewer xb8Q</h2>
           <ol>
-            <li><a href="#planning"><span class="n">01</span><span class="q">Can GPWM plan better than a classical simulator?</span><span class="go">Go to 01 · Planning →</span></a></li>
-            <li><a href="#dexterous"><span class="n">02</span><span class="q">Can it plan dexterous manipulation and cloth folding?</span><span class="go">Go to 02 · Dexterous hand and cloth →</span></a></li>
-            <li><a href="#generative"><span class="n">03</span><span class="q">What is the advantage of being generative?</span><span class="go">Go to 03 · Generative →</span></a></li>
-            <li><a href="#ablations"><span class="n">04</span><span class="q">Do the combined components each matter?</span><span class="go">Go to 04 · Ablations →</span></a></li>
-            <li><a href="#gripper-swap"><span class="n">07</span><span class="q">What does one model for many domains add?</span><span class="go">Go to 07 · Gripper swap →</span></a></li>
-            <li><a href="#real-world"><span class="n">09</span><span class="q">Is there a real-world evaluation?</span><span class="go">Go to 09 · Real world →</span></a></li>
+            <li><a href="#real-world"><span class="n">01</span><span class="q">Is there a real-world evaluation?</span><span class="go">Go to 01 · Real world →</span></a></li>
+            <li><a href="#planning"><span class="n">02</span><span class="q">Can GPWM plan better than a classical simulator?</span><span class="go">Go to 02 · Planning →</span></a></li>
+            <li><a href="#dexterous"><span class="n">03</span><span class="q">Can it plan dexterous manipulation and cloth folding?</span><span class="go">Go to 03 · Dexterous hand and cloth →</span></a></li>
+            <li><a href="#generative"><span class="n">04</span><span class="q">What is the advantage of being generative?</span><span class="go">Go to 04 · Generative →</span></a></li>
+            <li><a href="#ablations"><span class="n">05</span><span class="q">Do the combined components each matter?</span><span class="go">Go to 05 · Ablations →</span></a></li>
+            <li><a href="#gripper-swap"><span class="n">08</span><span class="q">What does one model for many domains add?</span><span class="go">Go to 08 · Gripper swap →</span></a></li>
           </ol>
         </div>
         <div class="rv">
           <h2>Reviewer wZV8</h2>
           <ol>
-            <li><a href="#physiformer"><span class="n">05</span><span class="q">How does GPWM compare with PhysiFormer?</span><span class="go">Go to 05 · PhysiFormer →</span></a></li>
-            <li><a href="#unified"><span class="n">06</span><span class="q">Is the larger Unified model less accurate?</span><span class="go">Go to 06 · Unified model →</span></a></li>
-            <li><a href="#observations"><span class="n">08</span><span class="q">How does it handle imperfect observations?</span><span class="go">Go to 08 · Observations →</span></a></li>
-            <li><a href="#ablations"><span class="n">04</span><span class="q">Is the combination of ingredients more than incremental?</span><span class="go">Go to 04 · Ablations →</span></a></li>
+            <li><a href="#physiformer"><span class="n">06</span><span class="q">How does GPWM compare with PhysiFormer?</span><span class="go">Go to 06 · PhysiFormer →</span></a></li>
+            <li><a href="#unified"><span class="n">07</span><span class="q">Is the larger Unified model less accurate?</span><span class="go">Go to 07 · Unified model →</span></a></li>
+            <li><a href="#observations"><span class="n">09</span><span class="q">How does it handle imperfect observations?</span><span class="go">Go to 09 · Observations →</span></a></li>
+            <li><a href="#ablations"><span class="n">05</span><span class="q">Is the combination of ingredients more than incremental?</span><span class="go">Go to 05 · Ablations →</span></a></li>
           </ol>
         </div>
         <div class="rv">
           <h2>Reviewer 1hZx</h2>
           <ol>
-            <li><a href="#ablations"><span class="n">04</span><span class="q">Ablations of the hierarchy, the factorized attention and the pose tokens</span><span class="go">Go to 04 · Ablations →</span></a></li>
-            <li><a href="#samples"><span class="n">03</span><span class="q">Best-of-N error or a distribution-level metric</span><span class="go">Go to 03 · Generative →</span></a></li>
-            <li><a href="#planning"><span class="n">01</span><span class="q">Planning at matched compute, against simulator search and a trained policy</span><span class="go">Go to 01 · Planning →</span></a></li>
-            <li><a href="#unified"><span class="n">06</span><span class="q">The Unified model's specialization gap</span><span class="go">Go to 06 · Unified model →</span></a></li>
-            <li><a href="#observations"><span class="n">08</span><span class="q">Noisy or incomplete particle tracking</span><span class="go">Go to 08 · Observations →</span></a></li>
+            <li><a href="#ablations"><span class="n">05</span><span class="q">Ablations of the hierarchy, the factorized attention and the pose tokens</span><span class="go">Go to 05 · Ablations →</span></a></li>
+            <li><a href="#samples"><span class="n">04</span><span class="q">Best-of-N error or a distribution-level metric</span><span class="go">Go to 04 · Generative →</span></a></li>
+            <li><a href="#planning"><span class="n">02</span><span class="q">Planning at matched compute, against simulator search and a trained policy</span><span class="go">Go to 02 · Planning →</span></a></li>
+            <li><a href="#unified"><span class="n">07</span><span class="q">The Unified model's specialization gap</span><span class="go">Go to 07 · Unified model →</span></a></li>
+            <li><a href="#observations"><span class="n">09</span><span class="q">Noisy or incomplete particle tracking</span><span class="go">Go to 09 · Observations →</span></a></li>
           </ol>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 01 planning -->
+<!-- REAL_WORLD_BEGIN -->
+  <!-- 01 real-world -->
+  <section class="sec" id="real-world">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">01 · Real world</p><span class="who"><span>xb8Q</span></span></div>
+      <h2>Pick and place on a real robot</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>xb8Q</cite>“The planning experiment is limited. It only conducts 3 tasks, and no sim2real experiment is shown.”</blockquote>
+      </div>
+      <div class="prose"><p>For each trial, GPWM plans with latent noise optimization at the same budget as Picking in the <a href="#planning">planning table</a>, and the robot executes the plan open loop.</p></div>
+      <figure>
+        <div class="vgrid" style="--cols: 2">
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_01.jpg" data-src="media/real_01.mp4" aria-label="Real-robot experiment, clip 1."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_02.jpg" data-src="media/real_02.mp4" aria-label="Real-robot experiment, clip 2."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_03.jpg" data-src="media/real_03.mp4" aria-label="Real-robot experiment, clip 3."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_04.jpg" data-src="media/real_04.mp4" aria-label="Real-robot experiment, clip 4."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_05.jpg" data-src="media/real_05.mp4" aria-label="Real-robot experiment, clip 5."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_06.jpg" data-src="media/real_06.mp4" aria-label="Real-robot experiment, clip 6."></video></div><p class="cap"><b>Failure</b> · grasp missed</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_07.jpg" data-src="media/real_07.mp4" aria-label="Real-robot experiment, clip 7."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_08.jpg" data-src="media/real_08.mp4" aria-label="Real-robot experiment, clip 8."></video></div><p class="cap"><b>Failure</b> · grasp missed</p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_09.jpg" data-src="media/real_09.mp4" aria-label="Real-robot experiment, clip 9."></video></div><p class="cap"><b>Success</b></p></div>
+          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_10.jpg" data-src="media/real_10.mp4" aria-label="Real-robot experiment, clip 10."></video></div><p class="cap"><b>Success</b></p></div>
+        </div>
+      </figure>
+      <p class="note">8 of 10 trials succeed. Robot footage plays at 2x speed.</p>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+<!-- REAL_WORLD_END -->
+
+  <!-- 02 planning -->
   <section class="sec" id="planning">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">01 · Planning</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
+      <div class="sec-top"><p class="eyebrow">02 · Planning</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
       <h2>Planning at one compute budget</h2>
       <div class="asks">
         <blockquote class="ask"><cite>1hZx</cite>“how do results change when baselines get a compute-matched budget, and how does GPWM compare with MPPI or CEM using the true simulator, or with a trained policy?”</blockquote>
@@ -313,10 +343,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 02 Dexterous -->
+  <!-- 03 Dexterous -->
   <section class="sec" id="dexterous">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">02 · Dexterous hand and cloth</p><span class="who"><span>xb8Q</span></span></div>
+      <div class="sec-top"><p class="eyebrow">03 · Dexterous hand and cloth</p><span class="who"><span>xb8Q</span></span></div>
       <h2>Planning dexterous and cloth manipulation</h2>
       <div class="asks">
         <blockquote class="ask"><cite>xb8Q</cite>“Can this model be used in more complicated planning tasks, like “garment folding”, “dragging a deformable”, or “dexterous manipulation”?”</blockquote>
@@ -354,10 +384,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 03 generative -->
+  <!-- 04 generative -->
   <section class="sec" id="generative">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">03 · Generative</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
+      <div class="sec-top"><p class="eyebrow">04 · Generative</p><span class="who"><span>xb8Q</span><span>1hZx</span></span></div>
       <h2>What being generative allows GPWM to do</h2>
       <div class="asks">
         <blockquote class="ask"><cite>xb8Q</cite>“Although claiming the model to be “generative”, it doesn't show the advantage of being “generative”.”</blockquote>
@@ -414,10 +444,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 04 ablations -->
+  <!-- 05 ablations -->
   <section class="sec" id="ablations">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">04 · Ablations</p><span class="who"><span>1hZx</span><span>wZV8</span><span>xb8Q</span></span></div>
+      <div class="sec-top"><p class="eyebrow">05 · Ablations</p><span class="who"><span>1hZx</span><span>wZV8</span><span>xb8Q</span></span></div>
       <h2>Which design choices matter</h2>
       <div class="asks">
         <blockquote class="ask"><cite>1hZx</cite>“Could you add ablations for the multi-resolution hierarchy, the factorized attention, and the rigid-body pose tokens”</blockquote>
@@ -469,10 +499,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 05 PhysiFormer -->
+  <!-- 06 PhysiFormer -->
   <section class="sec" id="physiformer">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">05 · PhysiFormer</p><span class="who"><span>wZV8</span></span></div>
+      <div class="sec-top"><p class="eyebrow">06 · PhysiFormer</p><span class="who"><span>wZV8</span></span></div>
       <h2>PhysiFormer on Free Fall</h2>
       <div class="asks">
         <blockquote class="ask"><cite>wZV8</cite>“Comparison with the closely related PhysiFormer, which is discussed but not evaluated, would clarify the advance.”</blockquote>
@@ -490,10 +520,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 06 unified -->
+  <!-- 07 unified -->
   <section class="sec" id="unified">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">06 · Unified model</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
+      <div class="sec-top"><p class="eyebrow">07 · Unified model</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
       <h2>The retrained Unified model</h2>
       <div class="asks">
         <blockquote class="ask"><cite>wZV8</cite>“The Unified model is substantially larger than the specialists yet is less accurate on five of six domains”</blockquote>
@@ -512,15 +542,15 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <p class="note">Revised Table 1, best per domain in blue. Garment Folding is the Chamfer distance over 898 frames on the 20 held-out folds with the most motion. The Garment Folding specialist uses the diffusion forcing rollout of section 04.</p>
+      <p class="note">Revised Table 1, best per domain in blue. Garment Folding is the Chamfer distance over 898 frames on the 20 held-out folds with the most motion. The Garment Folding specialist uses the diffusion forcing rollout of section 05.</p>
       <a class="top-link" href="#top">↑ Questions</a>
     </div>
   </section>
 
-  <!-- 07 gripper-swap -->
+  <!-- 08 gripper-swap -->
   <section class="sec" id="gripper-swap">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">07 · Gripper swap</p><span class="who"><span>xb8Q</span></span></div>
+      <div class="sec-top"><p class="eyebrow">08 · Gripper swap</p><span class="who"><span>xb8Q</span></span></div>
       <h2>Folding with a gripper the folding data never had</h2>
       <div class="asks">
         <blockquote class="ask"><cite>xb8Q</cite>“Having a unified design of particle simulator for diverse phenomena is also not new”</blockquote>
@@ -559,10 +589,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
-  <!-- 08 observations -->
+  <!-- 09 observations -->
   <section class="sec" id="observations">
     <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">08 · Observations</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
+      <div class="sec-top"><p class="eyebrow">09 · Observations</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
       <h2>Noisy and mis-tracked observations</h2>
       <div class="asks">
         <blockquote class="ask"><cite>1hZx</cite>“How sensitive is the model to noisy or incomplete particle tracking, which a real deployment would face?”</blockquote>
@@ -597,36 +627,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <a class="top-link" href="#top">↑ Questions</a>
     </div>
   </section>
-<!-- REAL_WORLD_BEGIN -->
-  <!-- 09 real-world -->
-  <section class="sec" id="real-world">
-    <div class="wrap">
-      <div class="sec-top"><p class="eyebrow">09 · Real world</p><span class="who"><span>xb8Q</span></span></div>
-      <h2>Pick and place on a real robot</h2>
-      <div class="asks">
-        <blockquote class="ask"><cite>xb8Q</cite>“The planning experiment is limited. It only conducts 3 tasks, and no sim2real experiment is shown.”</blockquote>
-      </div>
-      <div class="prose"><p>For each trial, GPWM plans with latent noise optimization at the same budget as Picking in the <a href="#planning">planning table</a>, and the robot executes the plan open loop.</p></div>
-      <figure>
-        <div class="vgrid" style="--cols: 2">
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_01.jpg" data-src="media/real_01.mp4" aria-label="Real-robot experiment, clip 1."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_02.jpg" data-src="media/real_02.mp4" aria-label="Real-robot experiment, clip 2."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_03.jpg" data-src="media/real_03.mp4" aria-label="Real-robot experiment, clip 3."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_04.jpg" data-src="media/real_04.mp4" aria-label="Real-robot experiment, clip 4."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_05.jpg" data-src="media/real_05.mp4" aria-label="Real-robot experiment, clip 5."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_06.jpg" data-src="media/real_06.mp4" aria-label="Real-robot experiment, clip 6."></video></div><p class="cap"><b>Failure</b> · grasp missed</p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_07.jpg" data-src="media/real_07.mp4" aria-label="Real-robot experiment, clip 7."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_08.jpg" data-src="media/real_08.mp4" aria-label="Real-robot experiment, clip 8."></video></div><p class="cap"><b>Failure</b> · grasp missed</p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_09.jpg" data-src="media/real_09.mp4" aria-label="Real-robot experiment, clip 9."></video></div><p class="cap"><b>Success</b></p></div>
-          <div><div class="plate"><video muted loop playsinline preload="none" width="1280" height="960" poster="media/real_10.jpg" data-src="media/real_10.mp4" aria-label="Real-robot experiment, clip 10."></video></div><p class="cap"><b>Success</b></p></div>
-        </div>
-      </figure>
-      <p class="note">8 of 10 trials succeed. Robot footage plays at 2x speed.</p>
-      <a class="top-link" href="#top">↑ Questions</a>
-    </div>
-  </section>
-<!-- REAL_WORLD_END -->
-
 </main>
 
 <footer><div class="wrap"><span>GPWM · anonymous submission</span><a href="../">Project page</a></div></footer>
