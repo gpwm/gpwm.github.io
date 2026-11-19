@@ -208,7 +208,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap">
     <a class="mark" href="../">GPWM</a>
     <nav aria-label="Sections">
-      <a href="#real-world">Real world</a><a href="#planning">Planning</a><a href="#dexterous">Dexterous, cloth</a><a href="#generative">Generative</a><a href="#ablations">Ablations</a><a href="#physiformer">PhysiFormer</a><a href="#unified">Unified</a><a href="#gripper-swap">Gripper swap</a><a href="#observations">Observations</a>
+      <a href="#real-world">Real world</a><a href="#planning">Planning</a><a href="#dexterous">Dexterous, cloth</a><a href="#generative">Generative</a><a href="#ablations">Ablations</a><a href="#physiformer">PhysiFormer</a><a href="#unified">Unified</a><a href="#gripper-swap">Gripper swap</a><a href="#observations">Observations</a><a href="#unified-planning">Unified planning</a>
     </nav>
     <button class="pill" type="button" id="theme">Dark mode</button>
   </div>
@@ -627,6 +627,48 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <a class="top-link" href="#top">↑ Questions</a>
     </div>
   </section>
+
+  <!-- 10 unified planning -->
+  <section class="sec" id="unified-planning">
+    <div class="wrap">
+      <div class="sec-top"><p class="eyebrow">10 · Unified planning</p><span class="who"><span>wZV8</span><span>1hZx</span></span></div>
+      <h2>Planning with one unified model</h2>
+      <div class="asks">
+        <blockquote class="ask"><cite>wZV8</cite>“The Unified model is substantially larger than the specialists yet is less accurate on five of six domains”</blockquote>
+        <blockquote class="ask"><cite>1hZx</cite>“what causes its specialization gap: capacity, data balance, or interference between domains?”</blockquote>
+      </div>
+      <div class="prose"><p>One GPWM model of 104M parameters, trained on five domains, plans the three tasks of section 02 with the same planners, settings, problems and simulators as the three task specialists of the same size. Every plan runs open loop in simulation.</p></div>
+      <div class="tbl">
+        <table class="full">
+          <thead><tr><th>Task progress, higher is better</th><th>Specialists</th><th>Unified model</th><th>Unified minus specialists</th><th>Samples per plan</th></tr></thead>
+          <tbody>
+            <tr><td>Pushing, latent noise optimization</td><td>0.56<span class="d">±0.04</span></td><td>0.52<span class="d">±0.05</span></td><td>−0.04<span class="d">±0.05</span></td><td>best 16 of 32<span class="n">112</span></td></tr>
+            <tr><td>Pile Manipulation, latent noise optimization</td><td>0.21<span class="d">±0.01</span></td><td>0.09<span class="d">±0.02</span></td><td>−0.12<span class="d">±0.02</span></td><td>best 4 of 32<span class="n">52</span></td></tr>
+            <tr><td>Picking, latent noise optimization</td><td>0.52<span class="d">±0.10</span></td><td>0.57<span class="d">±0.09</span></td><td>+0.05<span class="d">±0.14</span></td><td>best 8 of 32<span class="n">72</span></td></tr>
+            <tr><td>Pushing, noise-space CEM</td><td>0.58<span class="d">±0.04</span></td><td>0.52<span class="d">±0.04</span></td><td>−0.06<span class="d">±0.05</span></td><td>128 × 3<span class="n">384</span></td></tr>
+            <tr><td>Pile Manipulation, noise-space CEM</td><td>0.20<span class="d">±0.01</span></td><td>0.23<span class="d">±0.01</span></td><td>+0.03<span class="d">±0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
+            <tr><td>Picking, noise-space CEM</td><td>0.35<span class="d">±0.08</span></td><td>0.50<span class="d">±0.07</span></td><td>+0.15<span class="d">±0.11</span></td><td>80 × 3<span class="n">240</span></td></tr>
+            <tr class="sep"><td>Pushing, action-space CEM</td><td>0.00<span class="d">±&lt;0.01</span></td><td>0.00<span class="d">±&lt;0.01</span></td><td>0.00<span class="d">±&lt;0.01</span></td><td>128 × 3<span class="n">384</span></td></tr>
+            <tr><td>Pile Manipulation, action-space CEM</td><td>0.01<span class="d">±&lt;0.01</span></td><td>0.03<span class="d">±&lt;0.01</span></td><td>+0.02<span class="d">±&lt;0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
+            <tr><td>Picking, action-space CEM</td><td>−0.02<span class="d">±0.02</span></td><td>−0.12<span class="d">±0.03</span></td><td>−0.10<span class="d">±0.04</span></td><td>80 × 3<span class="n">240</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">The unified model trained for 500k steps on pile manipulation, picking, pushing, cloth folding and a dexterous hand, with the actuator's actions hidden in half of the training windows, and each specialist trained for 200k steps on its own task.</p>
+      <p class="note">Both models get the same samples, CEM rounds and gradient steps per plan and so score the same number of trajectories (grey), but planning time is not matched, so the specialist values differ from the time-budget values of section 02. Latent noise optimization refines the best of 32 noise samples with 5 gradient steps each, and CEM runs 3 rounds.</p>
+      <p class="note">Pushing with latent noise optimization keeps the best 16 of 32 samples because 40 samples run out of GPU memory with the unified model (36.1 against 10.4 GiB at 16 samples), since it keeps 128 coarse tokens per rigid object, like the picking and pile specialists, where the pushing specialist keeps 32.</p>
+      <p class="note">With gradient steps on Pile Manipulation, the unified plan moves the dough without paddle contact in 25 of 50 problems, so the simulated dough stays still. A contact penalty in the planning cost raises its task progress to 0.18 ±0.02 (the specialists were not run with it).</p>
+
+      <h3>What the plans look like</h3>
+      <div class="prose"><p>Latent noise optimization on three problems per task, the one at the median difference between the models and the two where the unified model is furthest behind and furthest ahead.</p></div>
+      <figure class="g3" data-src="data3d/unified_plan.json" data-aspect="0.62" data-group="Problem" style="--minw: 800px" data-rows='[{"aspect":0.85},{"aspect":0.85},{"aspect":0.85},{"aspect":0.62},{"aspect":0.62},{"aspect":0.62},{"aspect":0.95},{"aspect":0.95},{"aspect":0.95}]'>
+        <div class="g3-key"><span><i></i>Plan, imagined by the model</span><span><i class="k-gt"></i>Simulator, running the plan's actions</span><span><i class="k-act"></i>Gripper, pusher or paddle</span><span><i style="background: #2f9e44; box-shadow: inset 0 0 0 1px #16181c"></i>Target</span><span style="color: var(--sub)">Drag to turn all views, click to pause</span></div>
+        <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><span class="pr"><i></i>Specialist, plan</span><span class="gt"><i></i>Specialist, simulator</span><span class="pr"><i></i>Unified, plan</span><span class="gt"><i></i>Unified, simulator</span></div><div class="g3-box"></div></div></div>
+      </figure>
+      <a class="top-link" href="#top">↑ Questions</a>
+    </div>
+  </section>
+
 </main>
 
 <footer><div class="wrap"><span>GPWM · anonymous submission</span><a href="../">Project page</a></div></footer>
@@ -841,12 +883,17 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
    group opens with a band naming it ("Episode 1 of 5", the figure's data-group noun) and the frame being shown, and
    groups are set apart by a gap and a divider; a shape row opens with a strip carrying its label. Every scene panel
    names its column in the panel itself, with its error on the line below, so a panel reads on its own when the column
-   titles have scrolled away; a hint appears when the figure is wider than the screen. */
+   titles have scrolled away; a hint appears when the figure is wider than the screen.
+   v20 (11-18, planning clips; every field optional, so figures without them draw exactly as before): the data may give
+   col_roles ("gt" blue / "pr" orange per column, default: the first column "gt", the rest "pr"); a row may give a title
+   (its band then names it instead of "Episode 1 of 5") and a target [x, y, z] (a green goal disc with a dotted drop
+   line to the floor, in every scene panel, inside the framing) and a zoom (scale factor on its framing, default 1);
+   a row with no observed frames (C = 0) counts its frames in the band as "frame 12 of 61". */
 (function () {
   'use strict';
   const D2R = Math.PI / 180, TAU = Math.PI * 2, BUCKETS = 24;
   const GT_COL = '#1f6fb2', PRED_COL = '#e07b24', GHOST_COL = '#c3c9d1', ACT_COL = '#7d848c', SUB = '#45474d', LINE = '#e3e4e7', LINE_SOFT = '#eef0f2';
-  const INK = '#16181c', OBS = '#b4232c', BAND_BG = '#f3f4f6', DIV = '#b9bcc2', PRED_TXT = '#b8570f';
+  const INK = '#16181c', OBS = '#b4232c', BAND_BG = '#f3f4f6', DIV = '#b9bcc2', PRED_TXT = '#b8570f', GOAL_COL = '#2f9e44', DROP = '#8a8f98';
   const FONT = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
   const BAND_H = 32, SUB_H = 28, GAP = 18;                     // group band, shape-row strip, space between groups
   const CTX_S = 0.2, FPS = 12, HOLD_S = 1.4;                 // observed frames shown slowly, then 12 fps, then a hold
@@ -910,6 +957,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         z0 = Math.min(z0, P[j + 2]); z1 = Math.max(z1, P[j + 2]);
       }
     }
+    if (row.target) {                                         // v20: the goal stays inside the view
+      const [gx, gy, gz] = row.target;
+      x0 = Math.min(x0, gx); x1 = Math.max(x1, gx); y0 = Math.min(y0, gy); y1 = Math.max(y1, gy); z0 = Math.min(z0, gz); z1 = Math.max(z1, gz);
+    }
     row.fit = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, cz: (z0 + z1) / 2, floor: fl,
                 R: 0.42 * Math.max(Math.hypot(x1 - x0, y1 - y0), (z1 - z0) * 1.5) };
     row.dur = row.C * CTX_S + (row.T - row.C) / FPS + HOLD_S;
@@ -962,8 +1013,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           const d = await (await fetch(this.fig.dataset.src)).json();
           await Promise.all(d.rows.map(decode));
           this.data = d; this.cols = d.cols.length;
+          this.roles = d.col_roles || d.cols.map((c, i) => (i ? 'pr' : 'gt'));     // v20: blue or orange per column
           this.head.style.gridTemplateColumns = `repeat(${this.cols}, minmax(0, 1fr))`;
-          this.head.innerHTML = d.cols.map((c, i) => `<span class="${i ? 'pr' : 'gt'}"><i></i>${c}</span>`).join('');
+          this.head.innerHTML = d.cols.map((c, i) => `<span class="${this.roles[i]}"><i></i>${c}</span>`).join('');
           this.hint.textContent = `Scroll sideways to see all ${this.cols} columns →`;
           this.msg.remove(); this.layout();
         } catch (e) { this.msg.textContent = 'This 3D view could not load (' + (e && e.message ? e.message : e) + ').'; }
@@ -1000,7 +1052,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       this.bk = new Int32Array(m); this.order = new Int32Array(m);
     }
     panel(ctx, row, P, f, x, y, ph, col, B, ghost) {          // one method's points at frame f in the panel at (x, y)
-      const pw = this.pw, fit = row.fit, n = row.n, s = 0.92 * Math.min(pw, ph) / (2 * fit.R), off = f * n * 3;
+      const pw = this.pw, fit = row.fit, n = row.n, s = 0.92 * Math.min(pw, ph) / (2 * fit.R) * (row.zoom || 1), off = f * n * 3;
       const shape = row.kind === 'shape', cxp = x + pw / 2, cyp = y + ph / 2 + (shape ? 0.04 * ph : 0.07 * ph);
       const persp = this.persp, R3 = 3 * fit.R;
       this.buffers(n);
@@ -1038,6 +1090,22 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       };
       if (ghost) cloud(ghost, GHOST_COL, 0);                  // the true shape underneath: what is missing shows grey
       cloud(P, col, row.ng || 0);
+      if (row.target && !shape) {                             // v20: the goal on top, a dotted line down to the floor
+        const proj = (X, Y, Z) => { const d = X * B.fx + Y * B.fy + Z * B.fz, k = 1 / (1 - persp * d / R3);
+          return [cxp + (X * B.rx + Y * B.ry) * s * k, cyp - (X * B.ux + Y * B.uy + Z * B.uz) * s * k]; };
+        const X = row.target[0] - fit.cx, Y = row.target[1] - fit.cy;
+        const [gu, gv] = proj(X, Y, row.target[2] - fit.cz), [fu, fv] = proj(X, Y, fit.floor - fit.cz), gr = 6.5;
+        if (Math.hypot(gu - fu, gv - fv) > gr + 2) {
+          ctx.save(); ctx.strokeStyle = DROP; ctx.lineWidth = 1.2; ctx.setLineDash([2, 3]);
+          ctx.beginPath(); ctx.moveTo(gu, gv + gr); ctx.lineTo(fu, fv); ctx.stroke(); ctx.restore();
+          ctx.globalAlpha = 0.18; ctx.drawImage(blot(), fu - 7, fv - 3, 14, 6); ctx.globalAlpha = 1;
+        }
+        ctx.beginPath(); ctx.arc(gu, gv, gr + 1.5, 0, TAU); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(gu, gv, gr, 0, TAU); ctx.fillStyle = GOAL_COL; ctx.fill();
+        ctx.lineWidth = 1; ctx.strokeStyle = INK; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(gu - 3, gv); ctx.lineTo(gu + 3, gv); ctx.moveTo(gu, gv - 3); ctx.lineTo(gu, gv + 3);
+        ctx.lineWidth = 1.5; ctx.strokeStyle = '#ffffff'; ctx.stroke();
+      }
     }
     draw() {
       if (!this.data) return;
@@ -1056,11 +1124,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         if (row.first) {                                     // the group's band: its name and the frame shown
           if (row.gi) { ctx.fillStyle = DIV; ctx.fillRect(0, y - GAP / 2 - 1, W, 2); }
           ctx.fillStyle = BAND_BG; ctx.fillRect(0, y, W, row.hb);
-          const title = `${this.noun} ${row.gi + 1} of ${this.groups}`;
+          const title = row.title || `${this.noun} ${row.gi + 1} of ${this.groups}`;
           ctx.font = `600 14px ${FONT}`; ctx.fillStyle = INK; ctx.fillText(title, 10, y + 21);
           const tw = ctx.measureText(title).width;
           ctx.font = `500 13px ${FONT}`; ctx.fillStyle = f < row.C ? OBS : SUB;
-          ctx.fillText(f < row.C ? `observed frame ${f + 1} of ${row.C}` : `predicted frame ${f - row.C + 1} of ${row.T - row.C}`, 10 + tw + 18, y + 21);
+          ctx.fillText(!row.C ? `frame ${f + 1} of ${row.T}`
+            : f < row.C ? `observed frame ${f + 1} of ${row.C}` : `predicted frame ${f - row.C + 1} of ${row.T - row.C}`, 10 + tw + 18, y + 21);
         } else {                                             // a shape row's strip: what it shows
           ctx.font = `500 13px ${FONT}`; ctx.fillStyle = SUB; ctx.fillText(row.label, 10, y + 19);
         }
@@ -1068,11 +1137,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         row.P.forEach((P, ci) => {
           const x = ci * pw;
           ctx.save(); ctx.beginPath(); ctx.rect(x, yp, pw, row.h); ctx.clip();
-          this.panel(ctx, row, P, f, x, yp, row.h, ci ? PRED_COL : GT_COL, B, ci && ci !== row.ghost ? ghost : null);
+          const gt = this.roles[ci] === 'gt';
+          this.panel(ctx, row, P, f, x, yp, row.h, gt ? GT_COL : PRED_COL, B, ci && ci !== row.ghost ? ghost : null);
           ctx.restore();
           const tag = row.tags ? row.tags[ci] : (row.err[ci] != null ? row.err[ci].toFixed(1) + ' mm error' : null);
           if (row.first) {                                   // the column's name in the panel, its error below it
-            label(ctx, this.data.cols[ci], x + 10, yp + 22, pw - 20, 14, 600, ci ? PRED_TXT : GT_COL);
+            label(ctx, this.data.cols[ci], x + 10, yp + 22, pw - 20, 14, 600, gt ? GT_COL : PRED_TXT);
             if (tag) label(ctx, tag, x + 10, yp + 41, pw - 20, 13, 500, INK);
           } else if (tag) label(ctx, tag, x + 10, yp + 22, pw - 20, 13, 500, INK);
         });
