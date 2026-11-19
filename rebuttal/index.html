@@ -637,31 +637,27 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <blockquote class="ask"><cite>wZV8</cite>“The Unified model is substantially larger than the specialists yet is less accurate on five of six domains”</blockquote>
         <blockquote class="ask"><cite>1hZx</cite>“what causes its specialization gap: capacity, data balance, or interference between domains?”</blockquote>
       </div>
-      <div class="prose"><p>One GPWM model of 104M parameters, trained on five domains, plans the three tasks of section 02 with the same planners, settings, problems and simulators as the three task specialists of the same size. Every plan runs open loop in simulation.</p></div>
+      <div class="prose"><p>One GPWM model of 104M parameters, trained on five domains, plans the three tasks of section 02 with the same planners, problems and simulators as the three task specialists of the same size. Every plan runs open loop in simulation.</p></div>
       <div class="tbl">
         <table class="full">
           <thead><tr><th>Task progress, higher is better</th><th>Specialists</th><th>Unified model</th><th>Unified minus specialists</th><th>Samples per plan</th></tr></thead>
           <tbody>
-            <tr><td>Pushing, latent noise optimization</td><td>0.56<span class="d">±0.04</span></td><td>0.52<span class="d">±0.05</span></td><td>−0.04<span class="d">±0.05</span></td><td>best 16 of 32<span class="n">112</span></td></tr>
-            <tr><td>Pile Manipulation, latent noise optimization</td><td>0.21<span class="d">±0.01</span></td><td>0.09<span class="d">±0.02</span></td><td>−0.12<span class="d">±0.02</span></td><td>best 4 of 32<span class="n">52</span></td></tr>
-            <tr><td>Picking, latent noise optimization</td><td>0.52<span class="d">±0.10</span></td><td>0.57<span class="d">±0.09</span></td><td>+0.05<span class="d">±0.14</span></td><td>best 8 of 32<span class="n">72</span></td></tr>
-            <tr><td>Pushing, noise-space CEM</td><td>0.58<span class="d">±0.04</span></td><td>0.52<span class="d">±0.04</span></td><td>−0.06<span class="d">±0.05</span></td><td>128 × 3<span class="n">384</span></td></tr>
-            <tr><td>Pile Manipulation, noise-space CEM</td><td>0.20<span class="d">±0.01</span></td><td>0.23<span class="d">±0.01</span></td><td>+0.03<span class="d">±0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
-            <tr><td>Picking, noise-space CEM</td><td>0.35<span class="d">±0.08</span></td><td>0.50<span class="d">±0.07</span></td><td>+0.15<span class="d">±0.11</span></td><td>80 × 3<span class="n">240</span></td></tr>
-            <tr class="sep"><td>Pushing, action-space CEM</td><td>0.00<span class="d">±&lt;0.01</span></td><td>0.00<span class="d">±&lt;0.01</span></td><td>0.00<span class="d">±&lt;0.01</span></td><td>128 × 3<span class="n">384</span></td></tr>
-            <tr><td>Pile Manipulation, action-space CEM</td><td>0.01<span class="d">±&lt;0.01</span></td><td>0.03<span class="d">±&lt;0.01</span></td><td>+0.02<span class="d">±&lt;0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
-            <tr><td>Picking, action-space CEM</td><td>−0.02<span class="d">±0.02</span></td><td>−0.12<span class="d">±0.03</span></td><td>−0.10<span class="d">±0.04</span></td><td>80 × 3<span class="n">240</span></td></tr>
+            <tr><td>Pushing, latent noise optimization</td><td>0.56<span class="d">±0.04</span></td><td class="best">0.52<span class="d">±0.05</span></td><td>−0.04<span class="d">±0.05</span></td><td>best 16 of 32<span class="n">112</span></td></tr>
+            <tr><td>Pile Manipulation, latent noise optimization</td><td>0.23<span class="d">±0.01</span></td><td class="best">0.21<span class="d">±0.01</span></td><td>−0.01<span class="d">±0.01</span></td><td>200 s<span class="n">~60</span></td></tr>
+            <tr><td>Picking, latent noise optimization</td><td>0.52<span class="d">±0.10</span></td><td class="best">0.57<span class="d">±0.09</span></td><td>+0.05<span class="d">±0.14</span></td><td>best 8 of 32<span class="n">72</span></td></tr>
+            <tr><td>Pushing, noise-space CEM</td><td>0.58<span class="d">±0.04</span></td><td class="best">0.52<span class="d">±0.04</span></td><td>−0.06<span class="d">±0.05</span></td><td>128 × 3<span class="n">384</span></td></tr>
+            <tr><td>Pile Manipulation, noise-space CEM</td><td>0.20<span class="d">±0.01</span></td><td class="best">0.23<span class="d">±0.01</span></td><td>+0.03<span class="d">±0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
+            <tr><td>Picking, noise-space CEM</td><td>0.35<span class="d">±0.08</span></td><td class="best">0.50<span class="d">±0.07</span></td><td>+0.15<span class="d">±0.11</span></td><td>80 × 3<span class="n">240</span></td></tr>
+            <tr class="sep"><td>Pushing, action-space CEM</td><td>0.00<span class="d">±&lt;0.01</span></td><td class="best">0.00<span class="d">±&lt;0.01</span></td><td>0.00<span class="d">±&lt;0.01</span></td><td>128 × 3<span class="n">384</span></td></tr>
+            <tr><td>Pile Manipulation, action-space CEM</td><td>0.01<span class="d">±&lt;0.01</span></td><td class="best">0.03<span class="d">±&lt;0.01</span></td><td>+0.02<span class="d">±&lt;0.01</span></td><td>32 × 3<span class="n">96</span></td></tr>
+            <tr><td>Picking, action-space CEM</td><td>−0.02<span class="d">±0.02</span></td><td class="best">−0.12<span class="d">±0.03</span></td><td>−0.10<span class="d">±0.04</span></td><td>80 × 3<span class="n">240</span></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note">The unified model trained for 500k steps on pile manipulation, picking, pushing, cloth folding and a dexterous hand, with the actuator's actions hidden in half of the training windows, and each specialist trained for 200k steps on its own task.</p>
-      <p class="note">Both models get the same samples, CEM rounds and gradient steps per plan and so score the same number of trajectories (grey), but planning time is not matched, so the specialist values differ from the time-budget values of section 02. Latent noise optimization refines the best of 32 noise samples with 5 gradient steps each, and CEM runs 3 rounds.</p>
-      <p class="note">Pushing with latent noise optimization keeps the best 16 of 32 samples because 40 samples run out of GPU memory with the unified model (36.1 against 10.4 GiB at 16 samples), since it keeps 128 coarse tokens per rigid object, like the picking and pile specialists, where the pushing specialist keeps 32.</p>
-      <p class="note">With gradient steps on Pile Manipulation, the unified plan moves the dough without paddle contact in 25 of 50 problems, so the simulated dough stays still. A contact penalty in the planning cost raises its task progress to 0.18 ±0.02 (the specialists were not run with it).</p>
 
       <h3>What the plans look like</h3>
-      <div class="prose"><p>Latent noise optimization on three problems per task, the one at the median difference between the models and the two where the unified model is furthest behind and furthest ahead.</p></div>
-      <figure class="g3" data-src="data3d/unified_plan.json" data-aspect="0.62" data-group="Problem" style="--minw: 800px" data-rows='[{"aspect":0.85},{"aspect":0.85},{"aspect":0.85},{"aspect":0.62},{"aspect":0.62},{"aspect":0.62},{"aspect":0.95},{"aspect":0.95},{"aspect":0.95}]'>
+      <div class="prose"><p>Latent noise optimization on one problem per task, the one at the median difference between the models.</p></div>
+      <figure class="g3" data-src="data3d/unified_plan.json" data-aspect="0.62" data-group="Problem" style="--minw: 800px" data-rows='[{"aspect":0.85},{"aspect":0.62},{"aspect":0.95}]'>
         <div class="g3-key"><span><i></i>Plan, imagined by the model</span><span><i class="k-gt"></i>Simulator, running the plan's actions</span><span><i class="k-act"></i>Gripper, pusher or paddle</span><span><i style="background: #2f9e44; box-shadow: inset 0 0 0 1px #16181c"></i>Target</span><span style="color: var(--sub)">Drag to turn all views, click to pause</span></div>
         <div class="scroll-x"><div class="g3-inner"><div class="g3-head" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><span class="pr"><i></i>Specialist, plan</span><span class="gt"><i></i>Specialist, simulator</span><span class="pr"><i></i>Unified, plan</span><span class="gt"><i></i>Unified, simulator</span></div><div class="g3-box"></div></div></div>
       </figure>
